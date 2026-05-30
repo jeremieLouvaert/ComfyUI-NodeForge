@@ -174,6 +174,19 @@ If the model cannot hit that bar on a set we have ground truth for, it is sand
 and we learned it cheaply, before building anything. This benchmark is the next
 concrete buildable artifact.
 
+**RESULT (2026-05-30): PASS.** Built in `benchmark/`. On 6 confirmed specs (the 5
+probe node types + realistic bugs + one ambiguity case), 3 trials each, model
+claude-sonnet-4-6: teeth 21/21 (100%), specificity 21/21 (100%), triage 3/3, zero
+unrecoverable battery errors. The benchmark earned its keep by surfacing two real
+issues before they could mislead us: (1) output truncation masquerading as bad
+codegen (raised the token cap), and (2) one over-strict check that probed a
+clamped op at saturation and false-rejected a correct node (fixed with a
+generalizable test-signal-design rule, not by loosening the gate). Honest residual:
+a small fraction of raw draws emit a self-inconsistent battery that does not load;
+these are detected for free and auto-regenerated, exactly as the product loop will.
+The gate is a per-run check, so one clean pass is strong evidence, not a proof that
+every future draw self-verifies.
+
 ## 8. Honest limits / residual risk
 
 - **Shared blind spot across all N implementations AND the test.** If every

@@ -21,3 +21,6 @@ Thumbs.db
 # ComfyUI runtime artifacts
 output/
 *.pt
+
+# Benchmark per-run artifacts (regenerated each run)
+benchmark/results/

@@ -30,9 +30,10 @@ This is the de-risking work that precedes the build:
 ## Roadmap
 
 1. ~~Real-server load test.~~ **Done (2026-05-30):** all 6 probe nodes register with correct schemas in live ComfyUI, and a `Probe Test Image → Probe Unsharp Mask → SaveImage` graph executes end-to-end via `/prompt`. Confirms LLM-authored nodes work in the real server, not just an offline harness.
-2. ~~Self-verification design~~ **Designed (2026-05-30):** see [`docs/self-verification-model.md`](docs/self-verification-model.md). An escalating-oracle pipeline (structural → runtime → contract → property/metamorphic → differential consensus → confirmed-example → human gate), authored from the spec not the code, with a TDD loop where the human confirms a few input→output examples up front as the trusted oracle. Next concrete artifact: the meta-validation benchmark (run the model without the human on the 5 correct + 5 broken probe nodes; prove it catches the broken ones, passes the correct ones, and escalates ambiguity).
-3. The authoring agent loop + the human-approval gate + sandbox.
-4. The banked node library.
+2. ~~Self-verification design~~ **Designed (2026-05-30):** see [`docs/self-verification-model.md`](docs/self-verification-model.md). An escalating-oracle pipeline (structural → runtime → contract → property/metamorphic → differential consensus → confirmed-example → human gate), authored from the spec not the code, with a TDD loop where the human confirms a few input→output examples up front as the trusted oracle.
+3. ~~Meta-validation benchmark~~ **Passed (2026-05-30):** see [`benchmark/`](benchmark/). Running the model *without the human* on 6 confirmed specs (the 5 probe node types + their realistic bugs + one ambiguity case), 3 trials each: **teeth 21/21 (100%), specificity 21/21 (100%), triage 3/3.** The benchmark surfaced and fixed two real issues (output truncation; one over-strict check probing a clamped op at saturation). Self-verification de-risked: the model can auto-generate teeth-having, non-over-strict batteries from a spec alone.
+4. The authoring agent loop + the human-approval gate + sandbox. — **next.**
+5. The banked node library.
 
 ## License
 
