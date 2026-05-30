@@ -24,3 +24,8 @@ output/
 
 # Benchmark per-run artifacts (regenerated each run)
 benchmark/results/
+
+# Retrieval-eval per-run artifacts + fetched index caches (regenerated each run)
+eval/results/
+eval/index_cache/
+eval/_smoke.py

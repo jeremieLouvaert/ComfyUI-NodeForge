@@ -44,9 +44,23 @@ silently auto-authors when plausible matches exist.
   description. Node-level granularity (per-node names via `/object_info` of
   installed packs, or richer registry node listings) is a **v0.2 refinement** and a
   stated v0.1 limitation, not hidden.
-- **Build-time verification needed (assumed, not yet confirmed):** the exact JSON
-  shape of the Manager list, the registry API shape + pagination, and whether a
-  machine-readable banned/security list exists.
+- **Schemas CONFIRMED live (2026-05-30):**
+  - Manager `custom-node-list.json`: root key `custom_nodes` (array); per entry
+    `id, author, title, reference (repo URL), description, files, install_type`
+    (+ optional `nodename_pattern`, `pip`, `apt_dependency`, `js_path`).
+  - Registry `GET https://api.comfy.org/nodes?page=&limit=&search=`: paginated
+    (`page`, `limit`, `total` ~= 4455 packs, `totalPages`); per pack `id, name,
+    description, author, repository, downloads, github_stars, rating, status`
+    (`NodeStatusActive`...), `publisher{id,name,status}`, `latest_version{version,
+    deprecated}`, `tags`, `search_ranking`.
+  - **Health signals come free from the registry** (no separate GitHub call needed
+    for first-pass health): `github_stars`, `downloads`, `latest_version.deprecated`,
+    `status`, `publisher.status`. This directly powers sub-question (iii).
+  - **Still to verify at build:** whether `search=` actually filters server-side
+    (a quick probe returned the same head as no-search, so treat registry search as
+    unconfirmed and lean on our own recall+rerank), and whether a dedicated
+    machine-readable *banned/security* list exists beyond the `status`/`deprecated`
+    flags.
 
 ## 3. Match, rank, route
 
