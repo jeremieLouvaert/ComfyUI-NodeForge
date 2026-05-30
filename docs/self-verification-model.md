@@ -203,13 +203,53 @@ every future draw self-verifies.
   cheap, proven part, so this is acceptable. Cap N small (3 to start) and only
   widen on detected divergence.
 
-## 9. Open sub-questions for the build session
+## 9. Resolved (2026-05-30, v0.1 plan sign-off)
 
-- Exact representation of "examples" the human confirms: pure NL, a tiny tensor
-  literal, or a generated thumbnail pair. (Leaning: NL + an optional generated
-  thumbnail pair for image ops.)
-- How the mutation engine for the teeth test (rule 3) generates "plausible wrong
-  variants" of an assertion cheaply and without itself being circular.
-- Where the sandbox boundary sits for Stage 4 (subprocess vs the real ComfyUI
-  server) given the security mandate. Likely subprocess for the verify loop,
-  real server only at the human-approved bank step.
+The three build-session opens were resolved at the v0.1 AUTHOR + RETRIEVE plan
+sign-off (decisions.md "[2026-05-30] NodeForge v0.1 author+retrieve loop design";
+plan at .claude/plans/melodic-leaping-waffle.md). The retrieval-side design lives
+in docs/retrieval-model.md.
+
+1. **Example representation.** Each confirmed example is a record
+   `{nl_statement, input_spec (named synthetic generator + params), expectation
+   (invariant/relation, or a spec-pinned literal), optional thumbnail_pair}`.
+   Machine-facing: input_spec builds a small deterministic fixture (solid color,
+   gradient, checkerboard, seeded texture, known pattern); the expectation is
+   preferably an invariant or relation (rule 2), a literal only where the spec
+   pins an exact value/formula. Human-facing: the NL statement plus, for image
+   ops, an optional rendered input->output thumbnail pair so confirmation is a
+   glance. Prefer tiny inputs a human can reason about ("2x2 RGB, red/green
+   swapped") over a 1024px photo. This is a light formalization of what
+   benchmark/cases.py already encodes informally (spec "Confirmed examples /
+   invariants" + generate.py torch.rand fixtures + property assertions).
+
+2. **Teeth-test mutation engine.** Mutate the spec/behavior, never the candidate's
+   code (mutating the candidate shares its blind spots). Mutants come from a
+   generic, spec-agnostic library generalizing the five probe/negative_control.py
+   bugs into reusable operators (channel permute, Rec.709->mean-luma, MASK
+   [B,H,W]->[B,H,W,1], drop-clamp, identity/no-op, global-vs-local reduction,
+   sign/logic flip, wrong-factor scale, transpose H/W, off-by-one), plus an LLM
+   "write a subtly-wrong implementation from the spec" mutant authored in a context
+   separate from both the check-author and the implementer (non-circular, rule 1).
+   A generated check counts only if it FAILS on >=1 mutant AND PASSES the confirmed
+   examples. This makes the probe's one-time negative control standing and
+   per-check. Honest limit: the library catches known bug classes only; a check can
+   still be vacuous against an unknown class. Acceptable, and differential + the
+   human gate cover the residual.
+
+3. **Stage-4 sandbox boundary.** Verification executes UNAPPROVED LLM-authored code
+   (torch on real tensors) before the human approves; the human gate prevents
+   banking bad code, not running it during verify, so the verify loop must be
+   contained. All execution from Stage 2 onward runs in an isolated child
+   subprocess, never in the agent's process and never in the user's live ComfyUI
+   server: no network, filesystem read-only except a throwaway temp dir, hard
+   wall-clock timeout + memory cap with kill-on-exceed (the queue-hang failure mode
+   documented in the brain must not be inherited). GPU runs inside the same sandbox
+   only when the op needs it, with a tighter time budget; we do not escalate to the
+   real server for verification. The live ComfyUI server is touched only at the
+   human-approved BANK step (copy to custom_nodes, clear __pycache__, prompt
+   restart). Honest limit / biggest risk: on Windows this subprocess profile is not
+   a hard security boundary against a determined attacker; the v0.1 threat model is
+   buggy/accidentally-destructive code, not hardened RCE containment (the real
+   defenses are no-live-server-until-approved + the human diff glance). Container/VM
+   isolation is a v0.2 item if the tool ever auto-runs untrusted community code.
