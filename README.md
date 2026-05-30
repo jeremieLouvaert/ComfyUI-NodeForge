@@ -30,7 +30,7 @@ This is the de-risking work that precedes the build:
 ## Roadmap
 
 1. ~~Real-server load test.~~ **Done (2026-05-30):** all 6 probe nodes register with correct schemas in live ComfyUI, and a `Probe Test Image → Probe Unsharp Mask → SaveImage` graph executes end-to-end via `/prompt`. Confirms LLM-authored nodes work in the real server, not just an offline harness.
-2. Self-verification design: how the agent writes its own correctness test from a vague spec when there is no semantic oracle. — **next, the real hard problem.**
+2. ~~Self-verification design~~ **Designed (2026-05-30):** see [`docs/self-verification-model.md`](docs/self-verification-model.md). An escalating-oracle pipeline (structural → runtime → contract → property/metamorphic → differential consensus → confirmed-example → human gate), authored from the spec not the code, with a TDD loop where the human confirms a few input→output examples up front as the trusted oracle. Next concrete artifact: the meta-validation benchmark (run the model without the human on the 5 correct + 5 broken probe nodes; prove it catches the broken ones, passes the correct ones, and escalates ambiguity).
 3. The authoring agent loop + the human-approval gate + sandbox.
 4. The banked node library.
 
