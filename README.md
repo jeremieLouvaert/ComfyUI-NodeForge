@@ -29,8 +29,8 @@ This is the de-risking work that precedes the build:
 
 ## Roadmap
 
-1. Real-server load test (confirm the probe nodes register and execute in live ComfyUI). — in progress
-2. Self-verification design: how the agent writes its own correctness test from a vague spec when there is no semantic oracle.
+1. ~~Real-server load test.~~ **Done (2026-05-30):** all 6 probe nodes register with correct schemas in live ComfyUI, and a `Probe Test Image → Probe Unsharp Mask → SaveImage` graph executes end-to-end via `/prompt`. Confirms LLM-authored nodes work in the real server, not just an offline harness.
+2. Self-verification design: how the agent writes its own correctness test from a vague spec when there is no semantic oracle. — **next, the real hard problem.**
 3. The authoring agent loop + the human-approval gate + sandbox.
 4. The banked node library.
 
