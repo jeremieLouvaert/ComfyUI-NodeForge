@@ -63,10 +63,11 @@ def _strip_mappings(source):
 
 
 def _force_category(source):
-    """Set CATEGORY = "AKURATE/NodeForge" on the class (replace if present, else the
-    caller appends one). Returns (source, had_category)."""
-    new, n = re.subn(r"""(\n\s*)CATEGORY\s*=\s*['"][^'"]*['"]""",
-                     rf"""\1CATEGORY = "{_CATEGORY}\"""", source, count=1)
+    """Set CATEGORY = "AKURATE/NodeForge" on the class (replace if present).
+    Returns (source, had_category). Uses a function replacement so the literal
+    quotes around the category never collide with regex backref/escape rules."""
+    repl = lambda m: m.group(1) + 'CATEGORY = "' + _CATEGORY + '"'
+    new, n = re.subn(r"""(\n\s*)CATEGORY\s*=\s*['"][^'"]*['"]""", repl, source, count=1)
     return new, (n > 0)
 
 
@@ -78,9 +79,11 @@ def build_node_source(spec, candidate, class_name=None):
     src = _strip_mappings(src)
     src, had_cat = _force_category(src)
     if not had_cat:
-        # inject a CATEGORY right after the class's RETURN_TYPES or FUNCTION line
-        src = re.sub(r"(\n(\s*)FUNCTION\s*=\s*['\"]\w+['\"])",
-                     rf"""\1\n\2CATEGORY = "{_CATEGORY}\"""", src, count=1)
+        # inject a CATEGORY right after the class's FUNCTION line (function
+        # replacement avoids quote/backref collisions)
+        def _inject(m):
+            return m.group(1) + "\n" + m.group(2) + 'CATEGORY = "' + _CATEGORY + '"'
+        src = re.sub(r"(\n(\s*)FUNCTION\s*=\s*['\"]\w+['\"])", _inject, src, count=1)
     header = f'"""Authored + verified by NodeForge. Spec: {spec.title}."""\n'
     mappings = (f'\n\nNODE_CLASS_MAPPINGS = {{{real_cls!r}: {real_cls}}}\n'
                 f'NODE_DISPLAY_NAME_MAPPINGS = {{{real_cls!r}: {spec.title!r}}}\n')
