@@ -64,7 +64,7 @@ silently auto-authors when plausible matches exist.
 
 ## 3. Match, rank, route
 
-### Match / rank (reuses the proven Discover LLM-scoring pattern, comfyui-brain/tools/discover)
+### Match / rank (a proven LLM-scoring rerank pattern)
 1. **Cheap recall** (lexical / embedding) -> top-K candidate packs (K ~= 20).
 2. **LLM rerank** -> per candidate, a fit score 0..1 + a one-line justification,
    given the user ask + the candidate description + its health signals.

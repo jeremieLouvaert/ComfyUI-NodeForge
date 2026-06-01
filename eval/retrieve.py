@@ -1,7 +1,7 @@
 """
 The retrieval stage under test: cheap lexical recall -> LLM rerank -> 3-band router.
 
-Mirrors the Discover LLM-scoring pattern (comfyui-brain/tools/discover) and the
+Mirrors a proven LLM-scoring rerank pattern and the
 benchmark/ generate.py Anthropic call style (cached system prompt).
 
 Flow:
