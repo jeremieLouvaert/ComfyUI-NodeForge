@@ -94,6 +94,11 @@ class Spec:
     examples: list = field(default_factory=list)      # list[Example], 3-6
     invariants: list = field(default_factory=list)    # list[str]
     edge_cases: list = field(default_factory=list)    # list[str]
+    # v0.2 ambiguity oracle: interpretive forks the spec left UNPINNED. Each item:
+    # {"axis": str, "dimension": "shape"|"value"|"channel"|"dtype",
+    #  "interpretations": [str, ...]}. Empty for a fully-specified ask (then the
+    #  author loop behaves exactly as v0.1). See docs + decisions.md ambiguity oracle.
+    unpinned_axes: list = field(default_factory=list)
     confirmed: bool = False
 
     def to_dict(self):
@@ -103,6 +108,7 @@ class Spec:
                 "contract": self.contract,
                 "examples": [e.to_dict() for e in self.examples],
                 "invariants": list(self.invariants), "edge_cases": list(self.edge_cases),
+                "unpinned_axes": list(self.unpinned_axes),
                 "confirmed": self.confirmed}
 
     @classmethod
@@ -112,6 +118,7 @@ class Spec:
                    contract=d.get("contract", ""),
                    examples=[Example.from_dict(e) for e in d.get("examples", [])],
                    invariants=d.get("invariants", []), edge_cases=d.get("edge_cases", []),
+                   unpinned_axes=d.get("unpinned_axes", []),
                    confirmed=d.get("confirmed", False))
 
     def to_spec_string(self) -> str:
@@ -138,6 +145,11 @@ class Spec:
             lines.append("Edge cases:")
             for ec in self.edge_cases:
                 lines.append(f"  - {ec.strip()}")
+        # unpinned_axes are DELIBERATELY not rendered here: ref0, the battery, and
+        # non-stance impls must see a clean v0.1-identical spec. The chosen
+        # interpretation is injected only into stance impls (codegen.generate_stance_impls,
+        # via the user message). Keeping axes out of this string is what guarantees
+        # the non-stance path is byte-identical to v0.1.
         return "\n".join(lines)
 
 
@@ -157,14 +169,20 @@ class Candidate:
     id: str                             # impl_0 | ref0 | mutant_op:<name> | mutant_llm:N
     source: str                         # full one-class node .py source
     class_name: str
-    origin: str                         # impl | ref0 | mutant_op:<name> | mutant_llm
+    origin: str                         # impl | ref0 | mutant_op:<name> | mutant_llm | stance
     temperature: Optional[float] = None
+    # v0.2 ambiguity oracle: set on stance-directed impls so the divergence the
+    # differential sees is attributable to a flagged axis. None for ordinary impls
+    # (then analyze_stance delegates verbatim to analyze). Travels as plain JSON.
+    # {"axis": str, "interpretation": str, "dimension": "shape"|"value"|"channel"|"dtype"}
+    stance: Optional[dict] = None
 
     def to_dict(self): return asdict(self)
     @classmethod
     def from_dict(cls, d):
         return cls(id=d["id"], source=d["source"], class_name=d["class_name"],
-                   origin=d["origin"], temperature=d.get("temperature"))
+                   origin=d["origin"], temperature=d.get("temperature"),
+                   stance=d.get("stance"))
 
 
 @dataclass

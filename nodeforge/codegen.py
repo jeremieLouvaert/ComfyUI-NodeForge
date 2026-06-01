@@ -40,6 +40,34 @@ Output ONLY a Python module: imports (torch etc.) + the single node class. No ma
 fences, no prose, no explanation."""
 
 
+_STANCE_SYSTEM = """You are a ComfyUI custom-node implementer resolving a specific \
+under-specified axis. Given a specification and ONE chosen interpretation of an \
+ambiguous design decision, write a COMPLETE, CORRECT implementation as a single \
+ComfyUI node class that faithfully implements THAT interpretation.
+
+ComfyUI conventions:
+- IMAGE tensor: torch.float32, shape [B, H, W, C], values in [0,1], C=3 (RGB).
+- MASK tensor: torch.float32, shape [B, H, W], values in [0,1] (NO channel dimension).
+- A node is a class with: a classmethod INPUT_TYPES() returning the required/optional
+  dict; RETURN_TYPES (a tuple of type strings); optional RETURN_NAMES; FUNCTION (the
+  method name, as a string); CATEGORY (a string); and the method named by FUNCTION,
+  which returns a tuple matching RETURN_TYPES.
+- The method signature must accept the inputs by the names declared in INPUT_TYPES.
+
+Requirements:
+- Implement EXACTLY what the spec says. Honor every confirmed example and invariant.
+- Commit fully to the CHOSEN INTERPRETATION given in the user message. Do NOT hedge \
+  between interpretations -- implement only the one specified.
+- Do NOT introduce a bug. This is a correct implementation of a valid reading.
+- Respect the declared INPUT_TYPES and RETURN_TYPES precisely (shapes, ranges, dtypes,
+  the MASK [B,H,W] vs IMAGE [B,H,W,C] convention).
+- Be deterministic. No randomness, no network, no file I/O, no global state.
+- Operate on the whole batch. Clamp outputs to [0,1] when the contract says so.
+
+Output ONLY a Python module: imports (torch etc.) + the single node class. No markdown
+fences, no prose, no explanation."""
+
+
 def _strip_fences(text):
     text = text.strip()
     m = re.search(r"```(?:python)?\s*\n(.*?)```", text, re.DOTALL)
@@ -76,10 +104,70 @@ def generate_ref0(spec, model="claude-sonnet-4-6", client=None):
     return generate_impl(spec, "ref0", temperature=0.4, seed=999, model=model, client=client)
 
 
+def generate_stance_impls(spec, axis, n_cap=3, model="claude-sonnet-4-6", client=None):
+    """Generate one implementation per interpretation of `axis` (capped at n_cap).
+
+    `axis` is one unpinned-axis dict:
+        {"axis": str, "dimension": str, "interpretations": [str, ...]}
+
+    Each call is ISOLATED: system=_STANCE_SYSTEM, and the chosen interpretation is
+    injected via the user message only. Sibling interpretations are never visible to
+    any single call (anti-circularity).
+
+    Returns ([Candidate], [usage]).
+    """
+    client = client or keys.anthropic_client()
+    interpretations = axis.get("interpretations", [])[:n_cap]
+    axis_name = axis.get("axis", "unknown")
+    axis_dim = axis.get("dimension", "value")
+    spec_text = spec.to_spec_string()
+    cands, usages = [], []
+    for i, interp in enumerate(interpretations):
+        user = (
+            f"{spec_text}\n\n"
+            f"--- CHOSEN INTERPRETATION ---\n"
+            f"CHOSEN INTERPRETATION for axis '{axis_name}': {interp}\n"
+            f"----------------------------\n\n"
+            "Write the implementation now. Output only the Python module."
+        )
+        resp = client.messages.create(
+            model=model, max_tokens=2000, temperature=0.4,
+            system=[{"type": "text", "text": _STANCE_SYSTEM,
+                     "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": user}],
+        )
+        src = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
+        cname = _first_node_class_name(src)
+        cands.append(records.Candidate(
+            id=f"stance_{i}",
+            source=src,
+            class_name=cname,
+            origin="stance",
+            temperature=0.4,
+            stance={
+                "axis": axis_name,
+                "interpretation": interp,
+                "dimension": axis_dim,
+            },
+        ))
+        usages.append(resp.usage)
+    return cands, usages
+
+
 def generate_impls(spec, n=3, model="claude-sonnet-4-6", client=None):
     """N independent Stage-3 implementations, varied temperature. Returns
-    ([Candidate], [usage])."""
+    ([Candidate], [usage]).
+
+    v0.2: if spec.unpinned_axes is non-empty, delegates to generate_stance_impls
+    on the first (highest-priority) unpinned axis, capped at min(3, n) stances.
+    When the spec is fully specified (no unpinned axes), behaves exactly as v0.1.
+    """
     client = client or keys.anthropic_client()
+    if spec.unpinned_axes:
+        first_axis = spec.unpinned_axes[0]
+        return generate_stance_impls(spec, first_axis, n_cap=min(3, n),
+                                     model=model, client=client)
+    # Fully-specified path -- unchanged from v0.1
     temps = [0.3, 0.7, 1.0, 0.5, 0.9, 0.2]
     cands, usages = [], []
     for i in range(n):

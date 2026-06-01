@@ -62,8 +62,36 @@ def format_spec(spec, thumbs=None):
         L.append("\nEdge cases noted:")
         for ec in spec.edge_cases:
             L.append(f"  - {ec}")
+    if spec.unpinned_axes:
+        L.append("\nUnspecified choices NodeForge will probe:")
+        for ax in spec.unpinned_axes:
+            if not isinstance(ax, dict):
+                continue
+            name = ax.get("axis", "?")
+            interps = ax.get("interpretations", [])
+            interp_str = "; ".join(str(x) for x in interps)
+            L.append(f"  - {name}: {interp_str}")
     L.append("")
     return "\n".join(L)
+
+
+def ask_choice(question, options, _input=input):
+    """Print question + numbered options, return the selected option string.
+
+    Reads one line from `_input` (injectable for tests). Uses 1-based indexing.
+    Empty input or out-of-range selection returns options[0] (safe default).
+    """
+    print(question)
+    for i, opt in enumerate(options, start=1):
+        print(f"  [{i}] {opt}")
+    raw = _input("> ").strip()
+    if not raw:
+        return options[0]
+    if raw.isdigit():
+        idx = int(raw) - 1
+        if 0 <= idx < len(options):
+            return options[idx]
+    return options[0]
 
 
 def confirm_spec(spec, interactive=True, render_dir=None, edits=None, inp=input, out=print):

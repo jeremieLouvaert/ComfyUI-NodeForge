@@ -22,6 +22,11 @@ Thumbs.db
 output/
 *.pt
 
+# Test-run scratch at repo root (regenerated each run: _accept_*, _diff_result,
+# _axes_result, _oracle_live, _mutate_result, _synth_result, etc.)
+/_*.txt
+/_staging/
+
 # Benchmark per-run artifacts (regenerated each run)
 benchmark/results/
 

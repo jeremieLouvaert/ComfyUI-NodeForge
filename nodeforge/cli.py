@@ -52,6 +52,37 @@ def _best_ref0(spec, model, client, tries=4, log=print):
     return best, best_fail
 
 
+def _resolve_ambiguity(spec, outcome, confirm_cb, log):
+    """Fold a Stage-4 ambiguity resolution into the spec, then let the loop re-run.
+
+    Structured (the v0.2 oracle, outcome carries `options`): the human picks one
+    interpretation via a multiple-choice menu; it becomes a hard invariant AND the
+    resolved axis is removed from spec.unpinned_axes so the next round stops probing
+    it (impls converge on the pinned reading -> CONFIDENT -> bank). In auto mode
+    (confirm_cb set, no human) the first option is chosen deterministically so the
+    loop still progresses. Falls back to today's free-text path when no options."""
+    axis = outcome.get("axis")
+    options = outcome.get("options", [])
+    if options:
+        if confirm_cb is not None:
+            choice = options[0]            # auto mode: deterministic, keeps the loop moving
+        else:
+            choice = confirm_mod.ask_choice(outcome["question"], options)
+        spec.invariants.append(f"The '{axis}' MUST be: {choice}")
+        # stop re-probing the now-resolved axis next round
+        spec.unpinned_axes = [a for a in spec.unpinned_axes
+                              if not (isinstance(a, dict) and a.get("axis") == axis)]
+        log(f"    [AMBIGUITY resolved] {axis} -> {choice}")
+        return
+    # free-text fallback (no structured options)
+    if confirm_cb is not None:
+        spec.invariants.append("Resolve ambiguity: " + outcome["question"])
+    else:
+        ans = input("Clarify the intended behavior (becomes a new invariant): ").strip()
+        if ans:
+            spec.invariants.append(ans)
+
+
 def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
                confirm_cb=None, approve_cb=None, max_spec_rounds=2,
                staging_root=None, force_bank=False, log=print, client=None,
@@ -82,6 +113,11 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
     # ---- Stage 0: elaborate ----
     log("[0] elaborating spec ...")
     spec, _u = spec_mod.elaborate(ask, model=model, client=client)
+
+    # Each unpinned axis can cost one resolution round (the oracle probes one axis
+    # per round); give the loop enough budget to resolve them all + a final bank
+    # round, so a multi-axis spec is not starved into ambiguity_exhausted.
+    max_spec_rounds = max(max_spec_rounds, len(spec.unpinned_axes) + 1)
 
     rounds = 0
     while True:
@@ -129,7 +165,10 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         report = _run_vetted(spec, kept, impls)
         impl_ids = [c.id for c in impls]
         by_id = {c.id: c for c in impls}
-        outcome = differential.analyze(report, impl_ids, spec, candidates_by_id=by_id)
+        # analyze_stance is byte-identical to analyze for non-stance runs (no
+        # Candidate carries a .stance); for stance runs it escalates only on
+        # axis-attributable, on-dimension divergence (the v0.2 ambiguity oracle).
+        outcome = differential.analyze_stance(report, impl_ids, spec, candidates_by_id=by_id)
         log(f"    outcome: {outcome['outcome']} -- {outcome['detail']}")
 
         if outcome["outcome"] == differential.CONTRADICTION:
@@ -144,16 +183,10 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         if outcome["outcome"] == differential.AMBIGUITY:
             if rounds >= max_spec_rounds:
                 return {"status": "ambiguity_exhausted", "spec": spec, "report": report,
-                        "question": outcome["question"]}
+                        "question": outcome["question"], "axis": outcome.get("axis"),
+                        "options": outcome.get("options", [])}
             log("    [AMBIGUITY] " + outcome["question"])
-            # fold the clarification into the spec and re-run
-            if confirm_cb is not None:
-                # auto mode: append the question as an invariant the next round confirms
-                spec.invariants.append("Resolve ambiguity: " + outcome["question"])
-            else:
-                ans = input("Clarify the intended behavior (becomes a new invariant): ").strip()
-                if ans:
-                    spec.invariants.append(ans)
+            _resolve_ambiguity(spec, outcome, confirm_cb, log)
             spec.confirmed = False
             continue
 
