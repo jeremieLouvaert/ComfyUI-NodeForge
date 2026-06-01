@@ -17,7 +17,8 @@ import sys
 import argparse
 
 from . import (records, spec as spec_mod, confirm as confirm_mod, codegen,
-               mutate, synth, sandbox, differential, gate, nodegen, bank)
+               mutate, synth, sandbox, differential, gate, nodegen, bank,
+               precheck as precheck_mod)
 
 
 # ---------------------------------------------------------------------------
@@ -53,16 +54,30 @@ def _best_ref0(spec, model, client, tries=4, log=print):
 
 def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
                confirm_cb=None, approve_cb=None, max_spec_rounds=2,
-               staging_root=None, force_bank=False, log=print, client=None):
+               staging_root=None, force_bank=False, log=print, client=None,
+               precheck=True, precheck_cb=None):
     """Drive the full author loop. Returns a result dict:
-       {status: banked|rejected|contradiction|ambiguity_exhausted|error,
+       {status: banked|rejected|contradiction|ambiguity_exhausted|exists|error,
         dest, spec, winner, report, ...}.
 
     confirm_cb(spec)->spec   : Stage-1 hook (auto mode). Defaults to confirm_mod.
     approve_cb(spec,cand,checks,unkilled)->True/RejectError : Stage-5 hook.
+    precheck_cb(hit)->bool   : pre-check hook; True = author anyway, False = stop.
     """
     staging_root = staging_root or os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_staging")
+
+    # ---- Pre-check (v0.1.1): does an existing pack already do this? ----
+    # Advisory only -- never auto-installs, never auto-suppresses authoring.
+    # Needs a human to confirm, so it runs only when interactive (or a cb drives it).
+    if precheck and (interactive or precheck_cb is not None):
+        hit = precheck_mod.find_existing(ask, model=model, client=client, log=log)
+        if hit:
+            author_anyway = (precheck_cb(hit) if precheck_cb is not None
+                             else precheck_mod.prompt_existing(hit))
+            if not author_anyway:
+                return {"status": "exists", "ask": ask, "pack": hit,
+                        "detail": f"existing pack suggested: {hit['title']} ({hit['url']})"}
 
     # ---- Stage 0: elaborate ----
     log("[0] elaborating spec ...")
@@ -177,6 +192,8 @@ def main(argv=None):
     ap.add_argument("--model", default="claude-sonnet-4-6")
     ap.add_argument("--yes", action="store_true", help="non-interactive: auto-confirm + auto-approve")
     ap.add_argument("--force", action="store_true", help="overwrite an existing banked pack")
+    ap.add_argument("--no-precheck", action="store_true",
+                    help="skip the 'does this already exist?' retrieval pre-check")
     args = ap.parse_args(argv)
 
     interactive = not args.yes
@@ -187,10 +204,12 @@ def main(argv=None):
         approve_cb = lambda *a, **k: True
 
     res = run_author(args.ask, n=args.n, model=args.model, interactive=interactive,
-                     confirm_cb=confirm_cb, approve_cb=approve_cb, force_bank=args.force)
+                     confirm_cb=confirm_cb, approve_cb=approve_cb, force_bank=args.force,
+                     precheck=not args.no_precheck)
     print("\n=== RESULT ===")
     print(res["status"], "--", res.get("detail", res.get("dest", "")))
-    return 0 if res["status"] == "banked" else 1
+    # 'exists' is a success: the user chose to install an existing pack instead.
+    return 0 if res["status"] in ("banked", "exists") else 1
 
 
 def _set_confirmed(spec):

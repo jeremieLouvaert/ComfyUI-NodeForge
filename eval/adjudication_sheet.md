@@ -55,5 +55,21 @@ Write your verdict in the Verdict column. Leave the Score column for reference �
 | 25 | An outpainting node equivalent to the stablediffusion-infinity 'infinite canvas' project | ComfyUI-Infinity-Canvas | https://github.com/kreonxv/ComfyUI-Infinity-Canvas | 0.85 | yes — explicitly infinite canvas inpainting extension inspired by stablediffusion-infinity |
 | 26 | A text-to-music node that runs on an 8GB GPU | ComfyUI InspireMusic Plugin | https://github.com/vanche1212/ComfyUI-InspireMusic | 0.90 | partial — text-to-music via InspireMusic confirmed; 8GB GPU fit not explicitly verified |
 | 27 | A node to call Anthropic Claude (describe images / transform text) inside ComfyUI | ComfyUI and Claude | https://github.com/tkreuziger/comfyui-claude | 1.00 | yes — custom nodes using Claude for describing images and transforming texts; genuine recall win |
+
+---
+
+## tau_high FIRMING — 5-row live-README spot-check (2026-06-01)
+
+Fresh-eyes Sonnet adjudicator, blind to the verdicts above, re-judged 5 rows against the **current** real READMEs to firm `tau_high`. Result: **tau_high = 0.95 firmed** (was provisional).
+
+| # | Score | Sheet verdict | Live-README verdict | Note |
+|---|-------|---------------|---------------------|------|
+| 1  | 0.92 | no      | **no** (held)        | Praveen's tools: fixed 3-way split / select-last / skip-first only; no nth-INDEX extractor. Did NOT flip → first "no" stays at 0.92 → cut stays 0.95. |
+| 4  | 0.70 | yes     | yes                  | A2V Multi Image Composite: offset + rotation + scale + blend confirmed. Below band; no effect on tau_high. |
+| 15 | 0.90 | partial | **no** (worse)       | SD3-nodes is a *renamed wrapper* of core nodes (SD3 Load Checkpoint/CLIPs/Empty Latent), not TripleCLIPLoader etc. — a misdirect. Confirms 0.90 would admit a bad rec → do NOT drop below 0.95. |
+| 23 | 0.99 | yes     | **yes** (re-verified)| Eses levels node: Black/Mid/White point sliders + output range. ≥0.95 band holds. |
+| 27 | 1.00 | yes     | **yes** (re-verified)| comfyui-claude: DescribeImage + TransformText via Anthropic API. ≥0.95 band holds. |
+
+**Conclusion:** the 0.92→0.95 question (Decision 2 residual #2) resolves to **keep 0.95**. Row 1 held "no"; row 15 flipping partial→no strengthens the precision cut; both in-band rows (23, 27) re-verified "yes" against live READMEs. `tau_high=0.95` is the wired value for the v0.1.1 pre-check. `tau_low=0.50` unchanged (not used by the thin pre-check, which only fires the HIGH band).
 | 28 | Take a screen grab / render of the output of the Preview 3D and Animation node | ComfyUI-gaussian_preview | https://github.com/yichengup/ComfyUI-gaussian_preview | 0.85 | partial — previews/records Gaussian splatting; ask is about Preview 3D and Animation node specifically |
 | 29 | Pipe a dynamic filename prefix into a Save Image node via a text/concatenate node | Load Image With Filename | https://github.com/kymeraj/comfyui-load-image-with-filename | 0.65 | partial — outputs source filename; ask is about building arbitrary dynamic prefix via concatenation |
