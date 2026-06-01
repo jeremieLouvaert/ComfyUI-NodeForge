@@ -73,3 +73,54 @@ Fresh-eyes Sonnet adjudicator, blind to the verdicts above, re-judged 5 rows aga
 **Conclusion:** the 0.92→0.95 question (Decision 2 residual #2) resolves to **keep 0.95**. Row 1 held "no"; row 15 flipping partial→no strengthens the precision cut; both in-band rows (23, 27) re-verified "yes" against live READMEs. `tau_high=0.95` is the wired value for the v0.1.1 pre-check. `tau_low=0.50` unchanged (not used by the thin pre-check, which only fires the HIGH band).
 | 28 | Take a screen grab / render of the output of the Preview 3D and Animation node | ComfyUI-gaussian_preview | https://github.com/yichengup/ComfyUI-gaussian_preview | 0.85 | partial — previews/records Gaussian splatting; ask is about Preview 3D and Animation node specifically |
 | 29 | Pipe a dynamic filename prefix into a Save Image node via a text/concatenate node | Load Image With Filename | https://github.com/kymeraj/comfyui-load-image-with-filename | 0.65 | partial — outputs source filename; ask is about building arbitrary dynamic prefix via concatenation |
+
+---
+
+## MIDDLE band — three-band re-read (2026-06-01)
+
+Before wiring the full HIGH/MIDDLE/LOW router (v0.2), the trustworthy MIDDLE check is NOT a new
+expensive eval — it is a **three-band re-read of the 29 rows above** through the router's lens
+(`tau_high=0.95`, `tau_low=0.50`). This is the analog of the "tau_high FIRMING" section: it asks
+"does the MIDDLE band, as designed, hold up against the adjudicated verdicts?" rather than
+re-running the confounded automated metric.
+
+Mapping every `(score, verdict)` to its band:
+
+| Band | Rows (by #) | Count | Verdict breakdown |
+|------|-------------|-------|-------------------|
+| **HIGH** (≥0.95) | 2, 5, 6, 8, 16, 23, 27 | 7 | **7/7 yes** (already firmed — recommend-install precision 100% on the sample) |
+| **MIDDLE** [0.50, 0.95) | 1, 3, 4, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 22, 24, 25, 26, 28, 29 | 20 | 5 yes / **13 partial** / 2 no |
+| **LOW** (<0.50) | 20 (0.40), 21 (0.30) | 2 | **2/2 no → author** |
+
+**Decisive findings (the gate):**
+
+1. **All 13 "partial" adjudications land in MIDDLE — every one.** A "partial" verdict is by
+   definition "related / plausibly helps but not a clean match" = exactly MIDDLE's promise:
+   *show the candidate AND offer to author; the human picks*. The partials are not a confound to
+   be cleaned up; they are the MIDDLE band's native population.
+
+2. **Zero "yes" rows fall below `tau_low`.** The one teeth-check that matters — is any clear
+   existing match (a "yes") silently routed to AUTHOR, i.e. a discovery miss / duplicate-author? —
+   **passes**: the only sub-0.50 rows are 20 and 21, both "no" (genuine author cases). No clean
+   match is suppressed on this sample.
+
+3. **MIDDLE is the structural resolution of the eval confound.** The confound that collapsed the
+   *binary* install-precision metric (0.12) was the forced install-vs-author choice on rows that
+   are genuinely neither (non-unique packs, unresolved-thread mislabels). Those exact rows — the
+   5 mid-yes + 13 partial + 2 mid-no — **all land in MIDDLE**, the band that makes **no** binary
+   claim and defers to the human. The three-band router does not need the confounded numbers
+   resolved; it *routes around* the confound by construction. A "yes" landing in MIDDLE is not a
+   failure (we showed the right pack as a candidate; the human installs it — just without HIGH's
+   auto-recommend convenience); a "no" in MIDDLE is the band working (weak candidate shown
+   alongside an author offer; human authors).
+
+**`tau_low` placement (firming):** the n=29 data places 0.50 cleanly — 2/2 below it are author
+cases; the partials worth showing sit at/above it. The asymmetry is deliberately **wide-MIDDLE**:
+the costly error is a *too-high* tau_low that silently authors a duplicate of an existing node
+(the Probe-2 dominant pain — discovery), not a *too-low* one that shows a weak candidate the human
+ignores. So `tau_low=0.50` is **kept** (provisional on n=29, wide-by-design). Reversible lever if a
+future spot-check shows sub-0.55 candidates are pure noise: nudge up; the data has not shown that.
+
+**Conclusion:** the MIDDLE band is validated for wiring **without** a HIGH-grade firming pass,
+because it makes no precision-critical claim — it is the human-adjudication band by construction,
+and it is precisely what makes the known eval confound not matter.

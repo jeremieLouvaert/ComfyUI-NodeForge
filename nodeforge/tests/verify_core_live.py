@@ -1,10 +1,12 @@
 """
-Live e2e check of the wired v0.2 core-node precedence in precheck.find_existing
-(real Manager + core index, real Sonnet rerank). Costs ~3 rerank calls.
+Live e2e check of the wired v0.2 three-band router (incl. core precedence) in
+precheck.find_existing (real Manager + core index, real Sonnet rerank). Costs
+~4 rerank calls.
 
-Proves the live contract:
-  - a core-answerable ask  -> kind=='core' (built-in surfaced, no pack/author)
-  - a genuine authoring ask -> None (falls through to author; never over-claims)
+Proves the live band contract:
+  - a core-answerable ask   -> band 'core'   (built-in surfaced, no pack/author)
+  - a partial-match ask     -> band 'middle' (1-3 candidates + offer author)
+  - a genuine authoring ask -> band 'low'    (silent -> author; never over-claims)
 Run with the embedded python (needs ANTHROPIC_API_KEY).
 """
 import os
@@ -23,22 +25,32 @@ from nodeforge import precheck  # noqa: E402
 # still out-score core ImageScale at rerank (a soft cost: advisory, never
 # auto-installed, not a wrong answer). Not asserted, precisely because it is a
 # known non-guarantee.
+# (ask, expected band). 'core'/'low' are firm; 'middle' is the partial-match
+# band -- a generic detect/crop-and-paste-back ask (adjudication row 17, scored
+# 0.65 partial = related face/object pack but not a clean general match), which
+# is exactly MIDDLE's native population (show candidates + offer author).
 CASES = [
     ("Where to get the SD3 nodes (TripleCLIPLoader, ModelSamplingSD3, EmptySD3LatentImage)", "core"),
     ("Where the 'Apply ControlNet (Advanced)' node went / why it is missing", "core"),
+    ("A general-purpose detect/crop-out a region and paste it back after editing, for any object", "middle"),
     # genuine authoring: no built-in and no confident pack (eval top_pack ~0.40)
-    ("Pixel-perfect 90-degree rotation and mirroring of a rendered image, not latent", None),
+    ("Pixel-perfect 90-degree rotation and mirroring of a rendered image, not latent", "low"),
 ]
 
 if __name__ == "__main__":
     ok = True
     for ask, expect in CASES:
-        hit = precheck.find_existing(ask)
-        kind = hit["kind"] if hit else None
-        node = (hit.get("node_name") or hit.get("title")) if hit else "-"
-        good = (kind == expect)
+        routed = precheck.find_existing(ask)
+        band = routed.get("band", "low")
+        good = (band == expect)
         ok = ok and good
-        print(f"[{'OK ' if good else 'XX '}] expect={str(expect):6s} got={str(kind):6s} "
-              f"({node} {hit['score']:.2f})" if hit else
-              f"[{'OK ' if good else 'XX '}] expect={str(expect):6s} got=None -> author")
+        if band == "middle":
+            names = ", ".join(f"{c['title']} {c['score']:.2f}" for c in routed["candidates"])
+            detail = f"[{names}]"
+        elif routed.get("hit"):
+            h = routed["hit"]
+            detail = f"({h.get('node_name') or h.get('title')} {h['score']:.2f})"
+        else:
+            detail = "-> author"
+        print(f"[{'OK ' if good else 'XX '}] expect={expect:6s} got={band:6s} {detail}")
     print("verify_core_live:", "ALL PASS" if ok else "FAIL")

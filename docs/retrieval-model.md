@@ -156,8 +156,26 @@ node (0/6 in the eval). Closed in v0.2:
   phrasings (improved by the built-in-preference fix but not guaranteed live — a
   soft cost). tau_core is provisional on n=29.
 
-## 6. Deferred to v0.2+ / later
+## 6. Full three-band router (v0.2, BUILT 2026-06-01)
+
+The thin HIGH-band pre-check was promoted to the full HIGH/MIDDLE/LOW router
+(`precheck._route` / `find_existing`), composing with the core-node precedence above:
+- **HIGH** (≥ tau_high=0.95) → recommend the one strong match.
+- **MIDDLE** (tau_low=0.50 ≤ score < tau_high) → show 1–3 related **custom** packs
+  AND offer to author; the human picks via a numbered menu (`prompt_middle`). Health
+  (stars/downloads/deprecated) is surfaced best-effort via `build_index.registry_health`
+  and a positively-deprecated/archived candidate is hard-excluded; a sub-tau_core core
+  node is dropped (a low-confidence "maybe built-in" is uninstallable noise).
+- **LOW** (< tau_low) → author silently. Core ≥ tau_core still wins over any band.
+- The **24h freshness cache** was already in `build_index.load_manager_index` (TTL +
+  stale-fallback-with-age-warning).
+- **Gate:** validated by a three-band re-read of the n=29 adjudication
+  (`eval/adjudication_sheet.md`) — all 13 "partial" verdicts land in MIDDLE and 0 "yes"
+  falls below tau_low, so MIDDLE (which defers to the human, making no binary claim) is
+  the structural answer to the known eval confound and needs no HIGH-grade firming.
+  tau_low=0.50 kept wide-by-design. Offline `test_precheck.py` + live
+  `verify_core_live.py` pass.
+
+## 7. Deferred to later
 - Node-level (not pack-level) match granularity for CUSTOM packs.
-- The full three-band router + MIDDLE band + 24h freshness cache (separate v0.2
-  item; the live pre-check is still the thin HIGH-band + this core path).
 - Anything requiring richer registry node metadata than v0.1 verifies exists.

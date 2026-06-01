@@ -52,6 +52,77 @@ def test_pick_core_precedence():
     assert hit["kind"] == "custom" and hit["title"] == "SomePack", "sub-tau core -> custom fallback"
 
 
+def _custom_row(score, title="P", url="https://github.com/o/r"):
+    return {"id": title, "score": score, "reason": "r", "source": "custom",
+            "pack": {"title": title, "reference": url}}
+
+
+def test_route_bands():
+    # band boundaries (tau_high=0.95, tau_low=0.50)
+    assert precheck._route([])["band"] == "low",                "empty -> low (author)"
+    assert precheck._route(_scored(0.95))["band"] == "high",    "0.95 -> high"
+    assert precheck._route(_scored(0.94))["band"] == "middle",  "0.94 -> middle"
+    assert precheck._route(_scored(0.50))["band"] == "middle",  "0.50 inclusive lower bound"
+    assert precheck._route(_scored(0.49))["band"] == "low",     "0.49 below tau_low -> low"
+    # CORE PRECEDENCE composes with MIDDLE: a confident built-in beats a middle
+    # custom band (don't offer-to-author what ComfyUI ships).
+    r = precheck._route([_custom_row(0.80), _core_row(0.88)], 0.95, 0.50, 0.85)
+    assert r["band"] == "core" and r["hit"]["node_name"] == "ImageScale", "core beats middle custom"
+    # a SUB-tau core is dropped (not shown as a middle candidate -- can't install it)
+    r = precheck._route([_custom_row(0.80), _core_row(0.70)], 0.95, 0.50, 0.85)
+    assert r["band"] == "middle" and len(r["candidates"]) == 1 and r["candidates"][0]["kind"] == "custom"
+
+
+def test_route_middle_assembly():
+    rows = [_custom_row(0.92, "A"), _custom_row(0.71, "B"), _custom_row(0.60, "C"),
+            _custom_row(0.55, "D"), _custom_row(0.49, "E")]
+    r = precheck._route(rows)
+    assert r["band"] == "middle"
+    titles = [c["title"] for c in r["candidates"]]
+    assert titles == ["A", "B", "C"],                    "top-3, sorted desc"
+    assert all(0.50 <= c["score"] < 0.95 for c in r["candidates"])
+    assert "E" not in titles,                            "0.49 (below tau_low) never shown (neg control)"
+    assert "D" not in titles,                            "only top-3 shown"
+
+
+def test_enrich_health_excludes_deprecated():
+    # _enrich_health imports build_index.registry_health at call time; patch it.
+    sys.path.insert(0, precheck._EVAL)
+    import build_index  # noqa: E402
+    orig = build_index.registry_health
+    build_index.registry_health = lambda *a, **k: {
+        "n1": {"repository": "https://github.com/o/dep.git", "deprecated": True,
+               "github_stars": 3, "downloads": 5, "status": ""},
+        "n2": {"repository": "https://github.com/o/ok", "deprecated": False,
+               "github_stars": 40, "downloads": 900, "status": "NodeStatusActive"},
+    }
+    try:
+        cands = [{"title": "Dep", "score": 0.7, "url": "https://github.com/o/dep", "reason": ""},
+                 {"title": "Ok", "score": 0.6, "url": "https://github.com/o/ok", "reason": ""}]
+        out = precheck._enrich_health("x", cands, exclude_deprecated=True)
+        assert [c["title"] for c in out] == ["Ok"],     "deprecated hard-excluded from middle"
+        assert out[0]["health"]["stars"] == 40,         "health attached to the survivor"
+        # attach-only path (HIGH) keeps the deprecated one, flagged not hidden
+        out2 = precheck._enrich_health("x", cands, exclude_deprecated=False)
+        assert len(out2) == 2 and out2[0]["health"]["deprecated"] is True
+        # a candidate with no registry match is passed through unchanged (no exclude on ABSENCE)
+        none_match = [{"title": "Z", "score": 0.6, "url": "https://github.com/o/unknown", "reason": ""}]
+        assert precheck._enrich_health("x", none_match, exclude_deprecated=True) == none_match
+    finally:
+        build_index.registry_health = orig
+
+
+def test_prompt_middle():
+    cands = [{"title": "A", "score": 0.80, "url": "", "reason": ""},
+             {"title": "B", "score": 0.60, "url": "", "reason": ""}]
+    assert precheck.prompt_middle(cands, _input=lambda *_: "") == (True, None),  "empty default = author"
+    assert precheck.prompt_middle(cands, _input=lambda *_: "a") == (True, None), "'a' = author"
+    aa, ch = precheck.prompt_middle(cands, _input=lambda *_: "2")
+    assert aa is False and ch["title"] == "B",                                   "'2' = stop + pick B"
+    assert precheck.prompt_middle(cands, _input=lambda *_: "s") == (False, None), "'s' = stop, no author"
+    assert precheck.prompt_middle(cands, _input=lambda *_: "9") == (True, None), "out-of-range -> author"
+
+
 def test_prompt_defaults():
     hit = {"kind": "custom", "title": "P", "score": 0.99, "url": "", "reason": ""}
     assert precheck.prompt_existing(hit, _input=lambda *_: "") is True,   "empty default = author anyway"
@@ -99,6 +170,10 @@ def test_gate_skipped_noninteractive(monkeypatch_done=[]):
 if __name__ == "__main__":
     test_pick_band()
     test_pick_core_precedence()
+    test_route_bands()
+    test_route_middle_assembly()
+    test_enrich_health_excludes_deprecated()
+    test_prompt_middle()
     test_prompt_defaults()
     test_gate_skipped_noninteractive()
     print("test_precheck: ALL PASS")
