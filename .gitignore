@@ -32,5 +32,11 @@ benchmark/results/
 
 # Retrieval-eval per-run artifacts + fetched index caches (regenerated each run)
 eval/results/
-eval/index_cache/
 eval/_smoke.py
+# Ignore index_cache CONTENTS (transient fetched caches like manager.json) but
+# DO commit the core-node snapshot: a version-stamped vendored index that needs a
+# local ComfyUI to regenerate (not a URL refetch), so the v0.2 core-node path
+# works out-of-box on a fresh clone. build_core_index.py refreshes it in place.
+# (Must ignore /* not the dir itself, else git won't descend to honor the !file.)
+eval/index_cache/*
+!eval/index_cache/core_nodes.json

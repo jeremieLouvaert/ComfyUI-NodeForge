@@ -13,6 +13,11 @@ thresholds.
   other 8 (other excluded from scoring).
 - `build_index.py` — fetch + 24h-TTL-cache the Manager `custom-node-list.json`
   (5048 packs, schema confirmed live) + registry health lookups.
+- `build_core_index.py` — snapshot the **canonical core-node set** (v0.2 core-node
+  path) straight from the ComfyUI source registry (`import nodes` +
+  `init_builtin_extra_nodes()`, custom_nodes excluded). Run with the embedded
+  python; version-stamped JSON at `index_cache/core_nodes.json` (483 nodes,
+  ComfyUI 0.19.5). Regenerate after a ComfyUI update.
 - `retrieve.py` — the stage under test: `recall()` (lexical, no API) → `rerank()`
   (one LLM call, 0..1 fit score) → `route()` (HIGH/MIDDLE/LOW; install always
   human-confirmed).
@@ -53,7 +58,48 @@ a gate is for. Two confounds, both real findings:
 Confirmed cleanly (not confounded):
 - **Core-node-awareness gap: 0/6.** None of the 6 asks whose true answer is a
   built-in core/frontend node were found in the *custom* index — expected, and it
-  motivates a core-node path in v0.2.
+  motivated the core-node path (below).
+
+## Core-node path (v0.2, 2026-06-01) — BUILT + WIRED
+
+Closes the 0/6 gap: a `core_nodes.json` index (483 nodes, `build_core_index.py`)
+is folded into the SAME `recall → rerank` as a tagged source, and a precedence
+layer (`retrieve.pick_best` / `precheck._pick`) makes a confident built-in BEAT a
+third-party pack rec — so "where are the SD3 nodes" resolves to core, not a
+wrapper. Re-run scores (`run_eval.py`, claude-sonnet-4-6, n=29, ~$0.78):
+
+- **Recall:** all 5 backend core targets surface in lexical recall (plural-stem +
+  a structural resize-family inference: width/height inputs ⇒ a resizer, which
+  rescues ImageScale — named "Upscale Image" — from rank 57). After rerank (with a
+  built-in-preference instruction: judge a core node on capability, ignore a
+  misleading name, don't rank it below a pack that does the same), **4/5 are firm
+  hits at tau_core=0.85**: SD3 `EmptySD3LatentImage` 1.00, `ControlNetApplyAdvanced`
+  0.95, `ImageScale`/resize 0.95, `ImageToMask` (batch) 0.85. The 5th,
+  `canvas_to_mask → ImageToMask` 0.40, falls through the SAFE way (correctly
+  *partial* — needs a paint-canvas widget too). The 6th core ask
+  (`loadimage_mask_editor_button`) is a **frontend UI button, no backend node —
+  documented out of scope.**
+- **Precision (clean):** every custom/authoring ask scoring a core node ≥0.85 was
+  a GENUINE built-in — `StringConcatenate` (0.90, the `dynamic_filename_prefix`
+  ask literally wants a concatenate node) and `SplitImageToTileList` (0.90, a real
+  core tiler) — i.e. **zero true false positives**, plus 2 bonus discoveries on
+  asks mislabeled non-core (the unresolved-thread confound again).
+- **No pack regression:** custom-pack top scores unchanged (color_match 0.97,
+  anime 0.95) — the merge is safe.
+- **tau_core = 0.85** (PROVISIONAL, n=29; in-band cases hand-verified). Less
+  conservative than tau_high=0.95: a wrong "built-in" hint misdirects but carries
+  no third-party install/trust cost, and the user still chooses (default = author).
+- **Live-verified** (`nodeforge/tests/verify_core_live.py`): SD3 + ControlNet
+  resolve to core, a genuine authoring ask falls through to author.
+
+**Documented soft-limit:** generic image RESIZE is IMPROVED by the built-in-
+preference fix (ImageScale 0.90→0.95, batch 0.70→0.85, recall 3/5→4/5) but NOT
+guaranteed live — for that ultra-common op a polished custom resize pack can still
+out-score core `ImageScale` at rerank on some phrasings (a soft cost: advisory,
+never auto-installed, not a wrong answer). Core precedence reliably wins for
+DISTINCTIVE core nodes (SD3, ControlNet, mask conversion). Tried twice at the
+rerank layer (capability description + built-in-preference prompt); stopped there
+per the Newson-grain "don't keep patching" rule.
 
 ## What this gates (honest)
 - **Do NOT set the router thresholds from these numbers.** Threshold calibration

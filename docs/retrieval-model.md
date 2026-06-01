@@ -127,6 +127,37 @@ a bar.
 retrieval-skewed), so the eval is only as good as its labels -- augment the label
 set before trusting tau.
 
-## 5. Deferred to v0.2+
-- Node-level (not pack-level) match granularity.
+## 5. Core-node path (v0.2, BUILT 2026-06-01)
+
+The v0.1 custom index has no core nodes, so asks answered by a ComfyUI built-in
+misdirected to a custom wrapper pack (row-15 SD3) or to authoring a redundant
+node (0/6 in the eval). Closed in v0.2:
+- **Index:** `eval/build_core_index.py` snapshots the canonical core set from the
+  ComfyUI source registry (`import nodes` + `init_builtin_extra_nodes()`,
+  custom_nodes excluded) to `eval/index_cache/core_nodes.json` (483 nodes,
+  version-stamped). Authoritative + regenerable; NOT live `/object_info` (which
+  can't separate core from a user's installed custom packs).
+- **Match:** core entries fold into the SAME `recall → rerank` as a tagged source
+  (one LLM call). Core metadata is terse, so recall is plural-stemmed and adds
+  structurally-inferred capability words (width/height inputs ⇒ resizer); the
+  rerank-facing description gets the same capability sentence so a misleadingly-
+  named node (ImageScale = "Upscale Image") is judged on capability. The rerank
+  prompt carries a built-in-preference instruction (judge a core node on
+  capability, ignore a terse/odd name, don't rank it below a pack that does the
+  same) — precision-guarded (a non-matching core node still scores low; eval
+  confirmed no inflation / no new false positives / no pack regression).
+- **Route (precedence):** a core node clearing `tau_core` (0.85, precision-biased)
+  BEATS a custom-pack rec — a built-in needs no install. Wired into the live
+  `precheck.py`. Proven: eval (4/5 firm backend hits, 0 true false positives, no
+  pack regression) + `verify_core_live.py`.
+- **Limits (honest):** frontend-only UI features (e.g. a mask-editor button) have
+  no backend node and are out of scope; for ultra-common ops (generic resize) a
+  polished custom pack may still out-rank core ImageScale at rerank on some
+  phrasings (improved by the built-in-preference fix but not guaranteed live — a
+  soft cost). tau_core is provisional on n=29.
+
+## 6. Deferred to v0.2+ / later
+- Node-level (not pack-level) match granularity for CUSTOM packs.
+- The full three-band router + MIDDLE band + 24h freshness cache (separate v0.2
+  item; the live pre-check is still the thin HIGH-band + this core path).
 - Anything requiring richer registry node metadata than v0.1 verifies exists.

@@ -63,6 +63,14 @@ SPECIFIC operation asked for. Reserve >=0.7 for a real match you would stake an 
 It is correct and expected to score EVERY candidate low when none of them actually do the asked \
 thing -- do not inflate a weak match just because it is the best of a bad list.
 
+Built-in core nodes: some candidates are BUILT-IN ComfyUI core nodes (their description begins \
+"Built-in ComfyUI core node"). Judge a core node ONLY on whether it performs the asked operation, \
+IGNORING a terse or counterintuitive display name -- e.g. a core node named "Upscale Image" that \
+takes width+height inputs performs arbitrary resize/downscale, so for a resize ask it is a full \
+match. This is NOT a license to inflate: a core node that does not do the asked thing still scores \
+low. But when a core node genuinely performs the asked operation, score it on that merit and do \
+NOT rate it below a third-party pack that does the same thing -- the user already has the built-in.
+
 Output ONLY a JSON array, one object per candidate you were given, in any order:
 [{"id": "<pack id or title>", "score": <float>, "reason": "<one short clause>"}]
 No prose, no markdown fences."""
@@ -93,17 +101,139 @@ def rerank(ask, candidates, model="claude-sonnet-4-6", max_tokens=1500):
     out = []
     for r in rows:
         key = str(r.get("id", ""))
-        pack = by_key.get(key)
-        if pack is None:
+        cand = by_key.get(key)
+        if cand is None:
             # model may have lightly renamed the id; fuzzy-match on title
             for k2, p2 in by_key.items():
                 if key and (key in k2 or k2 in key):
-                    pack = p2
+                    cand = p2
                     break
+        # source tag drives core-vs-custom precedence downstream. Custom pack
+        # candidates (from recall()) are raw Manager dicts with no "source" key
+        # -> default "custom"; core candidates (core_to_candidate) carry "core".
+        source = (cand or {}).get("source", "custom")
         out.append({"id": key, "score": float(r.get("score", 0.0)),
-                    "reason": r.get("reason", ""), "pack": pack})
+                    "reason": r.get("reason", ""),
+                    "source": source,
+                    "pack": cand if source == "custom" else None,
+                    "core": (cand or {}).get("_core") if source == "core" else None})
     out.sort(key=lambda d: d["score"], reverse=True)
     return out, resp.usage
+
+
+# --- v0.2 core-node path (decisions.md "[2026-06-01] NodeForge core-node path") ---
+# Core nodes ship with ComfyUI, so a confident core match should answer "you
+# already have this" and take PRECEDENCE over recommending a third-party pack
+# (the row-15 SD3 wrapper-misdirect). Core entries come from build_core_index.py
+# and are folded into the SAME recall->rerank as a tagged source (one LLM call);
+# the rerank prompt is unchanged -- the synthesized description below carries the
+# "built-in core node" signal, and precedence lives in pick_best()/_pick, not the
+# prompt (keeps the proven pack-scoring path untouched).
+
+# Structural capability inference: terse/misleadingly-named core nodes don't
+# carry synonym words. A node that takes width+height (or a scale/megapixel
+# input) IS a resizer regardless of its display name (e.g. ImageScale displays
+# as "Upscale Image" but does arbitrary resize). This adds the resize-family
+# vocabulary structurally (from the input signature), NOT via a hand-list of
+# node names -- it generalizes to any resizer, core or custom. Precision is still
+# gated by the LLM rerank + tau_core; this only widens RECALL.
+_RESIZE_INPUTS = {"scale_by", "megapixels", "largest_size", "resolution", "resolution_steps"}
+_RESIZE_TOKENS = ["resize", "rescale", "scale", "downscale", "downsize", "size", "dimension", "resolution"]
+
+
+def _capability_tokens(e):
+    names = set(e.get("input_names", []))
+    out = []
+    if {"width", "height"} <= names or (names & _RESIZE_INPUTS):
+        out += _RESIZE_TOKENS
+    return out
+
+
+def _core_haystack(e):
+    """Recall signal for a core node. Core DESCRIPTION is usually empty, so lean
+    on display_name + category + input/output names + socket types (D2), plus
+    structurally-inferred capability words (e.g. resize family for width/height
+    nodes)."""
+    parts = [e.get("display_name", ""), e.get("name", ""),
+             (e.get("category", "") or "").replace("/", " "),
+             " ".join(e.get("input_names", [])), " ".join(e.get("input_types", [])),
+             " ".join(e.get("output_types", [])), " ".join(e.get("output_names", [])),
+             e.get("description", ""), " ".join(_capability_tokens(e))]
+    return _tokens(" ".join(parts))
+
+
+def _stem_set(tokens):
+    """Add a naive singular form (masks->mask, boxes->box) so plural asks match
+    terse singular core metadata. Scoped to recall_core ONLY -- the shared
+    _tokens (and the proven pack path) is untouched."""
+    out = set()
+    for t in tokens:
+        out.add(t)
+        if len(t) > 4 and t.endswith("es"):
+            out.add(t[:-2])
+        elif len(t) > 3 and t.endswith("s"):
+            out.add(t[:-1])
+    return out
+
+
+def recall_core(ask, core_nodes, k=25):
+    """Cheap lexical recall over the core-node index. Returns up to k core entry
+    dicts. No API. Plural-stemmed (masks~mask) and output-type/display-name hits
+    are weighted (a 'MASK' output is a strong signal for a 'make a mask' ask).
+    k is generous: core metadata is terse so recall is brittle -- surface wide
+    and let the LLM rerank + tau_core supply the precision."""
+    q = _stem_set(_tokens(ask))
+    if not q:
+        return []
+    scored = []
+    for e in core_nodes:
+        hay = _stem_set(_core_haystack(e))
+        if not hay:
+            continue
+        overlap = len(q & hay)
+        if overlap == 0:
+            continue
+        strong = _stem_set(set(_tokens(e.get("display_name", "")))
+                           | set(t.lower() for t in e.get("output_types", []))
+                           | set(t.lower() for t in e.get("output_names", [])))
+        strong_hits = len(q & strong)
+        scored.append((overlap + strong_hits, e))
+    scored.sort(key=lambda t: t[0], reverse=True)
+    return [e for _, e in scored[:k]]
+
+
+def _capability_phrase(e):
+    """A natural-language capability sentence from the structural signature, so
+    the RERANK (not just recall) can judge a terse/misleadingly-named core node.
+    E.g. ImageScale displays as 'Upscale Image' but width+height => it resizes;
+    without this the reranker under-scores it and a clearly-described third-party
+    resize pack wrongly wins (the exact misdirect this path fixes)."""
+    if _capability_tokens(e):  # currently fires for resizers (width/height/scale inputs)
+        return " It resizes, rescales, downscales or upscales images to a target size/resolution."
+    return ""
+
+
+def core_to_candidate(e):
+    """Shape a core-node entry as a rerank candidate (parallel to a pack dict).
+    The description is synthesized from the structured fields so the reranker can
+    judge capability without a real prose description."""
+    desc = (f"Built-in ComfyUI core node (category {e.get('category','')}). "
+            f"Inputs: {', '.join(e.get('input_names', [])) or 'n/a'}. "
+            f"Outputs: {', '.join(e.get('output_types', [])) or 'n/a'}.")
+    if e.get("description"):
+        desc += " " + e["description"]
+    desc += _capability_phrase(e)
+    return {"id": f"core:{e.get('name','')}", "title": e.get("display_name", e.get("name", "")),
+            "description": desc, "source": "core", "_core": e}
+
+
+def pick_best(scored):
+    """From a rerank result, return (best_core_row, best_custom_row) -- the
+    highest-scored row of each source (scored is sorted desc, so the first of
+    each source is its best). Either may be None."""
+    best_core = next((s for s in scored if s.get("source") == "core"), None)
+    best_custom = next((s for s in scored if s.get("source") == "custom"), None)
+    return best_core, best_custom
 
 
 def route(scored, tau_high, tau_low):

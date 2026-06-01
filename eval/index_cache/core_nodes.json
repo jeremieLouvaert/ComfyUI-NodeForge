@@ -1,0 +1,12179 @@
+{
+"fetched_at": 1780317532.8079116,
+"comfyui_version": "0.19.5",
+"count": 483,
+"core_nodes": [
+{
+"name": "APG",
+"display_name": "Adaptive Projected Guidance",
+"category": "sampling/custom_sampling",
+"description": "",
+"input_names": [
+"model",
+"eta",
+"norm_threshold",
+"momentum"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AddNoise",
+"display_name": "AddNoise",
+"category": "_for_testing/custom_sampling/noise",
+"description": "",
+"input_names": [
+"model",
+"noise",
+"sigmas",
+"latent_image"
+],
+"input_types": [
+"LATENT",
+"MODEL",
+"NOISE",
+"SIGMAS"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AddTextPrefix",
+"display_name": "Add Text Prefix",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts",
+"prefix"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AddTextSuffix",
+"display_name": "Add Text Suffix",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts",
+"suffix"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AdjustBrightness",
+"display_name": "Adjust Brightness",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"factor"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AdjustContrast",
+"display_name": "Adjust Contrast",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"factor"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AlignYourStepsScheduler",
+"display_name": "AlignYourStepsScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"model_type",
+"steps",
+"denoise"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioAdjustVolume",
+"display_name": "Audio Adjust Volume",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"volume"
+],
+"input_types": [
+"AUDIO",
+"INT"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioConcat",
+"display_name": "Audio Concat",
+"category": "audio",
+"description": "Concatenates the audio1 to audio2 in the specified direction.",
+"input_names": [
+"audio1",
+"audio2",
+"direction"
+],
+"input_types": [
+"AUDIO",
+"COMBO"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioEncoderEncode",
+"display_name": "AudioEncoderEncode",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"audio_encoder",
+"audio"
+],
+"input_types": [
+"AUDIO",
+"AUDIO_ENCODER"
+],
+"output_types": [
+"AUDIO_ENCODER_OUTPUT"
+],
+"output_names": [
+"AUDIO_ENCODER_OUTPUT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioEncoderLoader",
+"display_name": "AudioEncoderLoader",
+"category": "loaders",
+"description": "",
+"input_names": [
+"audio_encoder_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"AUDIO_ENCODER"
+],
+"output_names": [
+"AUDIO_ENCODER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioEqualizer3Band",
+"display_name": "Audio Equalizer (3-Band)",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"low_gain_dB",
+"low_freq",
+"mid_gain_dB",
+"mid_freq",
+"mid_q",
+"high_gain_dB",
+"high_freq"
+],
+"input_types": [
+"AUDIO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "AudioMerge",
+"display_name": "Audio Merge",
+"category": "audio",
+"description": "Combine two audio tracks by overlaying their waveforms.",
+"input_names": [
+"audio1",
+"audio2",
+"merge_method"
+],
+"input_types": [
+"AUDIO",
+"COMBO"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BasicGuider",
+"display_name": "BasicGuider",
+"category": "sampling/custom_sampling/guiders",
+"description": "",
+"input_names": [
+"model",
+"conditioning"
+],
+"input_types": [
+"CONDITIONING",
+"MODEL"
+],
+"output_types": [
+"GUIDER"
+],
+"output_names": [
+"GUIDER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BasicScheduler",
+"display_name": "BasicScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"model",
+"scheduler",
+"steps",
+"denoise"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BatchImagesNode",
+"display_name": "Batch Images",
+"category": "image",
+"description": "",
+"input_names": [
+"images"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BatchLatentsNode",
+"display_name": "Batch Latents",
+"category": "latent",
+"description": "",
+"input_names": [
+"latents"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BatchMasksNode",
+"display_name": "Batch Masks",
+"category": "mask",
+"description": "",
+"input_names": [
+"masks"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "BetaSamplingScheduler",
+"display_name": "BetaSamplingScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"model",
+"steps",
+"alpha",
+"beta"
+],
+"input_types": [
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CFGGuider",
+"display_name": "CFGGuider",
+"category": "sampling/custom_sampling/guiders",
+"description": "",
+"input_names": [
+"model",
+"positive",
+"negative",
+"cfg"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"GUIDER"
+],
+"output_names": [
+"GUIDER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CFGNorm",
+"display_name": "CFGNorm",
+"category": "advanced/guidance",
+"description": "",
+"input_names": [
+"model",
+"strength"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"patched_model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CFGZeroStar",
+"display_name": "CFGZeroStar",
+"category": "advanced/guidance",
+"description": "",
+"input_names": [
+"model"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"patched_model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPAttentionMultiply",
+"display_name": "CLIPAttentionMultiply",
+"category": "_for_testing/attention_experiments",
+"description": "",
+"input_names": [
+"clip",
+"q",
+"k",
+"v",
+"out"
+],
+"input_types": [
+"CLIP",
+"FLOAT"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [
+"CLIP"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPLoader",
+"display_name": "Load CLIP",
+"category": "advanced/loaders",
+"description": "[Recipes]\n\nstable_diffusion: clip-l\nstable_cascade: clip-g\nsd3: t5 xxl/ clip-g / clip-l\nstable_audio: t5 base\nmochi: t5 xxl\ncosmos: old t5 xxl\nlumina2: gemma 2 2B\nwan: umt5 xxl\n hidream: llama-3.1 (Recommend) or t5\nomnigen2: qwen vl 2.5 3B",
+"input_names": [
+"clip_name",
+"type",
+"device"
+],
+"input_types": [],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPMergeAdd",
+"display_name": "CLIPMergeAdd",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"clip1",
+"clip2"
+],
+"input_types": [
+"CLIP"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPMergeSimple",
+"display_name": "CLIPMergeSimple",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"clip1",
+"clip2",
+"ratio"
+],
+"input_types": [
+"CLIP",
+"FLOAT"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPMergeSubtract",
+"display_name": "CLIPMergeSubtract",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"clip1",
+"clip2",
+"multiplier"
+],
+"input_types": [
+"CLIP",
+"FLOAT"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPSave",
+"display_name": "CLIPSave",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"clip",
+"filename_prefix"
+],
+"input_types": [
+"CLIP",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "CLIPSetLastLayer",
+"display_name": "CLIP Set Last Layer",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"clip",
+"stop_at_clip_layer"
+],
+"input_types": [
+"CLIP",
+"INT"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncode",
+"display_name": "CLIP Text Encode (Prompt)",
+"category": "conditioning",
+"description": "Encodes a text prompt using a CLIP model into an embedding that can be used to guide the diffusion model towards generating specific images.",
+"input_names": [
+"text",
+"clip"
+],
+"input_types": [
+"CLIP",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeControlnet",
+"display_name": "CLIPTextEncodeControlnet",
+"category": "_for_testing/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"conditioning",
+"text"
+],
+"input_types": [
+"CLIP",
+"CONDITIONING",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeFlux",
+"display_name": "CLIPTextEncodeFlux",
+"category": "advanced/conditioning/flux",
+"description": "",
+"input_names": [
+"clip",
+"clip_l",
+"t5xxl",
+"guidance"
+],
+"input_types": [
+"CLIP",
+"FLOAT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeHiDream",
+"display_name": "CLIPTextEncodeHiDream",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"clip_l",
+"clip_g",
+"t5xxl",
+"llama"
+],
+"input_types": [
+"CLIP",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeHunyuanDiT",
+"display_name": "CLIPTextEncodeHunyuanDiT",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"bert",
+"mt5xl"
+],
+"input_types": [
+"CLIP",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeKandinsky5",
+"display_name": "CLIPTextEncodeKandinsky5",
+"category": "advanced/conditioning/kandinsky5",
+"description": "",
+"input_names": [
+"clip",
+"clip_l",
+"qwen25_7b"
+],
+"input_types": [
+"CLIP",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeLumina2",
+"display_name": "CLIP Text Encode for Lumina2",
+"category": "conditioning",
+"description": "Encodes a system prompt and a user prompt using a CLIP model into an embedding that can be used to guide the diffusion model towards generating specific images.",
+"input_names": [
+"system_prompt",
+"user_prompt",
+"clip"
+],
+"input_types": [
+"CLIP",
+"COMBO",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodePixArtAlpha",
+"display_name": "CLIPTextEncodePixArtAlpha",
+"category": "advanced/conditioning",
+"description": "Encodes text and sets the resolution conditioning for PixArt Alpha. Does not apply to PixArt Sigma.",
+"input_names": [
+"width",
+"height",
+"text",
+"clip"
+],
+"input_types": [
+"CLIP",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeSD3",
+"display_name": "CLIPTextEncodeSD3",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"clip_l",
+"clip_g",
+"t5xxl",
+"empty_padding"
+],
+"input_types": [
+"CLIP",
+"COMBO",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeSDXL",
+"display_name": "CLIPTextEncodeSDXL",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"width",
+"height",
+"crop_w",
+"crop_h",
+"target_width",
+"target_height",
+"text_g",
+"text_l"
+],
+"input_types": [
+"CLIP",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPTextEncodeSDXLRefiner",
+"display_name": "CLIPTextEncodeSDXLRefiner",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"ascore",
+"width",
+"height",
+"text",
+"clip"
+],
+"input_types": [
+"CLIP",
+"FLOAT",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPVisionEncode",
+"display_name": "CLIP Vision Encode",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"clip_vision",
+"image",
+"crop"
+],
+"input_types": [
+"CLIP_VISION",
+"IMAGE"
+],
+"output_types": [
+"CLIP_VISION_OUTPUT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CLIPVisionLoader",
+"display_name": "Load CLIP Vision",
+"category": "loaders",
+"description": "",
+"input_names": [
+"clip_name"
+],
+"input_types": [],
+"output_types": [
+"CLIP_VISION"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Canny",
+"display_name": "Canny",
+"category": "image/preprocessors",
+"description": "",
+"input_names": [
+"image",
+"low_threshold",
+"high_threshold"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CaseConverter",
+"display_name": "Text Case Converter",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"mode"
+],
+"input_types": [
+"COMBO",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CenterCropImages",
+"display_name": "Center Crop Images",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"width",
+"height"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CheckpointLoader",
+"display_name": "Load Checkpoint With Config (DEPRECATED)",
+"category": "advanced/loaders",
+"description": "",
+"input_names": [
+"config_name",
+"ckpt_name"
+],
+"input_types": [],
+"output_types": [
+"MODEL",
+"CLIP",
+"VAE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CheckpointLoaderSimple",
+"display_name": "Load Checkpoint",
+"category": "loaders",
+"description": "Loads a diffusion model checkpoint, diffusion models are used to denoise latents.",
+"input_names": [
+"ckpt_name"
+],
+"input_types": [],
+"output_types": [
+"MODEL",
+"CLIP",
+"VAE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CheckpointSave",
+"display_name": "Save Checkpoint",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model",
+"clip",
+"vae",
+"filename_prefix"
+],
+"input_types": [
+"CLIP",
+"MODEL",
+"STRING",
+"VAE"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "ChromaRadianceOptions",
+"display_name": "ChromaRadianceOptions",
+"category": "model_patches/chroma_radiance",
+"description": "Allows setting advanced options for the Chroma Radiance model.",
+"input_names": [
+"model",
+"preserve_wrapper",
+"start_sigma",
+"end_sigma",
+"nerf_tile_size"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ColorToRGBInt",
+"display_name": "Color to RGB Int",
+"category": "utils",
+"description": "Convert a color to a RGB integer value.",
+"input_names": [
+"color"
+],
+"input_types": [
+"COLOR"
+],
+"output_types": [
+"INT"
+],
+"output_names": [
+"rgb_int"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CombineHooks2",
+"display_name": "Combine Hooks [2]",
+"category": "advanced/hooks/combine",
+"description": "",
+"input_names": [
+"hooks_A",
+"hooks_B"
+],
+"input_types": [
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CombineHooks4",
+"display_name": "Combine Hooks [4]",
+"category": "advanced/hooks/combine",
+"description": "",
+"input_names": [
+"hooks_A",
+"hooks_B",
+"hooks_C",
+"hooks_D"
+],
+"input_types": [
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CombineHooks8",
+"display_name": "Combine Hooks [8]",
+"category": "advanced/hooks/combine",
+"description": "",
+"input_names": [
+"hooks_A",
+"hooks_B",
+"hooks_C",
+"hooks_D",
+"hooks_E",
+"hooks_F",
+"hooks_G",
+"hooks_H"
+],
+"input_types": [
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ComfyMathExpression",
+"display_name": "Math Expression",
+"category": "math",
+"description": "",
+"input_names": [
+"expression",
+"values"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3",
+"STRING"
+],
+"output_types": [
+"FLOAT",
+"INT"
+],
+"output_names": [
+"FLOAT",
+"INT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ComfyNumberConvert",
+"display_name": "Number Convert",
+"category": "math",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"INT,FLOAT,STRING,BOOLEAN"
+],
+"output_types": [
+"FLOAT",
+"INT"
+],
+"output_names": [
+"FLOAT",
+"INT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ComfySwitchNode",
+"display_name": "Switch",
+"category": "logic",
+"description": "",
+"input_names": [
+"switch",
+"on_false",
+"on_true"
+],
+"input_types": [
+"BOOLEAN",
+"COMFY_MATCHTYPE_V3"
+],
+"output_types": [
+"COMFY_MATCHTYPE_V3"
+],
+"output_names": [
+"output"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningAverage",
+"display_name": "ConditioningAverage",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning_to",
+"conditioning_from",
+"conditioning_to_strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningCombine",
+"display_name": "Conditioning (Combine)",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning_1",
+"conditioning_2"
+],
+"input_types": [
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningConcat",
+"display_name": "Conditioning (Concat)",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning_to",
+"conditioning_from"
+],
+"input_types": [
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetArea",
+"display_name": "Conditioning (Set Area)",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"width",
+"height",
+"x",
+"y",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetAreaPercentage",
+"display_name": "Conditioning (Set Area with Percentage)",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"width",
+"height",
+"x",
+"y",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetAreaPercentageVideo",
+"display_name": "ConditioningSetAreaPercentageVideo",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"width",
+"height",
+"temporal",
+"x",
+"y",
+"z",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetAreaStrength",
+"display_name": "ConditioningSetAreaStrength",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetDefaultCombine",
+"display_name": "Cond Set Default Combine",
+"category": "advanced/hooks/cond single",
+"description": "",
+"input_names": [
+"cond",
+"cond_DEFAULT",
+"hooks"
+],
+"input_types": [
+"CONDITIONING",
+"HOOKS"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetMask",
+"display_name": "Conditioning (Set Mask)",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"mask",
+"strength",
+"set_cond_area"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"MASK"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetProperties",
+"display_name": "Cond Set Props",
+"category": "advanced/hooks/cond single",
+"description": "",
+"input_names": [
+"cond_NEW",
+"strength",
+"set_cond_area",
+"mask",
+"hooks",
+"timesteps"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"HOOKS",
+"MASK",
+"TIMESTEPS_RANGE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetPropertiesAndCombine",
+"display_name": "Cond Set Props Combine",
+"category": "advanced/hooks/cond single",
+"description": "",
+"input_names": [
+"cond",
+"cond_NEW",
+"strength",
+"set_cond_area",
+"mask",
+"hooks",
+"timesteps"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"HOOKS",
+"MASK",
+"TIMESTEPS_RANGE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningSetTimestepRange",
+"display_name": "ConditioningSetTimestepRange",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"start",
+"end"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningStableAudio",
+"display_name": "ConditioningStableAudio",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"seconds_start",
+"seconds_total"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningTimestepsRange",
+"display_name": "Timesteps Range",
+"category": "advanced/hooks",
+"description": "",
+"input_names": [
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"TIMESTEPS_RANGE",
+"TIMESTEPS_RANGE",
+"TIMESTEPS_RANGE"
+],
+"output_names": [
+"TIMESTEPS_RANGE",
+"BEFORE_RANGE",
+"AFTER_RANGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ConditioningZeroOut",
+"display_name": "ConditioningZeroOut",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"conditioning"
+],
+"input_types": [
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ContextWindowsManual",
+"display_name": "Context Windows (Manual)",
+"category": "context",
+"description": "Manually set context windows.",
+"input_names": [
+"model",
+"context_length",
+"context_overlap",
+"context_schedule",
+"context_stride",
+"closed_loop",
+"fuse_method",
+"dim",
+"freenoise",
+"cond_retain_index_list",
+"split_conds_to_windows"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"INT",
+"MODEL",
+"STRING"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ControlNetApply",
+"display_name": "Apply ControlNet (OLD)",
+"category": "conditioning/controlnet",
+"description": "",
+"input_names": [
+"conditioning",
+"control_net",
+"image",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"CONTROL_NET",
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ControlNetApplyAdvanced",
+"display_name": "Apply ControlNet",
+"category": "conditioning/controlnet",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"control_net",
+"image",
+"strength",
+"start_percent",
+"end_percent",
+"vae"
+],
+"input_types": [
+"CONDITIONING",
+"CONTROL_NET",
+"FLOAT",
+"IMAGE",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ControlNetApplySD3",
+"display_name": "Apply Controlnet with VAE",
+"category": "conditioning/controlnet",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"control_net",
+"vae",
+"image",
+"strength",
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"CONDITIONING",
+"CONTROL_NET",
+"FLOAT",
+"IMAGE",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ControlNetInpaintingAliMamaApply",
+"display_name": "ControlNetInpaintingAliMamaApply",
+"category": "conditioning/controlnet",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"control_net",
+"vae",
+"image",
+"mask",
+"strength",
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"CONDITIONING",
+"CONTROL_NET",
+"FLOAT",
+"IMAGE",
+"MASK",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ControlNetLoader",
+"display_name": "Load ControlNet Model",
+"category": "loaders",
+"description": "",
+"input_names": [
+"control_net_name"
+],
+"input_types": [],
+"output_types": [
+"CONTROL_NET"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CosmosImageToVideoLatent",
+"display_name": "CosmosImageToVideoLatent",
+"category": "conditioning/inpaint",
+"description": "",
+"input_names": [
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image",
+"end_image"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CosmosPredict2ImageToVideoLatent",
+"display_name": "CosmosPredict2ImageToVideoLatent",
+"category": "conditioning/inpaint",
+"description": "",
+"input_names": [
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image",
+"end_image"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookKeyframe",
+"display_name": "Create Hook Keyframe",
+"category": "advanced/hooks/scheduling",
+"description": "",
+"input_names": [
+"strength_mult",
+"start_percent",
+"prev_hook_kf"
+],
+"input_types": [
+"FLOAT",
+"HOOK_KEYFRAMES"
+],
+"output_types": [
+"HOOK_KEYFRAMES"
+],
+"output_names": [
+"HOOK_KF"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookKeyframesFromFloats",
+"display_name": "Create Hook Keyframes From Floats",
+"category": "advanced/hooks/scheduling",
+"description": "",
+"input_names": [
+"floats_strength",
+"start_percent",
+"end_percent",
+"print_keyframes",
+"prev_hook_kf"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"FLOATS",
+"HOOK_KEYFRAMES"
+],
+"output_types": [
+"HOOK_KEYFRAMES"
+],
+"output_names": [
+"HOOK_KF"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookKeyframesInterpolated",
+"display_name": "Create Hook Keyframes Interp.",
+"category": "advanced/hooks/scheduling",
+"description": "",
+"input_names": [
+"strength_start",
+"strength_end",
+"interpolation",
+"start_percent",
+"end_percent",
+"keyframes_count",
+"print_keyframes",
+"prev_hook_kf"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"HOOK_KEYFRAMES",
+"INT"
+],
+"output_types": [
+"HOOK_KEYFRAMES"
+],
+"output_names": [
+"HOOK_KF"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookLora",
+"display_name": "Create Hook LoRA",
+"category": "advanced/hooks/create",
+"description": "",
+"input_names": [
+"lora_name",
+"strength_model",
+"strength_clip",
+"prev_hooks"
+],
+"input_types": [
+"FLOAT",
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookLoraModelOnly",
+"display_name": "Create Hook LoRA (MO)",
+"category": "advanced/hooks/create",
+"description": "",
+"input_names": [
+"lora_name",
+"strength_model",
+"prev_hooks"
+],
+"input_types": [
+"FLOAT",
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookModelAsLora",
+"display_name": "Create Hook Model as LoRA",
+"category": "advanced/hooks/create",
+"description": "",
+"input_names": [
+"ckpt_name",
+"strength_model",
+"strength_clip",
+"prev_hooks"
+],
+"input_types": [
+"FLOAT",
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateHookModelAsLoraModelOnly",
+"display_name": "Create Hook Model as LoRA (MO)",
+"category": "advanced/hooks/create",
+"description": "",
+"input_names": [
+"ckpt_name",
+"strength_model",
+"prev_hooks"
+],
+"input_types": [
+"FLOAT",
+"HOOKS"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateList",
+"display_name": "Create List",
+"category": "logic",
+"description": "",
+"input_names": [
+"inputs"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3"
+],
+"output_types": [
+"COMFY_MATCHTYPE_V3"
+],
+"output_names": [
+"list"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CreateVideo",
+"display_name": "Create Video",
+"category": "image/video",
+"description": "Create a video from images.",
+"input_names": [
+"images",
+"fps",
+"audio"
+],
+"input_types": [
+"AUDIO",
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"VIDEO"
+],
+"output_names": [
+"VIDEO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CropByBBoxes",
+"display_name": "CropByBBoxes",
+"category": "image/preprocessors",
+"description": "Crop and resize regions from the input image batch based on provided bounding boxes.",
+"input_names": [
+"image",
+"bboxes",
+"output_width",
+"output_height",
+"padding",
+"keep_aspect"
+],
+"input_types": [
+"BOUNDING_BOX",
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CropMask",
+"display_name": "CropMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask",
+"x",
+"y",
+"width",
+"height"
+],
+"input_types": [
+"INT",
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CurveEditor",
+"display_name": "Curve Editor",
+"category": "utils",
+"description": "",
+"input_names": [
+"curve",
+"histogram"
+],
+"input_types": [
+"CURVE",
+"HISTOGRAM"
+],
+"output_types": [
+"CURVE"
+],
+"output_names": [
+"curve"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "CustomCombo",
+"display_name": "Custom Combo",
+"category": "utils",
+"description": "",
+"input_names": [
+"choice"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"STRING",
+"INT"
+],
+"output_names": [
+"STRING",
+"INDEX"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DiffControlNetLoader",
+"display_name": "Load ControlNet Model (diff)",
+"category": "loaders",
+"description": "",
+"input_names": [
+"model",
+"control_net_name"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"CONTROL_NET"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DifferentialDiffusion",
+"display_name": "Differential Diffusion",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"model",
+"strength"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DiffusersLoader",
+"display_name": "DiffusersLoader",
+"category": "advanced/loaders/deprecated",
+"description": "",
+"input_names": [
+"model_path"
+],
+"input_types": [],
+"output_types": [
+"MODEL",
+"CLIP",
+"VAE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DisableNoise",
+"display_name": "DisableNoise",
+"category": "sampling/custom_sampling/noise",
+"description": "",
+"input_names": [],
+"input_types": [],
+"output_types": [
+"NOISE"
+],
+"output_names": [
+"NOISE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DrawBBoxes",
+"display_name": "Draw BBoxes",
+"category": "detection/",
+"description": "",
+"input_names": [
+"bboxes",
+"image"
+],
+"input_types": [
+"BOUNDING_BOX",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"out_image"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DualCFGGuider",
+"display_name": "DualCFGGuider",
+"category": "sampling/custom_sampling/guiders",
+"description": "",
+"input_names": [
+"model",
+"cond1",
+"cond2",
+"negative",
+"cfg_conds",
+"cfg_cond2_negative",
+"style"
+],
+"input_types": [
+"COMBO",
+"CONDITIONING",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"GUIDER"
+],
+"output_names": [
+"GUIDER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "DualCLIPLoader",
+"display_name": "DualCLIPLoader",
+"category": "advanced/loaders",
+"description": "[Recipes]\n\nsdxl: clip-l, clip-g\nsd3: clip-l, clip-g / clip-l, t5 / clip-g, t5\nflux: clip-l, t5\nhidream: at least one of t5 or llama, recommended t5 and llama\nhunyuan_image: qwen2.5vl 7b and byt5 small\nnewbie: gemma-3-4b-it, jina clip v2",
+"input_names": [
+"clip_name1",
+"clip_name2",
+"type",
+"device"
+],
+"input_types": [],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EasyCache",
+"display_name": "EasyCache",
+"category": "advanced/debug/model",
+"description": "Native EasyCache implementation.",
+"input_names": [
+"model",
+"reuse_threshold",
+"start_percent",
+"end_percent",
+"verbose"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyAceStep1.5LatentAudio",
+"display_name": "Empty Ace Step 1.5 Latent Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"seconds",
+"batch_size"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyAceStepLatentAudio",
+"display_name": "Empty Ace Step 1.0 Latent Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"seconds",
+"batch_size"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyAudio",
+"display_name": "Empty Audio",
+"category": "audio",
+"description": "",
+"input_names": [
+"duration",
+"sample_rate",
+"channels"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyChromaRadianceLatentImage",
+"display_name": "EmptyChromaRadianceLatentImage",
+"category": "latent/chroma_radiance",
+"description": "",
+"input_names": [
+"width",
+"height",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyCosmosLatentVideo",
+"display_name": "EmptyCosmosLatentVideo",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"width",
+"height",
+"length",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyFlux2LatentImage",
+"display_name": "Empty Flux 2 Latent",
+"category": "latent",
+"description": "",
+"input_names": [
+"width",
+"height",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyHunyuanImageLatent",
+"display_name": "EmptyHunyuanImageLatent",
+"category": "latent",
+"description": "",
+"input_names": [
+"width",
+"height",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyHunyuanLatentVideo",
+"display_name": "Empty HunyuanVideo 1.0 Latent",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"width",
+"height",
+"length",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyHunyuanVideo15Latent",
+"display_name": "Empty HunyuanVideo 1.5 Latent",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"width",
+"height",
+"length",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyImage",
+"display_name": "EmptyImage",
+"category": "image",
+"description": "",
+"input_names": [
+"width",
+"height",
+"batch_size",
+"color"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyLTXVLatentVideo",
+"display_name": "EmptyLTXVLatentVideo",
+"category": "latent/video/ltxv",
+"description": "",
+"input_names": [
+"width",
+"height",
+"length",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyLatentAudio",
+"display_name": "Empty Latent Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"seconds",
+"batch_size"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyLatentHunyuan3Dv2",
+"display_name": "EmptyLatentHunyuan3Dv2",
+"category": "latent/3d",
+"description": "",
+"input_names": [
+"resolution",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyLatentImage",
+"display_name": "Empty Latent Image",
+"category": "latent",
+"description": "Create a new batch of empty latent images to be denoised via sampling.",
+"input_names": [
+"width",
+"height",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyMochiLatentVideo",
+"display_name": "EmptyMochiLatentVideo",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"width",
+"height",
+"length",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptyQwenImageLayeredLatentImage",
+"display_name": "Empty Qwen Image Layered Latent",
+"category": "latent/qwen",
+"description": "",
+"input_names": [
+"width",
+"height",
+"layers",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "EmptySD3LatentImage",
+"display_name": "EmptySD3LatentImage",
+"category": "latent/sd3",
+"description": "",
+"input_names": [
+"width",
+"height",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Epsilon Scaling",
+"display_name": "Epsilon Scaling",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"scaling_factor"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ExponentialScheduler",
+"display_name": "ExponentialScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"sigma_max",
+"sigma_min"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ExtendIntermediateSigmas",
+"display_name": "ExtendIntermediateSigmas",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"sigmas",
+"steps",
+"start_at_sigma",
+"end_at_sigma",
+"spacing"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT",
+"SIGMAS"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FeatherMask",
+"display_name": "FeatherMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask",
+"left",
+"top",
+"right",
+"bottom"
+],
+"input_types": [
+"INT",
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FlipSigmas",
+"display_name": "FlipSigmas",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"sigmas"
+],
+"input_types": [
+"SIGMAS"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Flux2Scheduler",
+"display_name": "Flux2Scheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"width",
+"height"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FluxDisableGuidance",
+"display_name": "FluxDisableGuidance",
+"category": "advanced/conditioning/flux",
+"description": "This node completely disables the guidance embed on Flux and Flux like models",
+"input_names": [
+"conditioning"
+],
+"input_types": [
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FluxGuidance",
+"display_name": "FluxGuidance",
+"category": "advanced/conditioning/flux",
+"description": "",
+"input_names": [
+"conditioning",
+"guidance"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FluxKVCache",
+"display_name": "Flux KV Cache",
+"category": "",
+"description": "Enables KV Cache optimization for reference images on Flux family models.",
+"input_names": [
+"model"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FluxKontextImageScale",
+"display_name": "FluxKontextImageScale",
+"category": "advanced/conditioning/flux",
+"description": "This node resizes the image to one that is more optimal for flux kontext.",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FluxKontextMultiReferenceLatentMethod",
+"display_name": "Edit Model Reference Method",
+"category": "advanced/conditioning/flux",
+"description": "",
+"input_names": [
+"conditioning",
+"reference_latents_method"
+],
+"input_types": [
+"COMBO",
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FreSca",
+"display_name": "FreSca",
+"category": "_for_testing",
+"description": "Applies frequency-dependent scaling to the guidance",
+"input_names": [
+"model",
+"scale_low",
+"scale_high",
+"freq_cutoff"
+],
+"input_types": [
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FreeU",
+"display_name": "FreeU",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"b1",
+"b2",
+"s1",
+"s2"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "FreeU_V2",
+"display_name": "FreeU_V2",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"b1",
+"b2",
+"s1",
+"s2"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GITSScheduler",
+"display_name": "GITSScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"coeff",
+"steps",
+"denoise"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GLIGENLoader",
+"display_name": "GLIGENLoader",
+"category": "loaders",
+"description": "",
+"input_names": [
+"gligen_name"
+],
+"input_types": [],
+"output_types": [
+"GLIGEN"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GLIGENTextBoxApply",
+"display_name": "GLIGENTextBoxApply",
+"category": "conditioning/gligen",
+"description": "",
+"input_names": [
+"conditioning_to",
+"clip",
+"gligen_textbox_model",
+"text",
+"width",
+"height",
+"x",
+"y"
+],
+"input_types": [
+"CLIP",
+"CONDITIONING",
+"GLIGEN",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GLSLShader",
+"display_name": "GLSL Shader",
+"category": "image/shader",
+"description": "Apply GLSL ES fragment shaders to images. u_resolution (vec2) is always available.",
+"input_names": [
+"fragment_shader",
+"size_mode",
+"images",
+"floats",
+"ints",
+"bools",
+"curves"
+],
+"input_types": [
+"COMFY_AUTOGROW_V3",
+"COMFY_DYNAMICCOMBO_V3",
+"STRING"
+],
+"output_types": [
+"IMAGE",
+"IMAGE",
+"IMAGE",
+"IMAGE"
+],
+"output_names": [
+"IMAGE0",
+"IMAGE1",
+"IMAGE2",
+"IMAGE3"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GenerateTracks",
+"display_name": "GenerateTracks",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"width",
+"height",
+"start_x",
+"start_y",
+"end_x",
+"end_y",
+"num_frames",
+"num_tracks",
+"track_spread",
+"bezier",
+"mid_x",
+"mid_y",
+"interpolation",
+"track_mask"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"FLOAT",
+"INT",
+"MASK"
+],
+"output_types": [
+"TRACKS",
+"INT"
+],
+"output_names": [
+"TRACKS",
+"track_length"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GetImageSize",
+"display_name": "Get Image Size",
+"category": "image",
+"description": "Returns width and height of the image, and passes it through unchanged.",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"INT",
+"INT",
+"INT"
+],
+"output_names": [
+"width",
+"height",
+"batch_size"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GetVideoComponents",
+"display_name": "Get Video Components",
+"category": "image/video",
+"description": "Extracts all components from a video: frames, audio, and framerate.",
+"input_names": [
+"video"
+],
+"input_types": [
+"VIDEO"
+],
+"output_types": [
+"IMAGE",
+"AUDIO",
+"FLOAT"
+],
+"output_names": [
+"images",
+"audio",
+"fps"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "GrowMask",
+"display_name": "Grow Mask",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask",
+"expand",
+"tapered_corners"
+],
+"input_types": [
+"BOOLEAN",
+"INT",
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Hunyuan3Dv2Conditioning",
+"display_name": "Hunyuan3Dv2Conditioning",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Hunyuan3Dv2ConditioningMultiView",
+"display_name": "Hunyuan3Dv2ConditioningMultiView",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"front",
+"left",
+"back",
+"right"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HunyuanImageToVideo",
+"display_name": "HunyuanImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"guidance_type",
+"start_image"
+],
+"input_types": [
+"COMBO",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HunyuanRefinerLatent",
+"display_name": "HunyuanRefinerLatent",
+"category": "sd",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"latent",
+"noise_augmentation"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"LATENT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HunyuanVideo15ImageToVideo",
+"display_name": "HunyuanVideo15ImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image",
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HunyuanVideo15LatentUpscaleWithModel",
+"display_name": "Hunyuan Video 15 Latent Upscale With Model",
+"category": "latent",
+"description": "",
+"input_names": [
+"model",
+"samples",
+"upscale_method",
+"width",
+"height",
+"crop"
+],
+"input_types": [
+"COMBO",
+"INT",
+"LATENT",
+"LATENT_UPSCALE_MODEL"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HunyuanVideo15SuperResolution",
+"display_name": "HunyuanVideo15SuperResolution",
+"category": "sd",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"latent",
+"noise_augmentation",
+"vae",
+"start_image",
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HyperTile",
+"display_name": "HyperTile",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"tile_size",
+"swap_size",
+"max_depth",
+"scale_depth"
+],
+"input_types": [
+"BOOLEAN",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "HypernetworkLoader",
+"display_name": "HypernetworkLoader",
+"category": "loaders",
+"description": "",
+"input_names": [
+"model",
+"hypernetwork_name",
+"strength"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageAddNoise",
+"display_name": "ImageAddNoise",
+"category": "image",
+"description": "",
+"input_names": [
+"image",
+"seed",
+"strength"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageBatch",
+"display_name": "Batch Images",
+"category": "image",
+"description": "",
+"input_names": [
+"image1",
+"image2"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageBlend",
+"display_name": "Image Blend",
+"category": "image/postprocessing",
+"description": "",
+"input_names": [
+"image1",
+"image2",
+"blend_factor",
+"blend_mode"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageBlur",
+"display_name": "Image Blur",
+"category": "image/postprocessing",
+"description": "",
+"input_names": [
+"image",
+"blur_radius",
+"sigma"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageColorToMask",
+"display_name": "ImageColorToMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"image",
+"color"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageCompare",
+"display_name": "Image Compare",
+"category": "image",
+"description": "Compares two images side by side with a slider.",
+"input_names": [
+"compare_view",
+"image_a",
+"image_b"
+],
+"input_types": [
+"IMAGE",
+"IMAGECOMPARE"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "ImageCompositeMasked",
+"display_name": "ImageCompositeMasked",
+"category": "image",
+"description": "",
+"input_names": [
+"destination",
+"source",
+"x",
+"y",
+"resize_source",
+"mask"
+],
+"input_types": [
+"BOOLEAN",
+"IMAGE",
+"INT",
+"MASK"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageCrop",
+"display_name": "Image Crop (Deprecated)",
+"category": "image/transform",
+"description": "",
+"input_names": [
+"image",
+"width",
+"height",
+"x",
+"y"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageCropV2",
+"display_name": "Image Crop",
+"category": "image/transform",
+"description": "",
+"input_names": [
+"image",
+"crop_region"
+],
+"input_types": [
+"BOUNDING_BOX",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageDeduplication",
+"display_name": "Image Deduplication",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"similarity_threshold"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageFlip",
+"display_name": "ImageFlip",
+"category": "image/transform",
+"description": "",
+"input_names": [
+"image",
+"flip_method"
+],
+"input_types": [
+"COMBO",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageFromBatch",
+"display_name": "ImageFromBatch",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"image",
+"batch_index",
+"length"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageGrid",
+"display_name": "Image Grid",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"columns",
+"cell_width",
+"cell_height",
+"padding"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageHistogram",
+"display_name": "Image Histogram",
+"category": "utils",
+"description": "",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"HISTOGRAM",
+"HISTOGRAM",
+"HISTOGRAM",
+"HISTOGRAM",
+"HISTOGRAM"
+],
+"output_names": [
+"rgb",
+"luminance",
+"red",
+"green",
+"blue"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageInvert",
+"display_name": "Invert Image",
+"category": "image",
+"description": "",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageMergeTileList",
+"display_name": "Merge List of Tiles to Image",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"image_list",
+"final_width",
+"final_height",
+"overlap"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageOnlyCheckpointLoader",
+"display_name": "Image Only Checkpoint Loader (img2vid model)",
+"category": "loaders/video_models",
+"description": "",
+"input_names": [
+"ckpt_name"
+],
+"input_types": [],
+"output_types": [
+"MODEL",
+"CLIP_VISION",
+"VAE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageOnlyCheckpointSave",
+"display_name": "ImageOnlyCheckpointSave",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model",
+"clip_vision",
+"vae",
+"filename_prefix"
+],
+"input_types": [
+"CLIP_VISION",
+"MODEL",
+"STRING",
+"VAE"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "ImagePadForOutpaint",
+"display_name": "Pad Image for Outpainting",
+"category": "image",
+"description": "",
+"input_names": [
+"image",
+"left",
+"top",
+"right",
+"bottom",
+"feathering"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageQuantize",
+"display_name": "Image Quantize",
+"category": "image/postprocessing",
+"description": "",
+"input_names": [
+"image",
+"colors",
+"dither"
+],
+"input_types": [
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageRGBToYUV",
+"display_name": "ImageRGBToYUV",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE",
+"IMAGE",
+"IMAGE"
+],
+"output_names": [
+"Y",
+"U",
+"V"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageRotate",
+"display_name": "Image Rotate",
+"category": "image/transform",
+"description": "",
+"input_names": [
+"image",
+"rotation"
+],
+"input_types": [
+"COMBO",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageScale",
+"display_name": "Upscale Image",
+"category": "image/upscaling",
+"description": "",
+"input_names": [
+"image",
+"upscale_method",
+"width",
+"height",
+"crop"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageScaleBy",
+"display_name": "Upscale Image By",
+"category": "image/upscaling",
+"description": "",
+"input_names": [
+"image",
+"upscale_method",
+"scale_by"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageScaleToMaxDimension",
+"display_name": "ImageScaleToMaxDimension",
+"category": "image/upscaling",
+"description": "",
+"input_names": [
+"image",
+"upscale_method",
+"largest_size"
+],
+"input_types": [
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageScaleToTotalPixels",
+"display_name": "Scale Image to Total Pixels",
+"category": "image/upscaling",
+"description": "",
+"input_names": [
+"image",
+"upscale_method",
+"megapixels",
+"resolution_steps"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageSharpen",
+"display_name": "Image Sharpen",
+"category": "image/postprocessing",
+"description": "",
+"input_names": [
+"image",
+"sharpen_radius",
+"sigma",
+"alpha"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageStitch",
+"display_name": "Image Stitch",
+"category": "image/transform",
+"description": "Stitches image2 to image1 in the specified direction.\nIf image2 is not provided, returns image1 unchanged.\nOptional spacing can be added between images.",
+"input_names": [
+"image1",
+"direction",
+"match_image_size",
+"spacing_width",
+"spacing_color",
+"image2"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageToMask",
+"display_name": "Convert Image to Mask",
+"category": "mask",
+"description": "",
+"input_names": [
+"image",
+"channel"
+],
+"input_types": [
+"COMBO",
+"IMAGE"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageUpscaleWithModel",
+"display_name": "Upscale Image (using Model)",
+"category": "image/upscaling",
+"description": "",
+"input_names": [
+"upscale_model",
+"image"
+],
+"input_types": [
+"IMAGE",
+"UPSCALE_MODEL"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ImageYUVToRGB",
+"display_name": "ImageYUVToRGB",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"Y",
+"U",
+"V"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "InpaintModelConditioning",
+"display_name": "InpaintModelConditioning",
+"category": "conditioning/inpaint",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"pixels",
+"mask",
+"noise_mask"
+],
+"input_types": [
+"BOOLEAN",
+"CONDITIONING",
+"IMAGE",
+"MASK",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "InstructPixToPixConditioning",
+"display_name": "InstructPixToPixConditioning",
+"category": "conditioning/instructpix2pix",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"pixels"
+],
+"input_types": [
+"CONDITIONING",
+"IMAGE",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "InvertMask",
+"display_name": "InvertMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask"
+],
+"input_types": [
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "JoinAudioChannels",
+"display_name": "Join Audio Channels",
+"category": "audio",
+"description": "Joins left and right mono audio channels into a stereo audio.",
+"input_names": [
+"audio_left",
+"audio_right"
+],
+"input_types": [
+"AUDIO"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"audio"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "JoinImageWithAlpha",
+"display_name": "Join Image with Alpha",
+"category": "mask/compositing",
+"description": "",
+"input_names": [
+"image",
+"alpha"
+],
+"input_types": [
+"IMAGE",
+"MASK"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "JsonExtractString",
+"display_name": "Extract String from JSON",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"json_string",
+"key"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "KSampler",
+"display_name": "KSampler",
+"category": "sampling",
+"description": "Uses the provided model, positive and negative conditioning to denoise the latent image.",
+"input_names": [
+"model",
+"seed",
+"steps",
+"cfg",
+"sampler_name",
+"scheduler",
+"positive",
+"negative",
+"latent_image",
+"denoise"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"INT",
+"LATENT",
+"MODEL"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "KSamplerAdvanced",
+"display_name": "KSampler (Advanced)",
+"category": "sampling",
+"description": "",
+"input_names": [
+"model",
+"add_noise",
+"noise_seed",
+"steps",
+"cfg",
+"sampler_name",
+"scheduler",
+"positive",
+"negative",
+"latent_image",
+"start_at_step",
+"end_at_step",
+"return_with_leftover_noise"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"INT",
+"LATENT",
+"MODEL"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "KSamplerSelect",
+"display_name": "KSamplerSelect",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"sampler_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Kandinsky5ImageToVideo",
+"display_name": "Kandinsky5ImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image"
+],
+"input_types": [
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent",
+"cond_latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "KarrasScheduler",
+"display_name": "KarrasScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"sigma_max",
+"sigma_min",
+"rho"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXAVTextEncoderLoader",
+"display_name": "LTXV Audio Text Encoder Loader",
+"category": "advanced/loaders",
+"description": "[Recipes]\n\nltxav: gemma 3 12B",
+"input_names": [
+"text_encoder",
+"ckpt_name",
+"device"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [
+"CLIP"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVAddGuide",
+"display_name": "LTXVAddGuide",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"latent",
+"image",
+"frame_idx",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVAudioVAEDecode",
+"display_name": "LTXV Audio VAE Decode",
+"category": "audio",
+"description": "",
+"input_names": [
+"samples",
+"audio_vae"
+],
+"input_types": [
+"LATENT",
+"VAE"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"Audio"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVAudioVAEEncode",
+"display_name": "LTXV Audio VAE Encode",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"audio_vae"
+],
+"input_types": [
+"AUDIO",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"Audio Latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVAudioVAELoader",
+"display_name": "LTXV Audio VAE Loader",
+"category": "audio",
+"description": "",
+"input_names": [
+"ckpt_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"VAE"
+],
+"output_names": [
+"Audio VAE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVConcatAVLatent",
+"display_name": "LTXVConcatAVLatent",
+"category": "latent/video/ltxv",
+"description": "",
+"input_names": [
+"video_latent",
+"audio_latent"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVConditioning",
+"display_name": "LTXVConditioning",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"frame_rate"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVCropGuides",
+"display_name": "LTXVCropGuides",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"latent"
+],
+"input_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVEmptyLatentAudio",
+"display_name": "LTXV Empty Latent Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"frames_number",
+"frame_rate",
+"batch_size",
+"audio_vae"
+],
+"input_types": [
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"Latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVImgToVideo",
+"display_name": "LTXVImgToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"image",
+"width",
+"height",
+"length",
+"batch_size",
+"strength"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVImgToVideoInplace",
+"display_name": "LTXVImgToVideoInplace",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"vae",
+"image",
+"latent",
+"strength",
+"bypass"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"IMAGE",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVLatentUpsampler",
+"display_name": "LTXVLatentUpsampler",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"samples",
+"upscale_model",
+"vae"
+],
+"input_types": [
+"LATENT",
+"LATENT_UPSCALE_MODEL",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVPreprocess",
+"display_name": "LTXVPreprocess",
+"category": "image",
+"description": "",
+"input_names": [
+"image",
+"img_compression"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"output_image"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVReferenceAudio",
+"display_name": "LTXV Reference Audio (ID-LoRA)",
+"category": "conditioning/audio",
+"description": "Set reference audio for ID-LoRA speaker identity transfer. Encodes a reference audio clip into the conditioning and optionally patches the model with identity guidance (extra forward pass without reference, amplifying the speaker identity effect).",
+"input_names": [
+"model",
+"positive",
+"negative",
+"reference_audio",
+"audio_vae",
+"identity_guidance_scale",
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"AUDIO",
+"CONDITIONING",
+"FLOAT",
+"MODEL",
+"VAE"
+],
+"output_types": [
+"MODEL",
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"MODEL",
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVScheduler",
+"display_name": "LTXVScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"max_shift",
+"base_shift",
+"stretch",
+"terminal",
+"latent"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"INT",
+"LATENT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LTXVSeparateAVLatent",
+"display_name": "LTXVSeparateAVLatent",
+"category": "latent/video/ltxv",
+"description": "LTXV Separate AV Latent",
+"input_names": [
+"av_latent"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"video_latent",
+"audio_latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LaplaceScheduler",
+"display_name": "LaplaceScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"sigma_max",
+"sigma_min",
+"mu",
+"beta"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentAdd",
+"display_name": "LatentAdd",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples1",
+"samples2"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentApplyOperation",
+"display_name": "LatentApplyOperation",
+"category": "latent/advanced/operations",
+"description": "",
+"input_names": [
+"samples",
+"operation"
+],
+"input_types": [
+"LATENT",
+"LATENT_OPERATION"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentApplyOperationCFG",
+"display_name": "LatentApplyOperationCFG",
+"category": "latent/advanced/operations",
+"description": "",
+"input_names": [
+"model",
+"operation"
+],
+"input_types": [
+"LATENT_OPERATION",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentBatch",
+"display_name": "LatentBatch",
+"category": "latent/batch",
+"description": "",
+"input_names": [
+"samples1",
+"samples2"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentBatchSeedBehavior",
+"display_name": "LatentBatchSeedBehavior",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples",
+"seed_behavior"
+],
+"input_types": [
+"COMBO",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentBlend",
+"display_name": "Latent Blend",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"samples1",
+"samples2",
+"blend_factor"
+],
+"input_types": [
+"FLOAT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentComposite",
+"display_name": "Latent Composite",
+"category": "latent",
+"description": "",
+"input_names": [
+"samples_to",
+"samples_from",
+"x",
+"y",
+"feather"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentCompositeMasked",
+"display_name": "LatentCompositeMasked",
+"category": "latent",
+"description": "",
+"input_names": [
+"destination",
+"source",
+"x",
+"y",
+"resize_source",
+"mask"
+],
+"input_types": [
+"BOOLEAN",
+"INT",
+"LATENT",
+"MASK"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentConcat",
+"display_name": "LatentConcat",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples1",
+"samples2",
+"dim"
+],
+"input_types": [
+"COMBO",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentCrop",
+"display_name": "Crop Latent",
+"category": "latent/transform",
+"description": "",
+"input_names": [
+"samples",
+"width",
+"height",
+"x",
+"y"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentCut",
+"display_name": "LatentCut",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples",
+"dim",
+"index",
+"amount"
+],
+"input_types": [
+"COMBO",
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentCutToBatch",
+"display_name": "LatentCutToBatch",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples",
+"dim",
+"slice_size"
+],
+"input_types": [
+"COMBO",
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentFlip",
+"display_name": "Flip Latent",
+"category": "latent/transform",
+"description": "",
+"input_names": [
+"samples",
+"flip_method"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentFromBatch",
+"display_name": "Latent From Batch",
+"category": "latent/batch",
+"description": "",
+"input_names": [
+"samples",
+"batch_index",
+"length"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentInterpolate",
+"display_name": "LatentInterpolate",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples1",
+"samples2",
+"ratio"
+],
+"input_types": [
+"FLOAT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentMultiply",
+"display_name": "LatentMultiply",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples",
+"multiplier"
+],
+"input_types": [
+"FLOAT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentOperationSharpen",
+"display_name": "LatentOperationSharpen",
+"category": "latent/advanced/operations",
+"description": "",
+"input_names": [
+"sharpen_radius",
+"sigma",
+"alpha"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"LATENT_OPERATION"
+],
+"output_names": [
+"LATENT_OPERATION"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentOperationTonemapReinhard",
+"display_name": "LatentOperationTonemapReinhard",
+"category": "latent/advanced/operations",
+"description": "",
+"input_names": [
+"multiplier"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"LATENT_OPERATION"
+],
+"output_names": [
+"LATENT_OPERATION"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentRotate",
+"display_name": "Rotate Latent",
+"category": "latent/transform",
+"description": "",
+"input_names": [
+"samples",
+"rotation"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentSubtract",
+"display_name": "LatentSubtract",
+"category": "latent/advanced",
+"description": "",
+"input_names": [
+"samples1",
+"samples2"
+],
+"input_types": [
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentUpscale",
+"display_name": "Upscale Latent",
+"category": "latent",
+"description": "",
+"input_names": [
+"samples",
+"upscale_method",
+"width",
+"height",
+"crop"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentUpscaleBy",
+"display_name": "Upscale Latent By",
+"category": "latent",
+"description": "",
+"input_names": [
+"samples",
+"upscale_method",
+"scale_by"
+],
+"input_types": [
+"FLOAT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LatentUpscaleModelLoader",
+"display_name": "Load Latent Upscale Model",
+"category": "loaders",
+"description": "",
+"input_names": [
+"model_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"LATENT_UPSCALE_MODEL"
+],
+"output_names": [
+"LATENT_UPSCALE_MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LazyCache",
+"display_name": "LazyCache",
+"category": "advanced/debug/model",
+"description": "A homebrew version of EasyCache - even 'easier' version of EasyCache to implement. Overall works worse than EasyCache, but better in some rare cases AND universal compatibility with everything in ComfyUI.",
+"input_names": [
+"model",
+"reuse_threshold",
+"start_percent",
+"end_percent",
+"verbose"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Load3D",
+"display_name": "Load 3D & Animation",
+"category": "3d",
+"description": "",
+"input_names": [
+"model_file",
+"image",
+"width",
+"height"
+],
+"input_types": [
+"COMBO",
+"INT",
+"LOAD_3D"
+],
+"output_types": [
+"IMAGE",
+"MASK",
+"STRING",
+"IMAGE",
+"LOAD3D_CAMERA",
+"VIDEO",
+"FILE_3D"
+],
+"output_names": [
+"image",
+"mask",
+"mesh_path",
+"normal",
+"camera_info",
+"recording_video",
+"model_3d"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadAudio",
+"display_name": "Load Audio",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadImage",
+"display_name": "Load Image",
+"category": "image",
+"description": "",
+"input_names": [
+"image"
+],
+"input_types": [],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadImageDataSetFromFolder",
+"display_name": "Load Image Dataset from Folder",
+"category": "dataset",
+"description": "",
+"input_names": [
+"folder"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadImageMask",
+"display_name": "Load Image (as Mask)",
+"category": "mask",
+"description": "",
+"input_names": [
+"image",
+"channel"
+],
+"input_types": [],
+"output_types": [
+"MASK"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadImageOutput",
+"display_name": "Load Image (from Outputs)",
+"category": "image",
+"description": "Load an image from the output folder. When the refresh button is clicked, the node will update the image list and automatically select the first image, allowing for easy iteration.",
+"input_names": [
+"image"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadImageTextDataSetFromFolder",
+"display_name": "Load Image and Text Dataset from Folder",
+"category": "dataset",
+"description": "",
+"input_names": [
+"folder"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"IMAGE",
+"STRING"
+],
+"output_names": [
+"images",
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadLatent",
+"display_name": "LoadLatent",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"latent"
+],
+"input_types": [],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadTrainingDataset",
+"display_name": "Load Training Dataset",
+"category": "dataset",
+"description": "",
+"input_names": [
+"folder_name"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"LATENT",
+"CONDITIONING"
+],
+"output_names": [
+"latents",
+"conditioning"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoadVideo",
+"display_name": "Load Video",
+"category": "image/video",
+"description": "",
+"input_names": [
+"file"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"VIDEO"
+],
+"output_names": [
+"VIDEO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraLoader",
+"display_name": "Load LoRA (Model and CLIP)",
+"category": "loaders",
+"description": "LoRAs are used to modify diffusion and CLIP models, altering the way in which latents are denoised such as applying styles. Multiple LoRA nodes can be linked together.",
+"input_names": [
+"model",
+"clip",
+"lora_name",
+"strength_model",
+"strength_clip"
+],
+"input_types": [
+"CLIP",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL",
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraLoaderBypass",
+"display_name": "Load LoRA (Bypass) (For debugging)",
+"category": "loaders",
+"description": "Apply LoRA in bypass mode. Unlike regular LoRA, this doesn't modify model weights - instead it injects the LoRA computation during forward pass. Useful for training scenarios.",
+"input_names": [
+"model",
+"clip",
+"lora_name",
+"strength_model",
+"strength_clip"
+],
+"input_types": [
+"CLIP",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL",
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraLoaderBypassModelOnly",
+"display_name": "Load LoRA (Bypass, Model Only) (for debugging)",
+"category": "loaders",
+"description": "Apply LoRA in bypass mode. Unlike regular LoRA, this doesn't modify model weights - instead it injects the LoRA computation during forward pass. Useful for training scenarios.",
+"input_names": [
+"model",
+"lora_name",
+"strength_model"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraLoaderModelOnly",
+"display_name": "Load LoRA",
+"category": "loaders",
+"description": "LoRAs are used to modify diffusion and CLIP models, altering the way in which latents are denoised such as applying styles. Multiple LoRA nodes can be linked together.",
+"input_names": [
+"model",
+"lora_name",
+"strength_model"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraModelLoader",
+"display_name": "Load LoRA Model",
+"category": "loaders",
+"description": "",
+"input_names": [
+"model",
+"lora",
+"strength_model",
+"bypass"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"LORA_MODEL",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "LoraSave",
+"display_name": "Extract and Save Lora",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"filename_prefix",
+"rank",
+"lora_type",
+"bias_diff",
+"model_diff",
+"text_encoder_diff"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"COMBO",
+"INT",
+"MODEL",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "LossGraphNode",
+"display_name": "Plot Loss Graph",
+"category": "training",
+"description": "",
+"input_names": [
+"loss",
+"filename_prefix"
+],
+"input_types": [
+"LOSS_MAP",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "LotusConditioning",
+"display_name": "LotusConditioning",
+"category": "conditioning/lotus",
+"description": "",
+"input_names": [],
+"input_types": [],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"conditioning"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Mahiro",
+"display_name": "Positive-Biased Guidance",
+"category": "_for_testing",
+"description": "Modify the guidance to scale more on the 'direction' of the positive prompt rather than the difference between the negative prompt.",
+"input_names": [
+"model"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"patched_model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "MakeTrainingDataset",
+"display_name": "Make Training Dataset",
+"category": "dataset",
+"description": "",
+"input_names": [
+"images",
+"vae",
+"clip",
+"texts"
+],
+"input_types": [
+"CLIP",
+"IMAGE",
+"STRING",
+"VAE"
+],
+"output_types": [
+"LATENT",
+"CONDITIONING"
+],
+"output_names": [
+"latents",
+"conditioning"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ManualSigmas",
+"display_name": "ManualSigmas",
+"category": "_for_testing/custom_sampling",
+"description": "",
+"input_names": [
+"sigmas"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "MaskComposite",
+"display_name": "MaskComposite",
+"category": "mask",
+"description": "",
+"input_names": [
+"destination",
+"source",
+"x",
+"y",
+"operation"
+],
+"input_types": [
+"COMBO",
+"INT",
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "MaskPreview",
+"display_name": "Preview Mask",
+"category": "mask",
+"description": "Saves the input images to your ComfyUI output directory.",
+"input_names": [
+"mask"
+],
+"input_types": [
+"MASK"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "MaskToImage",
+"display_name": "Convert Mask to Image",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask"
+],
+"input_types": [
+"MASK"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "MergeImageLists",
+"display_name": "Merge Image Lists",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "MergeTextLists",
+"display_name": "Merge Text Lists",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelComputeDtype",
+"display_name": "ModelComputeDtype",
+"category": "advanced/debug/model",
+"description": "",
+"input_names": [
+"model",
+"dtype"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeAdd",
+"display_name": "ModelMergeAdd",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model1",
+"model2"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeAuraflow",
+"display_name": "ModelMergeAuraflow",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"init_x_linear.",
+"positional_encoding",
+"cond_seq_linear.",
+"register_tokens",
+"t_embedder.",
+"double_layers.0.",
+"double_layers.1.",
+"double_layers.2.",
+"double_layers.3.",
+"single_layers.0.",
+"single_layers.1.",
+"single_layers.2.",
+"single_layers.3.",
+"single_layers.4.",
+"single_layers.5.",
+"single_layers.6.",
+"single_layers.7.",
+"single_layers.8.",
+"single_layers.9.",
+"single_layers.10.",
+"single_layers.11.",
+"single_layers.12.",
+"single_layers.13.",
+"single_layers.14.",
+"single_layers.15.",
+"single_layers.16.",
+"single_layers.17.",
+"single_layers.18.",
+"single_layers.19.",
+"single_layers.20.",
+"single_layers.21.",
+"single_layers.22.",
+"single_layers.23.",
+"single_layers.24.",
+"single_layers.25.",
+"single_layers.26.",
+"single_layers.27.",
+"single_layers.28.",
+"single_layers.29.",
+"single_layers.30.",
+"single_layers.31.",
+"modF.",
+"final_linear."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeBlocks",
+"display_name": "ModelMergeBlocks",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"input",
+"middle",
+"out"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeCosmos14B",
+"display_name": "ModelMergeCosmos14B",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embedder.",
+"extra_pos_embedder.",
+"x_embedder.",
+"t_embedder.",
+"affline_norm.",
+"blocks.block0.",
+"blocks.block1.",
+"blocks.block2.",
+"blocks.block3.",
+"blocks.block4.",
+"blocks.block5.",
+"blocks.block6.",
+"blocks.block7.",
+"blocks.block8.",
+"blocks.block9.",
+"blocks.block10.",
+"blocks.block11.",
+"blocks.block12.",
+"blocks.block13.",
+"blocks.block14.",
+"blocks.block15.",
+"blocks.block16.",
+"blocks.block17.",
+"blocks.block18.",
+"blocks.block19.",
+"blocks.block20.",
+"blocks.block21.",
+"blocks.block22.",
+"blocks.block23.",
+"blocks.block24.",
+"blocks.block25.",
+"blocks.block26.",
+"blocks.block27.",
+"blocks.block28.",
+"blocks.block29.",
+"blocks.block30.",
+"blocks.block31.",
+"blocks.block32.",
+"blocks.block33.",
+"blocks.block34.",
+"blocks.block35.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeCosmos7B",
+"display_name": "ModelMergeCosmos7B",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embedder.",
+"extra_pos_embedder.",
+"x_embedder.",
+"t_embedder.",
+"affline_norm.",
+"blocks.block0.",
+"blocks.block1.",
+"blocks.block2.",
+"blocks.block3.",
+"blocks.block4.",
+"blocks.block5.",
+"blocks.block6.",
+"blocks.block7.",
+"blocks.block8.",
+"blocks.block9.",
+"blocks.block10.",
+"blocks.block11.",
+"blocks.block12.",
+"blocks.block13.",
+"blocks.block14.",
+"blocks.block15.",
+"blocks.block16.",
+"blocks.block17.",
+"blocks.block18.",
+"blocks.block19.",
+"blocks.block20.",
+"blocks.block21.",
+"blocks.block22.",
+"blocks.block23.",
+"blocks.block24.",
+"blocks.block25.",
+"blocks.block26.",
+"blocks.block27.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeCosmosPredict2_14B",
+"display_name": "ModelMergeCosmosPredict2_14B",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embedder.",
+"x_embedder.",
+"t_embedder.",
+"t_embedding_norm.",
+"blocks.0.",
+"blocks.1.",
+"blocks.2.",
+"blocks.3.",
+"blocks.4.",
+"blocks.5.",
+"blocks.6.",
+"blocks.7.",
+"blocks.8.",
+"blocks.9.",
+"blocks.10.",
+"blocks.11.",
+"blocks.12.",
+"blocks.13.",
+"blocks.14.",
+"blocks.15.",
+"blocks.16.",
+"blocks.17.",
+"blocks.18.",
+"blocks.19.",
+"blocks.20.",
+"blocks.21.",
+"blocks.22.",
+"blocks.23.",
+"blocks.24.",
+"blocks.25.",
+"blocks.26.",
+"blocks.27.",
+"blocks.28.",
+"blocks.29.",
+"blocks.30.",
+"blocks.31.",
+"blocks.32.",
+"blocks.33.",
+"blocks.34.",
+"blocks.35.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeCosmosPredict2_2B",
+"display_name": "ModelMergeCosmosPredict2_2B",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embedder.",
+"x_embedder.",
+"t_embedder.",
+"t_embedding_norm.",
+"blocks.0.",
+"blocks.1.",
+"blocks.2.",
+"blocks.3.",
+"blocks.4.",
+"blocks.5.",
+"blocks.6.",
+"blocks.7.",
+"blocks.8.",
+"blocks.9.",
+"blocks.10.",
+"blocks.11.",
+"blocks.12.",
+"blocks.13.",
+"blocks.14.",
+"blocks.15.",
+"blocks.16.",
+"blocks.17.",
+"blocks.18.",
+"blocks.19.",
+"blocks.20.",
+"blocks.21.",
+"blocks.22.",
+"blocks.23.",
+"blocks.24.",
+"blocks.25.",
+"blocks.26.",
+"blocks.27.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeFlux1",
+"display_name": "ModelMergeFlux1",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"img_in.",
+"time_in.",
+"guidance_in",
+"vector_in.",
+"txt_in.",
+"double_blocks.0.",
+"double_blocks.1.",
+"double_blocks.2.",
+"double_blocks.3.",
+"double_blocks.4.",
+"double_blocks.5.",
+"double_blocks.6.",
+"double_blocks.7.",
+"double_blocks.8.",
+"double_blocks.9.",
+"double_blocks.10.",
+"double_blocks.11.",
+"double_blocks.12.",
+"double_blocks.13.",
+"double_blocks.14.",
+"double_blocks.15.",
+"double_blocks.16.",
+"double_blocks.17.",
+"double_blocks.18.",
+"single_blocks.0.",
+"single_blocks.1.",
+"single_blocks.2.",
+"single_blocks.3.",
+"single_blocks.4.",
+"single_blocks.5.",
+"single_blocks.6.",
+"single_blocks.7.",
+"single_blocks.8.",
+"single_blocks.9.",
+"single_blocks.10.",
+"single_blocks.11.",
+"single_blocks.12.",
+"single_blocks.13.",
+"single_blocks.14.",
+"single_blocks.15.",
+"single_blocks.16.",
+"single_blocks.17.",
+"single_blocks.18.",
+"single_blocks.19.",
+"single_blocks.20.",
+"single_blocks.21.",
+"single_blocks.22.",
+"single_blocks.23.",
+"single_blocks.24.",
+"single_blocks.25.",
+"single_blocks.26.",
+"single_blocks.27.",
+"single_blocks.28.",
+"single_blocks.29.",
+"single_blocks.30.",
+"single_blocks.31.",
+"single_blocks.32.",
+"single_blocks.33.",
+"single_blocks.34.",
+"single_blocks.35.",
+"single_blocks.36.",
+"single_blocks.37.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeLTXV",
+"display_name": "ModelMergeLTXV",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"patchify_proj.",
+"adaln_single.",
+"caption_projection.",
+"transformer_blocks.0.",
+"transformer_blocks.1.",
+"transformer_blocks.2.",
+"transformer_blocks.3.",
+"transformer_blocks.4.",
+"transformer_blocks.5.",
+"transformer_blocks.6.",
+"transformer_blocks.7.",
+"transformer_blocks.8.",
+"transformer_blocks.9.",
+"transformer_blocks.10.",
+"transformer_blocks.11.",
+"transformer_blocks.12.",
+"transformer_blocks.13.",
+"transformer_blocks.14.",
+"transformer_blocks.15.",
+"transformer_blocks.16.",
+"transformer_blocks.17.",
+"transformer_blocks.18.",
+"transformer_blocks.19.",
+"transformer_blocks.20.",
+"transformer_blocks.21.",
+"transformer_blocks.22.",
+"transformer_blocks.23.",
+"transformer_blocks.24.",
+"transformer_blocks.25.",
+"transformer_blocks.26.",
+"transformer_blocks.27.",
+"scale_shift_table",
+"proj_out."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeMochiPreview",
+"display_name": "ModelMergeMochiPreview",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_frequencies.",
+"t_embedder.",
+"t5_y_embedder.",
+"t5_yproj.",
+"blocks.0.",
+"blocks.1.",
+"blocks.2.",
+"blocks.3.",
+"blocks.4.",
+"blocks.5.",
+"blocks.6.",
+"blocks.7.",
+"blocks.8.",
+"blocks.9.",
+"blocks.10.",
+"blocks.11.",
+"blocks.12.",
+"blocks.13.",
+"blocks.14.",
+"blocks.15.",
+"blocks.16.",
+"blocks.17.",
+"blocks.18.",
+"blocks.19.",
+"blocks.20.",
+"blocks.21.",
+"blocks.22.",
+"blocks.23.",
+"blocks.24.",
+"blocks.25.",
+"blocks.26.",
+"blocks.27.",
+"blocks.28.",
+"blocks.29.",
+"blocks.30.",
+"blocks.31.",
+"blocks.32.",
+"blocks.33.",
+"blocks.34.",
+"blocks.35.",
+"blocks.36.",
+"blocks.37.",
+"blocks.38.",
+"blocks.39.",
+"blocks.40.",
+"blocks.41.",
+"blocks.42.",
+"blocks.43.",
+"blocks.44.",
+"blocks.45.",
+"blocks.46.",
+"blocks.47.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeQwenImage",
+"display_name": "ModelMergeQwenImage",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embeds.",
+"img_in.",
+"txt_norm.",
+"txt_in.",
+"time_text_embed.",
+"transformer_blocks.0.",
+"transformer_blocks.1.",
+"transformer_blocks.2.",
+"transformer_blocks.3.",
+"transformer_blocks.4.",
+"transformer_blocks.5.",
+"transformer_blocks.6.",
+"transformer_blocks.7.",
+"transformer_blocks.8.",
+"transformer_blocks.9.",
+"transformer_blocks.10.",
+"transformer_blocks.11.",
+"transformer_blocks.12.",
+"transformer_blocks.13.",
+"transformer_blocks.14.",
+"transformer_blocks.15.",
+"transformer_blocks.16.",
+"transformer_blocks.17.",
+"transformer_blocks.18.",
+"transformer_blocks.19.",
+"transformer_blocks.20.",
+"transformer_blocks.21.",
+"transformer_blocks.22.",
+"transformer_blocks.23.",
+"transformer_blocks.24.",
+"transformer_blocks.25.",
+"transformer_blocks.26.",
+"transformer_blocks.27.",
+"transformer_blocks.28.",
+"transformer_blocks.29.",
+"transformer_blocks.30.",
+"transformer_blocks.31.",
+"transformer_blocks.32.",
+"transformer_blocks.33.",
+"transformer_blocks.34.",
+"transformer_blocks.35.",
+"transformer_blocks.36.",
+"transformer_blocks.37.",
+"transformer_blocks.38.",
+"transformer_blocks.39.",
+"transformer_blocks.40.",
+"transformer_blocks.41.",
+"transformer_blocks.42.",
+"transformer_blocks.43.",
+"transformer_blocks.44.",
+"transformer_blocks.45.",
+"transformer_blocks.46.",
+"transformer_blocks.47.",
+"transformer_blocks.48.",
+"transformer_blocks.49.",
+"transformer_blocks.50.",
+"transformer_blocks.51.",
+"transformer_blocks.52.",
+"transformer_blocks.53.",
+"transformer_blocks.54.",
+"transformer_blocks.55.",
+"transformer_blocks.56.",
+"transformer_blocks.57.",
+"transformer_blocks.58.",
+"transformer_blocks.59.",
+"proj_out."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSD1",
+"display_name": "ModelMergeSD1",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"time_embed.",
+"label_emb.",
+"input_blocks.0.",
+"input_blocks.1.",
+"input_blocks.2.",
+"input_blocks.3.",
+"input_blocks.4.",
+"input_blocks.5.",
+"input_blocks.6.",
+"input_blocks.7.",
+"input_blocks.8.",
+"input_blocks.9.",
+"input_blocks.10.",
+"input_blocks.11.",
+"middle_block.0.",
+"middle_block.1.",
+"middle_block.2.",
+"output_blocks.0.",
+"output_blocks.1.",
+"output_blocks.2.",
+"output_blocks.3.",
+"output_blocks.4.",
+"output_blocks.5.",
+"output_blocks.6.",
+"output_blocks.7.",
+"output_blocks.8.",
+"output_blocks.9.",
+"output_blocks.10.",
+"output_blocks.11.",
+"out."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSD2",
+"display_name": "ModelMergeSD2",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"time_embed.",
+"label_emb.",
+"input_blocks.0.",
+"input_blocks.1.",
+"input_blocks.2.",
+"input_blocks.3.",
+"input_blocks.4.",
+"input_blocks.5.",
+"input_blocks.6.",
+"input_blocks.7.",
+"input_blocks.8.",
+"input_blocks.9.",
+"input_blocks.10.",
+"input_blocks.11.",
+"middle_block.0.",
+"middle_block.1.",
+"middle_block.2.",
+"output_blocks.0.",
+"output_blocks.1.",
+"output_blocks.2.",
+"output_blocks.3.",
+"output_blocks.4.",
+"output_blocks.5.",
+"output_blocks.6.",
+"output_blocks.7.",
+"output_blocks.8.",
+"output_blocks.9.",
+"output_blocks.10.",
+"output_blocks.11.",
+"out."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSD35_Large",
+"display_name": "ModelMergeSD35_Large",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embed.",
+"x_embedder.",
+"context_embedder.",
+"y_embedder.",
+"t_embedder.",
+"joint_blocks.0.",
+"joint_blocks.1.",
+"joint_blocks.2.",
+"joint_blocks.3.",
+"joint_blocks.4.",
+"joint_blocks.5.",
+"joint_blocks.6.",
+"joint_blocks.7.",
+"joint_blocks.8.",
+"joint_blocks.9.",
+"joint_blocks.10.",
+"joint_blocks.11.",
+"joint_blocks.12.",
+"joint_blocks.13.",
+"joint_blocks.14.",
+"joint_blocks.15.",
+"joint_blocks.16.",
+"joint_blocks.17.",
+"joint_blocks.18.",
+"joint_blocks.19.",
+"joint_blocks.20.",
+"joint_blocks.21.",
+"joint_blocks.22.",
+"joint_blocks.23.",
+"joint_blocks.24.",
+"joint_blocks.25.",
+"joint_blocks.26.",
+"joint_blocks.27.",
+"joint_blocks.28.",
+"joint_blocks.29.",
+"joint_blocks.30.",
+"joint_blocks.31.",
+"joint_blocks.32.",
+"joint_blocks.33.",
+"joint_blocks.34.",
+"joint_blocks.35.",
+"joint_blocks.36.",
+"joint_blocks.37.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSD3_2B",
+"display_name": "ModelMergeSD3_2B",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"pos_embed.",
+"x_embedder.",
+"context_embedder.",
+"y_embedder.",
+"t_embedder.",
+"joint_blocks.0.",
+"joint_blocks.1.",
+"joint_blocks.2.",
+"joint_blocks.3.",
+"joint_blocks.4.",
+"joint_blocks.5.",
+"joint_blocks.6.",
+"joint_blocks.7.",
+"joint_blocks.8.",
+"joint_blocks.9.",
+"joint_blocks.10.",
+"joint_blocks.11.",
+"joint_blocks.12.",
+"joint_blocks.13.",
+"joint_blocks.14.",
+"joint_blocks.15.",
+"joint_blocks.16.",
+"joint_blocks.17.",
+"joint_blocks.18.",
+"joint_blocks.19.",
+"joint_blocks.20.",
+"joint_blocks.21.",
+"joint_blocks.22.",
+"joint_blocks.23.",
+"final_layer."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSDXL",
+"display_name": "ModelMergeSDXL",
+"category": "advanced/model_merging/model_specific",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"time_embed.",
+"label_emb.",
+"input_blocks.0",
+"input_blocks.1",
+"input_blocks.2",
+"input_blocks.3",
+"input_blocks.4",
+"input_blocks.5",
+"input_blocks.6",
+"input_blocks.7",
+"input_blocks.8",
+"middle_block.0",
+"middle_block.1",
+"middle_block.2",
+"output_blocks.0",
+"output_blocks.1",
+"output_blocks.2",
+"output_blocks.3",
+"output_blocks.4",
+"output_blocks.5",
+"output_blocks.6",
+"output_blocks.7",
+"output_blocks.8",
+"out."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSimple",
+"display_name": "ModelMergeSimple",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"ratio"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeSubtract",
+"display_name": "ModelMergeSubtract",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model1",
+"model2",
+"multiplier"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelMergeWAN2_1",
+"display_name": "ModelMergeWAN2_1",
+"category": "advanced/model_merging/model_specific",
+"description": "1.3B model has 30 blocks, 14B model has 40 blocks. Image to video model has the extra img_emb.",
+"input_names": [
+"model1",
+"model2",
+"patch_embedding.",
+"time_embedding.",
+"time_projection.",
+"text_embedding.",
+"img_emb.",
+"blocks.0.",
+"blocks.1.",
+"blocks.2.",
+"blocks.3.",
+"blocks.4.",
+"blocks.5.",
+"blocks.6.",
+"blocks.7.",
+"blocks.8.",
+"blocks.9.",
+"blocks.10.",
+"blocks.11.",
+"blocks.12.",
+"blocks.13.",
+"blocks.14.",
+"blocks.15.",
+"blocks.16.",
+"blocks.17.",
+"blocks.18.",
+"blocks.19.",
+"blocks.20.",
+"blocks.21.",
+"blocks.22.",
+"blocks.23.",
+"blocks.24.",
+"blocks.25.",
+"blocks.26.",
+"blocks.27.",
+"blocks.28.",
+"blocks.29.",
+"blocks.30.",
+"blocks.31.",
+"blocks.32.",
+"blocks.33.",
+"blocks.34.",
+"blocks.35.",
+"blocks.36.",
+"blocks.37.",
+"blocks.38.",
+"blocks.39.",
+"head."
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelPatchLoader",
+"display_name": "ModelPatchLoader",
+"category": "advanced/loaders",
+"description": "",
+"input_names": [
+"name"
+],
+"input_types": [],
+"output_types": [
+"MODEL_PATCH"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingAuraFlow",
+"display_name": "ModelSamplingAuraFlow",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"shift"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingContinuousEDM",
+"display_name": "ModelSamplingContinuousEDM",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"sampling",
+"sigma_max",
+"sigma_min"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingContinuousV",
+"display_name": "ModelSamplingContinuousV",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"sampling",
+"sigma_max",
+"sigma_min"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingDiscrete",
+"display_name": "ModelSamplingDiscrete",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"sampling",
+"zsnr"
+],
+"input_types": [
+"BOOLEAN",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingFlux",
+"display_name": "ModelSamplingFlux",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"max_shift",
+"base_shift",
+"width",
+"height"
+],
+"input_types": [
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingLTXV",
+"display_name": "ModelSamplingLTXV",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"max_shift",
+"base_shift",
+"latent"
+],
+"input_types": [
+"FLOAT",
+"LATENT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingSD3",
+"display_name": "ModelSamplingSD3",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"shift"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSamplingStableCascade",
+"display_name": "ModelSamplingStableCascade",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"shift"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ModelSave",
+"display_name": "ModelSave",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"model",
+"filename_prefix"
+],
+"input_types": [
+"MODEL",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "Morphology",
+"display_name": "ImageMorphology",
+"category": "image/postprocessing",
+"description": "",
+"input_names": [
+"image",
+"operation",
+"kernel_size"
+],
+"input_types": [
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "NAGuidance",
+"display_name": "Normalized Attention Guidance",
+"category": "advanced/guidance",
+"description": "Applies Normalized Attention Guidance to models, enabling negative prompts on distilled/schnell models.",
+"input_names": [
+"model",
+"nag_scale",
+"nag_alpha",
+"nag_tau"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "NormalizeImages",
+"display_name": "Normalize Images",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"mean",
+"std"
+],
+"input_types": [
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "NormalizeVideoLatentStart",
+"display_name": "NormalizeVideoLatentStart",
+"category": "conditioning/video_models",
+"description": "Normalizes the initial frames of a video latent to match the mean and standard deviation of subsequent reference frames. Helps reduce differences between the starting frames and the rest of the video.",
+"input_names": [
+"latent",
+"start_frame_count",
+"reference_frame_count"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "OptimalStepsScheduler",
+"display_name": "OptimalStepsScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"model_type",
+"steps",
+"denoise"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Painter",
+"display_name": "Painter",
+"category": "image",
+"description": "",
+"input_names": [
+"mask",
+"width",
+"height",
+"bg_color",
+"image"
+],
+"input_types": [
+"COLOR",
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [
+"IMAGE",
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PairConditioningCombine",
+"display_name": "Cond Pair Combine",
+"category": "advanced/hooks/cond pair",
+"description": "",
+"input_names": [
+"positive_A",
+"negative_A",
+"positive_B",
+"negative_B"
+],
+"input_types": [
+"CONDITIONING"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PairConditioningSetDefaultCombine",
+"display_name": "Cond Pair Set Default Combine",
+"category": "advanced/hooks/cond pair",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"positive_DEFAULT",
+"negative_DEFAULT",
+"hooks"
+],
+"input_types": [
+"CONDITIONING",
+"HOOKS"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PairConditioningSetProperties",
+"display_name": "Cond Pair Set Props",
+"category": "advanced/hooks/cond pair",
+"description": "",
+"input_names": [
+"positive_NEW",
+"negative_NEW",
+"strength",
+"set_cond_area",
+"mask",
+"hooks",
+"timesteps"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"HOOKS",
+"MASK",
+"TIMESTEPS_RANGE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PairConditioningSetPropertiesAndCombine",
+"display_name": "Cond Pair Set Props Combine",
+"category": "advanced/hooks/cond pair",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"positive_NEW",
+"negative_NEW",
+"strength",
+"set_cond_area",
+"mask",
+"hooks",
+"timesteps"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"HOOKS",
+"MASK",
+"TIMESTEPS_RANGE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING"
+],
+"output_names": [
+"positive",
+"negative"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PatchModelAddDownscale",
+"display_name": "PatchModelAddDownscale (Kohya Deep Shrink)",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"block_number",
+"downscale_factor",
+"start_percent",
+"end_percent",
+"downscale_after_skip",
+"downscale_method",
+"upscale_method"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PerpNeg",
+"display_name": "Perp-Neg (DEPRECATED by PerpNegGuider)",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"model",
+"empty_conditioning",
+"neg_scale"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PerpNegGuider",
+"display_name": "PerpNegGuider",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"model",
+"positive",
+"negative",
+"empty_conditioning",
+"cfg",
+"neg_scale"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"GUIDER"
+],
+"output_names": [
+"GUIDER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PerturbedAttentionGuidance",
+"display_name": "PerturbedAttentionGuidance",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"scale"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PhotoMakerEncode",
+"display_name": "PhotoMakerEncode",
+"category": "_for_testing/photomaker",
+"description": "",
+"input_names": [
+"photomaker",
+"image",
+"clip",
+"text"
+],
+"input_types": [
+"CLIP",
+"IMAGE",
+"PHOTOMAKER",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PhotoMakerLoader",
+"display_name": "PhotoMakerLoader",
+"category": "_for_testing/photomaker",
+"description": "",
+"input_names": [
+"photomaker_model_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"PHOTOMAKER"
+],
+"output_names": [
+"PHOTOMAKER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PolyexponentialScheduler",
+"display_name": "PolyexponentialScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"sigma_max",
+"sigma_min",
+"rho"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PorterDuffImageComposite",
+"display_name": "Porter-Duff Image Composite",
+"category": "mask/compositing",
+"description": "",
+"input_names": [
+"source",
+"source_alpha",
+"destination",
+"destination_alpha",
+"mode"
+],
+"input_types": [
+"COMBO",
+"IMAGE",
+"MASK"
+],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [
+"IMAGE",
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Preview3D",
+"display_name": "Preview 3D & Animation",
+"category": "3d",
+"description": "",
+"input_names": [
+"model_file",
+"camera_info",
+"bg_image"
+],
+"input_types": [
+"IMAGE",
+"LOAD3D_CAMERA",
+"STRING,FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_FBX,FILE_3D_OBJ,FILE_3D_STL,FILE_3D_USDZ,FILE_3D"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "PreviewAny",
+"display_name": "Preview as Text",
+"category": "utils",
+"description": "",
+"input_names": [
+"source"
+],
+"input_types": [
+"*"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "PreviewAudio",
+"display_name": "Preview Audio",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio"
+],
+"input_types": [
+"AUDIO"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "PreviewImage",
+"display_name": "Preview Image",
+"category": "image",
+"description": "Saves the input images to your ComfyUI output directory.",
+"input_names": [
+"images"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "PrimitiveBoolean",
+"display_name": "Boolean",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"BOOLEAN"
+],
+"output_types": [
+"BOOLEAN"
+],
+"output_names": [
+"BOOLEAN"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PrimitiveBoundingBox",
+"display_name": "Bounding Box",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"x",
+"y",
+"width",
+"height"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"BOUNDING_BOX"
+],
+"output_names": [
+"BOUNDING_BOX"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PrimitiveFloat",
+"display_name": "Float",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"FLOAT"
+],
+"output_names": [
+"FLOAT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PrimitiveInt",
+"display_name": "Int",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"INT"
+],
+"output_names": [
+"INT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PrimitiveString",
+"display_name": "String",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "PrimitiveStringMultiline",
+"display_name": "String (Multiline)",
+"category": "utils/primitive",
+"description": "",
+"input_names": [
+"value"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "QuadrupleCLIPLoader",
+"display_name": "QuadrupleCLIPLoader",
+"category": "advanced/loaders",
+"description": "[Recipes]\n\nhidream: long clip-l, long clip-g, t5xxl, llama_8b_3.1_instruct",
+"input_names": [
+"clip_name1",
+"clip_name2",
+"clip_name3",
+"clip_name4"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [
+"CLIP"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "QwenImageDiffsynthControlnet",
+"display_name": "QwenImageDiffsynthControlnet",
+"category": "advanced/loaders/qwen",
+"description": "",
+"input_names": [
+"model",
+"model_patch",
+"vae",
+"image",
+"strength",
+"mask"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"MASK",
+"MODEL",
+"MODEL_PATCH",
+"VAE"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RTDETR_detect",
+"display_name": "RT-DETR Detect",
+"category": "detection/",
+"description": "",
+"input_names": [
+"model",
+"image",
+"threshold",
+"class_name",
+"max_detections"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"IMAGE",
+"INT",
+"MODEL"
+],
+"output_types": [
+"BOUNDING_BOX"
+],
+"output_names": [
+"bboxes"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RandomCropImages",
+"display_name": "Random Crop Images",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"width",
+"height",
+"seed"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RandomNoise",
+"display_name": "RandomNoise",
+"category": "sampling/custom_sampling/noise",
+"description": "",
+"input_names": [
+"noise_seed"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"NOISE"
+],
+"output_names": [
+"NOISE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RebatchImages",
+"display_name": "Rebatch Images",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"images",
+"batch_size"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RebatchLatents",
+"display_name": "Rebatch Latents",
+"category": "latent/batch",
+"description": "",
+"input_names": [
+"latents",
+"batch_size"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RecordAudio",
+"display_name": "Record Audio",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio"
+],
+"input_types": [
+"AUDIO_RECORD"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ReferenceLatent",
+"display_name": "ReferenceLatent",
+"category": "advanced/conditioning/edit_models",
+"description": "This node sets the guiding latent for an edit model. If the model supports it you can chain multiple to set multiple reference images.",
+"input_names": [
+"conditioning",
+"latent"
+],
+"input_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ReferenceTimbreAudio",
+"display_name": "Reference Audio",
+"category": "advanced/conditioning/audio",
+"description": "This node sets the reference audio for ace step 1.5",
+"input_names": [
+"conditioning",
+"latent"
+],
+"input_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RegexExtract",
+"display_name": "Text Extract Substring",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"regex_pattern",
+"mode",
+"case_insensitive",
+"multiline",
+"dotall",
+"group_index"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RegexMatch",
+"display_name": "Text Match",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"regex_pattern",
+"case_insensitive",
+"multiline",
+"dotall"
+],
+"input_types": [
+"BOOLEAN",
+"STRING"
+],
+"output_types": [
+"BOOLEAN"
+],
+"output_names": [
+"matches"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RegexReplace",
+"display_name": "Text Replace (Regex)",
+"category": "utils/string",
+"description": "Find and replace text using regex patterns.",
+"input_names": [
+"string",
+"regex_pattern",
+"replace",
+"case_insensitive",
+"multiline",
+"dotall",
+"count"
+],
+"input_types": [
+"BOOLEAN",
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RenormCFG",
+"display_name": "RenormCFG",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"cfg_trunc",
+"renorm_cfg"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RepeatImageBatch",
+"display_name": "RepeatImageBatch",
+"category": "image/batch",
+"description": "",
+"input_names": [
+"image",
+"amount"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RepeatLatentBatch",
+"display_name": "Repeat Latent Batch",
+"category": "latent/batch",
+"description": "",
+"input_names": [
+"samples",
+"amount"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ReplaceText",
+"display_name": "Replace Text",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts",
+"find",
+"replace"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ReplaceVideoLatentFrames",
+"display_name": "ReplaceVideoLatentFrames",
+"category": "latent/batch",
+"description": "",
+"input_names": [
+"destination",
+"index",
+"source"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "RescaleCFG",
+"display_name": "RescaleCFG",
+"category": "advanced/model",
+"description": "",
+"input_names": [
+"model",
+"multiplier"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResizeAndPadImage",
+"display_name": "ResizeAndPadImage",
+"category": "image/transform",
+"description": "",
+"input_names": [
+"image",
+"target_width",
+"target_height",
+"padding_color",
+"interpolation"
+],
+"input_types": [
+"COMBO",
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResizeImageMaskNode",
+"display_name": "Resize Image/Mask",
+"category": "transform",
+"description": "Resize an image or mask using various scaling methods.",
+"input_names": [
+"input",
+"resize_type",
+"scale_method"
+],
+"input_types": [
+"COMBO",
+"COMFY_DYNAMICCOMBO_V3",
+"COMFY_MATCHTYPE_V3"
+],
+"output_types": [
+"COMFY_MATCHTYPE_V3"
+],
+"output_names": [
+"resized"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResizeImagesByLongerEdge",
+"display_name": "Resize Images by Longer Edge",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"longer_edge"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResizeImagesByShorterEdge",
+"display_name": "Resize Images by Shorter Edge",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"shorter_edge"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResolutionBucket",
+"display_name": "Resolution Bucket",
+"category": "dataset",
+"description": "",
+"input_names": [
+"latents",
+"conditioning"
+],
+"input_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_types": [
+"LATENT",
+"CONDITIONING"
+],
+"output_names": [
+"latents",
+"conditioning"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ResolutionSelector",
+"display_name": "Resolution Selector",
+"category": "utils",
+"description": "Calculate width and height from aspect ratio and megapixel target. Useful for setting up Empty Latent Image dimensions.",
+"input_names": [
+"aspect_ratio",
+"megapixels"
+],
+"input_types": [
+"COMBO",
+"FLOAT"
+],
+"output_types": [
+"INT",
+"INT"
+],
+"output_names": [
+"width",
+"height"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SDPoseDrawKeypoints",
+"display_name": "SDPoseDrawKeypoints",
+"category": "image/preprocessors",
+"description": "",
+"input_names": [
+"keypoints",
+"draw_body",
+"draw_hands",
+"draw_face",
+"draw_feet",
+"stick_width",
+"face_point_size",
+"score_threshold"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"INT",
+"POSE_KEYPOINT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SDPoseFaceBBoxes",
+"display_name": "SDPoseFaceBBoxes",
+"category": "image/preprocessors",
+"description": "",
+"input_names": [
+"keypoints",
+"scale",
+"force_square"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"POSE_KEYPOINT"
+],
+"output_types": [
+"BOUNDING_BOX"
+],
+"output_names": [
+"bboxes"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SDPoseKeypointExtractor",
+"display_name": "SDPoseKeypointExtractor",
+"category": "image/preprocessors",
+"description": "Extract pose keypoints from images using the SDPose model: https://huggingface.co/Comfy-Org/SDPose/tree/main/checkpoints",
+"input_names": [
+"model",
+"vae",
+"image",
+"batch_size",
+"bboxes"
+],
+"input_types": [
+"BOUNDING_BOX",
+"IMAGE",
+"INT",
+"MODEL",
+"VAE"
+],
+"output_types": [
+"POSE_KEYPOINT"
+],
+"output_names": [
+"keypoints"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SDTurboScheduler",
+"display_name": "SDTurboScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"model",
+"steps",
+"denoise"
+],
+"input_types": [
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SD_4XUpscale_Conditioning",
+"display_name": "SD_4XUpscale_Conditioning",
+"category": "conditioning/upscale_diffusion",
+"description": "",
+"input_names": [
+"images",
+"positive",
+"negative",
+"scale_ratio",
+"noise_augmentation"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"IMAGE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SV3D_Conditioning",
+"display_name": "SV3D_Conditioning",
+"category": "conditioning/3d_models",
+"description": "",
+"input_names": [
+"clip_vision",
+"init_image",
+"vae",
+"width",
+"height",
+"video_frames",
+"elevation"
+],
+"input_types": [
+"CLIP_VISION",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SVD_img2vid_Conditioning",
+"display_name": "SVD_img2vid_Conditioning",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"clip_vision",
+"init_image",
+"vae",
+"width",
+"height",
+"video_frames",
+"motion_bucket_id",
+"fps",
+"augmentation_level"
+],
+"input_types": [
+"CLIP_VISION",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerCustom",
+"display_name": "SamplerCustom",
+"category": "sampling/custom_sampling",
+"description": "",
+"input_names": [
+"model",
+"add_noise",
+"noise_seed",
+"cfg",
+"positive",
+"negative",
+"sampler",
+"sigmas",
+"latent_image"
+],
+"input_types": [
+"BOOLEAN",
+"CONDITIONING",
+"FLOAT",
+"INT",
+"LATENT",
+"MODEL",
+"SAMPLER",
+"SIGMAS"
+],
+"output_types": [
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"output",
+"denoised_output"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerCustomAdvanced",
+"display_name": "SamplerCustomAdvanced",
+"category": "sampling/custom_sampling",
+"description": "",
+"input_names": [
+"noise",
+"guider",
+"sampler",
+"sigmas",
+"latent_image"
+],
+"input_types": [
+"GUIDER",
+"LATENT",
+"NOISE",
+"SAMPLER",
+"SIGMAS"
+],
+"output_types": [
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"output",
+"denoised_output"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerDPMAdaptative",
+"display_name": "SamplerDPMAdaptative",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"order",
+"rtol",
+"atol",
+"h_init",
+"pcoeff",
+"icoeff",
+"dcoeff",
+"accept_safety",
+"eta",
+"s_noise"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerDPMPP_2M_SDE",
+"display_name": "SamplerDPMPP_2M_SDE",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"solver_type",
+"eta",
+"s_noise",
+"noise_device"
+],
+"input_types": [
+"COMBO",
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerDPMPP_2S_Ancestral",
+"display_name": "SamplerDPMPP_2S_Ancestral",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"eta",
+"s_noise"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerDPMPP_3M_SDE",
+"display_name": "SamplerDPMPP_3M_SDE",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"eta",
+"s_noise",
+"noise_device"
+],
+"input_types": [
+"COMBO",
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerDPMPP_SDE",
+"display_name": "SamplerDPMPP_SDE",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"eta",
+"s_noise",
+"r",
+"noise_device"
+],
+"input_types": [
+"COMBO",
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerER_SDE",
+"display_name": "SamplerER_SDE",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"solver_type",
+"max_stage",
+"eta",
+"s_noise"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerEulerAncestral",
+"display_name": "SamplerEulerAncestral",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"eta",
+"s_noise"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerEulerAncestralCFGPP",
+"display_name": "SamplerEulerAncestralCFG++",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"eta",
+"s_noise"
+],
+"input_types": [
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerEulerCFGpp",
+"display_name": "SamplerEulerCFG++",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"version"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerLCMUpscale",
+"display_name": "SamplerLCMUpscale",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"scale_ratio",
+"scale_steps",
+"upscale_method"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerLMS",
+"display_name": "SamplerLMS",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"order"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerSASolver",
+"display_name": "SamplerSASolver",
+"category": "sampling/custom_sampling/samplers",
+"description": "",
+"input_names": [
+"model",
+"eta",
+"sde_start_percent",
+"sde_end_percent",
+"s_noise",
+"predictor_order",
+"corrector_order",
+"use_pece",
+"simple_order_2"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"INT",
+"MODEL"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplerSEEDS2",
+"display_name": "SamplerSEEDS2",
+"category": "sampling/custom_sampling/samplers",
+"description": "This sampler node can represent multiple samplers:\n\nseeds_2\n- default setting\n\nexp_heun_2_x0\n- solver_type=phi_2, r=1.0, eta=0.0\n\nexp_heun_2_x0_sde\n- solver_type=phi_2, r=1.0, eta=1.0, s_noise=1.0",
+"input_names": [
+"solver_type",
+"eta",
+"s_noise",
+"r"
+],
+"input_types": [
+"COMBO",
+"FLOAT"
+],
+"output_types": [
+"SAMPLER"
+],
+"output_names": [
+"SAMPLER"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SamplingPercentToSigma",
+"display_name": "SamplingPercentToSigma",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"model",
+"sampling_percent",
+"return_actual_sigma"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"FLOAT"
+],
+"output_names": [
+"sigma_value"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SaveAnimatedPNG",
+"display_name": "SaveAnimatedPNG",
+"category": "image/animation",
+"description": "",
+"input_names": [
+"images",
+"filename_prefix",
+"fps",
+"compress_level"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveAnimatedWEBP",
+"display_name": "SaveAnimatedWEBP",
+"category": "image/animation",
+"description": "",
+"input_names": [
+"images",
+"filename_prefix",
+"fps",
+"lossless",
+"quality",
+"method"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"FLOAT",
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveAudio",
+"display_name": "Save Audio (FLAC)",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"filename_prefix"
+],
+"input_types": [
+"AUDIO",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveAudioMP3",
+"display_name": "Save Audio (MP3)",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"filename_prefix",
+"quality"
+],
+"input_types": [
+"AUDIO",
+"COMBO",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveAudioOpus",
+"display_name": "Save Audio (Opus)",
+"category": "audio",
+"description": "",
+"input_names": [
+"audio",
+"filename_prefix",
+"quality"
+],
+"input_types": [
+"AUDIO",
+"COMBO",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveGLB",
+"display_name": "Save 3D Model",
+"category": "3d",
+"description": "",
+"input_names": [
+"mesh",
+"filename_prefix"
+],
+"input_types": [
+"MESH,FILE_3D_GLB,FILE_3D_GLTF,FILE_3D_OBJ,FILE_3D_FBX,FILE_3D_STL,FILE_3D_USDZ,FILE_3D",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveImage",
+"display_name": "Save Image",
+"category": "image",
+"description": "Saves the input images to your ComfyUI output directory.",
+"input_names": [
+"images",
+"filename_prefix"
+],
+"input_types": [
+"IMAGE",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveImageDataSetToFolder",
+"display_name": "Save Image Dataset to Folder",
+"category": "dataset",
+"description": "",
+"input_names": [
+"images",
+"folder_name",
+"filename_prefix"
+],
+"input_types": [
+"IMAGE",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveImageTextDataSetToFolder",
+"display_name": "Save Image and Text Dataset to Folder",
+"category": "dataset",
+"description": "",
+"input_names": [
+"images",
+"texts",
+"folder_name",
+"filename_prefix"
+],
+"input_types": [
+"IMAGE",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveLatent",
+"display_name": "SaveLatent",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"samples",
+"filename_prefix"
+],
+"input_types": [
+"LATENT",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveLoRA",
+"display_name": "Save LoRA Weights",
+"category": "loaders",
+"description": "",
+"input_names": [
+"lora",
+"prefix",
+"steps"
+],
+"input_types": [
+"INT",
+"LORA_MODEL",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveSVGNode",
+"display_name": "SaveSVGNode",
+"category": "image/save",
+"description": "Save SVG files on disk.",
+"input_names": [
+"svg",
+"filename_prefix"
+],
+"input_types": [
+"STRING",
+"SVG"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveTrainingDataset",
+"display_name": "Save Training Dataset",
+"category": "dataset",
+"description": "",
+"input_names": [
+"latents",
+"conditioning",
+"folder_name",
+"shard_size"
+],
+"input_types": [
+"CONDITIONING",
+"INT",
+"LATENT",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveVideo",
+"display_name": "Save Video",
+"category": "image/video",
+"description": "Saves the input images to your ComfyUI output directory.",
+"input_names": [
+"video",
+"filename_prefix",
+"format",
+"codec"
+],
+"input_types": [
+"COMBO",
+"STRING",
+"VIDEO"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "SaveWEBM",
+"display_name": "SaveWEBM",
+"category": "image/video",
+"description": "",
+"input_names": [
+"images",
+"filename_prefix",
+"codec",
+"fps",
+"crf"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"IMAGE",
+"STRING"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "ScaleROPE",
+"display_name": "ScaleROPE",
+"category": "advanced/model_patches",
+"description": "Scale and shift the ROPE of the model.",
+"input_names": [
+"model",
+"scale_x",
+"shift_x",
+"scale_y",
+"shift_y",
+"scale_t",
+"shift_t"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SelfAttentionGuidance",
+"display_name": "Self-Attention Guidance",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"model",
+"scale",
+"blur_sigma"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SetClipHooks",
+"display_name": "Set CLIP Hooks",
+"category": "advanced/hooks/clip",
+"description": "",
+"input_names": [
+"clip",
+"apply_to_conds",
+"schedule_clip",
+"hooks"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"HOOKS"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SetFirstSigma",
+"display_name": "SetFirstSigma",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"sigmas",
+"sigma"
+],
+"input_types": [
+"FLOAT",
+"SIGMAS"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SetHookKeyframes",
+"display_name": "Set Hook Keyframes",
+"category": "advanced/hooks/scheduling",
+"description": "",
+"input_names": [
+"hooks",
+"hook_kf"
+],
+"input_types": [
+"HOOKS",
+"HOOK_KEYFRAMES"
+],
+"output_types": [
+"HOOKS"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SetLatentNoiseMask",
+"display_name": "Set Latent Noise Mask",
+"category": "latent/inpaint",
+"description": "",
+"input_names": [
+"samples",
+"mask"
+],
+"input_types": [
+"LATENT",
+"MASK"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SetUnionControlNetType",
+"display_name": "SetUnionControlNetType",
+"category": "conditioning/controlnet",
+"description": "",
+"input_names": [
+"control_net",
+"type"
+],
+"input_types": [
+"COMBO",
+"CONTROL_NET"
+],
+"output_types": [
+"CONTROL_NET"
+],
+"output_names": [
+"CONTROL_NET"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ShuffleDataset",
+"display_name": "Shuffle Image Dataset",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"seed"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"images"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ShuffleImageTextDataset",
+"display_name": "Shuffle Image-Text Dataset",
+"category": "dataset/image",
+"description": "",
+"input_names": [
+"images",
+"texts",
+"seed"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [
+"IMAGE",
+"STRING"
+],
+"output_names": [
+"images",
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SkipLayerGuidanceDiT",
+"display_name": "SkipLayerGuidanceDiT",
+"category": "advanced/guidance",
+"description": "Generic version of SkipLayerGuidance node that can be used on every DiT model.",
+"input_names": [
+"model",
+"double_layers",
+"single_layers",
+"scale",
+"start_percent",
+"end_percent",
+"rescaling_scale"
+],
+"input_types": [
+"FLOAT",
+"MODEL",
+"STRING"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SkipLayerGuidanceDiTSimple",
+"display_name": "SkipLayerGuidanceDiTSimple",
+"category": "advanced/guidance",
+"description": "Simple version of the SkipLayerGuidanceDiT node that only modifies the uncond pass.",
+"input_names": [
+"model",
+"double_layers",
+"single_layers",
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"FLOAT",
+"MODEL",
+"STRING"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SkipLayerGuidanceSD3",
+"display_name": "SkipLayerGuidanceSD3",
+"category": "advanced/guidance",
+"description": "Generic version of SkipLayerGuidance node that can be used on every DiT model.",
+"input_names": [
+"model",
+"layers",
+"scale",
+"start_percent",
+"end_percent"
+],
+"input_types": [
+"FLOAT",
+"MODEL",
+"STRING"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SolidMask",
+"display_name": "SolidMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"value",
+"width",
+"height"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SplitAudioChannels",
+"display_name": "Split Audio Channels",
+"category": "audio",
+"description": "Separates the audio into left and right channels.",
+"input_names": [
+"audio"
+],
+"input_types": [
+"AUDIO"
+],
+"output_types": [
+"AUDIO",
+"AUDIO"
+],
+"output_names": [
+"left",
+"right"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SplitImageToTileList",
+"display_name": "Split Image into List of Tiles",
+"category": "image/batch",
+"description": "Splits an image into a batched list of tiles with a specified overlap.",
+"input_names": [
+"image",
+"tile_width",
+"tile_height",
+"overlap"
+],
+"input_types": [
+"IMAGE",
+"INT"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SplitImageWithAlpha",
+"display_name": "Split Image with Alpha",
+"category": "mask/compositing",
+"description": "",
+"input_names": [
+"image"
+],
+"input_types": [
+"IMAGE"
+],
+"output_types": [
+"IMAGE",
+"MASK"
+],
+"output_names": [
+"IMAGE",
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SplitSigmas",
+"display_name": "SplitSigmas",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"sigmas",
+"step"
+],
+"input_types": [
+"INT",
+"SIGMAS"
+],
+"output_types": [
+"SIGMAS",
+"SIGMAS"
+],
+"output_names": [
+"high_sigmas",
+"low_sigmas"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "SplitSigmasDenoise",
+"display_name": "SplitSigmasDenoise",
+"category": "sampling/custom_sampling/sigmas",
+"description": "",
+"input_names": [
+"sigmas",
+"denoise"
+],
+"input_types": [
+"FLOAT",
+"SIGMAS"
+],
+"output_types": [
+"SIGMAS",
+"SIGMAS"
+],
+"output_names": [
+"high_sigmas",
+"low_sigmas"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableCascade_EmptyLatentImage",
+"display_name": "StableCascade_EmptyLatentImage",
+"category": "latent/stable_cascade",
+"description": "",
+"input_names": [
+"width",
+"height",
+"compression",
+"batch_size"
+],
+"input_types": [
+"INT"
+],
+"output_types": [
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"stage_c",
+"stage_b"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableCascade_StageB_Conditioning",
+"display_name": "StableCascade_StageB_Conditioning",
+"category": "conditioning/stable_cascade",
+"description": "",
+"input_names": [
+"conditioning",
+"stage_c"
+],
+"input_types": [
+"CONDITIONING",
+"LATENT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableCascade_StageC_VAEEncode",
+"display_name": "StableCascade_StageC_VAEEncode",
+"category": "latent/stable_cascade",
+"description": "",
+"input_names": [
+"image",
+"vae",
+"compression"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"stage_c",
+"stage_b"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableCascade_SuperResolutionControlnet",
+"display_name": "StableCascade_SuperResolutionControlnet",
+"category": "_for_testing/stable_cascade",
+"description": "",
+"input_names": [
+"image",
+"vae"
+],
+"input_types": [
+"IMAGE",
+"VAE"
+],
+"output_types": [
+"IMAGE",
+"LATENT",
+"LATENT"
+],
+"output_names": [
+"controlnet_input",
+"stage_c",
+"stage_b"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableZero123_Conditioning",
+"display_name": "StableZero123_Conditioning",
+"category": "conditioning/3d_models",
+"description": "",
+"input_names": [
+"clip_vision",
+"init_image",
+"vae",
+"width",
+"height",
+"batch_size",
+"elevation",
+"azimuth"
+],
+"input_types": [
+"CLIP_VISION",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StableZero123_Conditioning_Batched",
+"display_name": "StableZero123_Conditioning_Batched",
+"category": "conditioning/3d_models",
+"description": "",
+"input_names": [
+"clip_vision",
+"init_image",
+"vae",
+"width",
+"height",
+"batch_size",
+"elevation",
+"azimuth",
+"elevation_batch_increment",
+"azimuth_batch_increment"
+],
+"input_types": [
+"CLIP_VISION",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringCompare",
+"display_name": "Text Compare",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string_a",
+"string_b",
+"mode",
+"case_sensitive"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"STRING"
+],
+"output_types": [
+"BOOLEAN"
+],
+"output_names": [
+"BOOLEAN"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringConcatenate",
+"display_name": "Text Concatenate",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string_a",
+"string_b",
+"delimiter"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringContains",
+"display_name": "Text Contains",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"substring",
+"case_sensitive"
+],
+"input_types": [
+"BOOLEAN",
+"STRING"
+],
+"output_types": [
+"BOOLEAN"
+],
+"output_names": [
+"contains"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringLength",
+"display_name": "Text Length",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"INT"
+],
+"output_names": [
+"length"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringReplace",
+"display_name": "Text Replace",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"find",
+"replace"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringSubstring",
+"display_name": "Text Substring",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"start",
+"end"
+],
+"input_types": [
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StringTrim",
+"display_name": "Text Trim",
+"category": "utils/string",
+"description": "",
+"input_names": [
+"string",
+"mode"
+],
+"input_types": [
+"COMBO",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"STRING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StripWhitespace",
+"display_name": "Strip Whitespace",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StyleModelApply",
+"display_name": "Apply Style Model",
+"category": "conditioning/style_model",
+"description": "",
+"input_names": [
+"conditioning",
+"style_model",
+"clip_vision_output",
+"strength",
+"strength_type"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT",
+"STYLE_MODEL"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "StyleModelLoader",
+"display_name": "Load Style Model",
+"category": "loaders",
+"description": "",
+"input_names": [
+"style_model_name"
+],
+"input_types": [],
+"output_types": [
+"STYLE_MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "T5TokenizerOptions",
+"display_name": "T5TokenizerOptions",
+"category": "_for_testing/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"min_padding",
+"min_length"
+],
+"input_types": [
+"CLIP",
+"INT"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [
+"CLIP"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TCFG",
+"display_name": "Tangential Damping CFG",
+"category": "advanced/guidance",
+"description": "TCFG – Tangential Damping CFG (2503.18137)\n\nRefine the uncond (negative) to align with the cond (positive) for improving quality.",
+"input_names": [
+"model"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"patched_model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TemporalScoreRescaling",
+"display_name": "TSR - Temporal Score Rescaling",
+"category": "model_patches/unet",
+"description": "[Post-CFG Function]\nTSR - Temporal Score Rescaling (2510.01184)\n\nRescaling the model's score or noise to steer the sampling diversity.\n",
+"input_names": [
+"model",
+"tsr_k",
+"tsr_sigma"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"patched_model"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeAceStepAudio",
+"display_name": "TextEncodeAceStepAudio",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"clip",
+"tags",
+"lyrics",
+"lyrics_strength"
+],
+"input_types": [
+"CLIP",
+"FLOAT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeAceStepAudio1.5",
+"display_name": "TextEncodeAceStepAudio1.5",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"clip",
+"tags",
+"lyrics",
+"seed",
+"bpm",
+"duration",
+"timesignature",
+"language",
+"keyscale",
+"generate_audio_codes",
+"cfg_scale",
+"temperature",
+"top_p",
+"top_k",
+"min_p"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"COMBO",
+"FLOAT",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeHunyuanVideo_ImageToVideo",
+"display_name": "TextEncodeHunyuanVideo_ImageToVideo",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"clip_vision_output",
+"prompt",
+"image_interleave"
+],
+"input_types": [
+"CLIP",
+"CLIP_VISION_OUTPUT",
+"INT",
+"STRING"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeQwenImageEdit",
+"display_name": "TextEncodeQwenImageEdit",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"prompt",
+"vae",
+"image"
+],
+"input_types": [
+"CLIP",
+"IMAGE",
+"STRING",
+"VAE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeQwenImageEditPlus",
+"display_name": "TextEncodeQwenImageEditPlus",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"prompt",
+"vae",
+"image1",
+"image2",
+"image3"
+],
+"input_types": [
+"CLIP",
+"IMAGE",
+"STRING",
+"VAE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextEncodeZImageOmni",
+"display_name": "TextEncodeZImageOmni",
+"category": "advanced/conditioning",
+"description": "",
+"input_names": [
+"clip",
+"prompt",
+"auto_resize_images",
+"image_encoder",
+"vae",
+"image1",
+"image2",
+"image3"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"CLIP_VISION",
+"IMAGE",
+"STRING",
+"VAE"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [
+"CONDITIONING"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextGenerate",
+"display_name": "TextGenerate",
+"category": "textgen",
+"description": "",
+"input_names": [
+"clip",
+"prompt",
+"max_length",
+"sampling_mode",
+"image",
+"thinking",
+"use_default_template"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"COMFY_DYNAMICCOMBO_V3",
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"generated_text"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextGenerateLTX2Prompt",
+"display_name": "TextGenerateLTX2Prompt",
+"category": "textgen",
+"description": "",
+"input_names": [
+"clip",
+"prompt",
+"max_length",
+"sampling_mode",
+"image",
+"thinking",
+"use_default_template"
+],
+"input_types": [
+"BOOLEAN",
+"CLIP",
+"COMFY_DYNAMICCOMBO_V3",
+"IMAGE",
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"generated_text"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextToLowercase",
+"display_name": "Text to Lowercase",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TextToUppercase",
+"display_name": "Text to Uppercase",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts"
+],
+"input_types": [
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ThresholdMask",
+"display_name": "ThresholdMask",
+"category": "mask",
+"description": "",
+"input_names": [
+"mask",
+"value"
+],
+"input_types": [
+"FLOAT",
+"MASK"
+],
+"output_types": [
+"MASK"
+],
+"output_names": [
+"MASK"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TomePatchModel",
+"display_name": "TomePatchModel",
+"category": "model_patches/unet",
+"description": "",
+"input_names": [
+"model",
+"ratio"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TorchCompileModel",
+"display_name": "TorchCompileModel",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"model",
+"backend"
+],
+"input_types": [
+"COMBO",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TrainLoraNode",
+"display_name": "Train LoRA",
+"category": "training",
+"description": "",
+"input_names": [
+"model",
+"latents",
+"positive",
+"batch_size",
+"grad_accumulation_steps",
+"steps",
+"learning_rate",
+"rank",
+"optimizer",
+"loss_function",
+"seed",
+"training_dtype",
+"lora_dtype",
+"quantized_backward",
+"algorithm",
+"gradient_checkpointing",
+"checkpoint_depth",
+"offloading",
+"existing_lora",
+"bucket_mode",
+"bypass_mode"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"CONDITIONING",
+"FLOAT",
+"INT",
+"LATENT",
+"MODEL"
+],
+"output_types": [
+"LORA_MODEL",
+"LOSS_MAP",
+"INT"
+],
+"output_names": [
+"lora",
+"loss_map",
+"steps"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TrimAudioDuration",
+"display_name": "Trim Audio Duration",
+"category": "audio",
+"description": "Trim audio tensor into chosen time range.",
+"input_names": [
+"audio",
+"start_index",
+"duration"
+],
+"input_types": [
+"AUDIO",
+"FLOAT"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TrimVideoLatent",
+"display_name": "TrimVideoLatent",
+"category": "latent/video",
+"description": "",
+"input_names": [
+"samples",
+"trim_amount"
+],
+"input_types": [
+"INT",
+"LATENT"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TripleCLIPLoader",
+"display_name": "TripleCLIPLoader",
+"category": "advanced/loaders",
+"description": "[Recipes]\n\nsd3: clip-l, clip-g, t5",
+"input_names": [
+"clip_name1",
+"clip_name2",
+"clip_name3"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"CLIP"
+],
+"output_names": [
+"CLIP"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "TruncateText",
+"display_name": "Truncate Text",
+"category": "dataset/text",
+"description": "",
+"input_names": [
+"texts",
+"max_length"
+],
+"input_types": [
+"INT",
+"STRING"
+],
+"output_types": [
+"STRING"
+],
+"output_names": [
+"texts"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "UNETLoader",
+"display_name": "Load Diffusion Model",
+"category": "advanced/loaders",
+"description": "",
+"input_names": [
+"unet_name",
+"weight_dtype"
+],
+"input_types": [],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "UNetCrossAttentionMultiply",
+"display_name": "UNetCrossAttentionMultiply",
+"category": "_for_testing/attention_experiments",
+"description": "",
+"input_names": [
+"model",
+"q",
+"k",
+"v",
+"out"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "UNetSelfAttentionMultiply",
+"display_name": "UNetSelfAttentionMultiply",
+"category": "_for_testing/attention_experiments",
+"description": "",
+"input_names": [
+"model",
+"q",
+"k",
+"v",
+"out"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "UNetTemporalAttentionMultiply",
+"display_name": "UNetTemporalAttentionMultiply",
+"category": "_for_testing/attention_experiments",
+"description": "",
+"input_names": [
+"model",
+"self_structural",
+"self_temporal",
+"cross_structural",
+"cross_temporal"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "USOStyleReference",
+"display_name": "USOStyleReference",
+"category": "advanced/model_patches/flux",
+"description": "",
+"input_names": [
+"model",
+"model_patch",
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"MODEL",
+"MODEL_PATCH"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "UpscaleModelLoader",
+"display_name": "Load Upscale Model",
+"category": "loaders",
+"description": "",
+"input_names": [
+"model_name"
+],
+"input_types": [
+"COMBO"
+],
+"output_types": [
+"UPSCALE_MODEL"
+],
+"output_names": [
+"UPSCALE_MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEDecode",
+"display_name": "VAE Decode",
+"category": "latent",
+"description": "Decodes latent images back into pixel space images.",
+"input_names": [
+"samples",
+"vae"
+],
+"input_types": [
+"LATENT",
+"VAE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEDecodeAudio",
+"display_name": "VAE Decode Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"samples",
+"vae"
+],
+"input_types": [
+"LATENT",
+"VAE"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEDecodeAudioTiled",
+"display_name": "VAE Decode Audio (Tiled)",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"samples",
+"vae",
+"tile_size",
+"overlap"
+],
+"input_types": [
+"INT",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"AUDIO"
+],
+"output_names": [
+"AUDIO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEDecodeHunyuan3D",
+"display_name": "VAEDecodeHunyuan3D",
+"category": "latent/3d",
+"description": "",
+"input_names": [
+"samples",
+"vae",
+"num_chunks",
+"octree_resolution"
+],
+"input_types": [
+"INT",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"VOXEL"
+],
+"output_names": [
+"VOXEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEDecodeTiled",
+"display_name": "VAE Decode (Tiled)",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"samples",
+"vae",
+"tile_size",
+"overlap",
+"temporal_size",
+"temporal_overlap"
+],
+"input_types": [
+"INT",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEEncode",
+"display_name": "VAE Encode",
+"category": "latent",
+"description": "",
+"input_names": [
+"pixels",
+"vae"
+],
+"input_types": [
+"IMAGE",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEEncodeAudio",
+"display_name": "VAE Encode Audio",
+"category": "latent/audio",
+"description": "",
+"input_names": [
+"audio",
+"vae"
+],
+"input_types": [
+"AUDIO",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEEncodeForInpaint",
+"display_name": "VAE Encode (for Inpainting)",
+"category": "latent/inpaint",
+"description": "",
+"input_names": [
+"pixels",
+"vae",
+"mask",
+"grow_mask_by"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"MASK",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAEEncodeTiled",
+"display_name": "VAE Encode (Tiled)",
+"category": "_for_testing",
+"description": "",
+"input_names": [
+"pixels",
+"vae",
+"tile_size",
+"overlap",
+"temporal_size",
+"temporal_overlap"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAELoader",
+"display_name": "Load VAE",
+"category": "loaders",
+"description": "",
+"input_names": [
+"vae_name"
+],
+"input_types": [],
+"output_types": [
+"VAE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VAESave",
+"display_name": "VAESave",
+"category": "advanced/model_merging",
+"description": "",
+"input_names": [
+"vae",
+"filename_prefix"
+],
+"input_types": [
+"STRING",
+"VAE"
+],
+"output_types": [],
+"output_names": [],
+"output_node": true,
+"source": "core"
+},
+{
+"name": "VPScheduler",
+"display_name": "VPScheduler",
+"category": "sampling/custom_sampling/schedulers",
+"description": "",
+"input_names": [
+"steps",
+"beta_d",
+"beta_min",
+"eps_s"
+],
+"input_types": [
+"FLOAT",
+"INT"
+],
+"output_types": [
+"SIGMAS"
+],
+"output_names": [
+"SIGMAS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Video Slice",
+"display_name": "Video Slice",
+"category": "image/video",
+"description": "",
+"input_names": [
+"video",
+"start_time",
+"duration",
+"strict_duration"
+],
+"input_types": [
+"BOOLEAN",
+"FLOAT",
+"VIDEO"
+],
+"output_types": [
+"VIDEO"
+],
+"output_names": [
+"VIDEO"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VideoLinearCFGGuidance",
+"display_name": "VideoLinearCFGGuidance",
+"category": "sampling/video_models",
+"description": "",
+"input_names": [
+"model",
+"min_cfg"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VideoTriangleCFGGuidance",
+"display_name": "VideoTriangleCFGGuidance",
+"category": "sampling/video_models",
+"description": "",
+"input_names": [
+"model",
+"min_cfg"
+],
+"input_types": [
+"FLOAT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VoxelToMesh",
+"display_name": "VoxelToMesh",
+"category": "3d",
+"description": "",
+"input_names": [
+"voxel",
+"algorithm",
+"threshold"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"VOXEL"
+],
+"output_types": [
+"MESH"
+],
+"output_names": [
+"MESH"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "VoxelToMeshBasic",
+"display_name": "VoxelToMeshBasic",
+"category": "3d",
+"description": "",
+"input_names": [
+"voxel",
+"threshold"
+],
+"input_types": [
+"FLOAT",
+"VOXEL"
+],
+"output_types": [
+"MESH"
+],
+"output_names": [
+"MESH"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Wan22FunControlToVideo",
+"display_name": "Wan22FunControlToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"ref_image",
+"control_video"
+],
+"input_types": [
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "Wan22ImageToVideoLatent",
+"display_name": "Wan22ImageToVideoLatent",
+"category": "conditioning/inpaint",
+"description": "",
+"input_names": [
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image"
+],
+"input_types": [
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"LATENT"
+],
+"output_names": [
+"LATENT"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanAnimateToVideo",
+"display_name": "WanAnimateToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"continue_motion_max_frames",
+"video_frame_offset",
+"clip_vision_output",
+"reference_image",
+"face_video",
+"pose_video",
+"background_video",
+"character_mask",
+"continue_motion"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"MASK",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT",
+"INT",
+"INT",
+"INT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent",
+"trim_latent",
+"trim_image",
+"video_frame_offset"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanCameraEmbedding",
+"display_name": "WanCameraEmbedding",
+"category": "camera",
+"description": "",
+"input_names": [
+"camera_pose",
+"width",
+"height",
+"length",
+"speed",
+"fx",
+"fy",
+"cx",
+"cy"
+],
+"input_types": [
+"COMBO",
+"FLOAT",
+"INT"
+],
+"output_types": [
+"WAN_CAMERA_EMBEDDING",
+"INT",
+"INT",
+"INT"
+],
+"output_names": [
+"camera_embedding",
+"width",
+"height",
+"length"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanCameraImageToVideo",
+"display_name": "WanCameraImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"clip_vision_output",
+"start_image",
+"camera_conditions"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE",
+"WAN_CAMERA_EMBEDDING"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanContextWindowsManual",
+"display_name": "WAN Context Windows (Manual)",
+"category": "context",
+"description": "Manually set context windows.",
+"input_names": [
+"model",
+"context_length",
+"context_overlap",
+"context_schedule",
+"context_stride",
+"closed_loop",
+"fuse_method",
+"freenoise"
+],
+"input_types": [
+"BOOLEAN",
+"COMBO",
+"INT",
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanFirstLastFrameToVideo",
+"display_name": "WanFirstLastFrameToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"clip_vision_start_image",
+"clip_vision_end_image",
+"start_image",
+"end_image"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanFunControlToVideo",
+"display_name": "WanFunControlToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"clip_vision_output",
+"start_image",
+"control_video"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanFunInpaintToVideo",
+"display_name": "WanFunInpaintToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"clip_vision_output",
+"start_image",
+"end_image"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanHuMoImageToVideo",
+"display_name": "WanHuMoImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"audio_encoder_output",
+"ref_image"
+],
+"input_types": [
+"AUDIO_ENCODER_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanImageToVideo",
+"display_name": "WanImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"clip_vision_output",
+"start_image"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanInfiniteTalkToVideo",
+"display_name": "WanInfiniteTalkToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"mode",
+"model",
+"model_patch",
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"audio_encoder_output_1",
+"motion_frame_count",
+"audio_scale",
+"clip_vision_output",
+"start_image",
+"previous_frames"
+],
+"input_types": [
+"AUDIO_ENCODER_OUTPUT",
+"CLIP_VISION_OUTPUT",
+"COMFY_DYNAMICCOMBO_V3",
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"MODEL",
+"MODEL_PATCH",
+"VAE"
+],
+"output_types": [
+"MODEL",
+"CONDITIONING",
+"CONDITIONING",
+"LATENT",
+"INT"
+],
+"output_names": [
+"model",
+"positive",
+"negative",
+"latent",
+"trim_image"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanMoveConcatTrack",
+"display_name": "WanMoveConcatTrack",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"tracks_1",
+"tracks_2"
+],
+"input_types": [
+"TRACKS"
+],
+"output_types": [
+"TRACKS"
+],
+"output_names": [
+"TRACKS"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanMoveTrackToVideo",
+"display_name": "WanMoveTrackToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"strength",
+"width",
+"height",
+"length",
+"batch_size",
+"start_image",
+"tracks",
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"TRACKS",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanMoveTracksFromCoords",
+"display_name": "WanMoveTracksFromCoords",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"track_coords",
+"track_mask"
+],
+"input_types": [
+"MASK",
+"STRING"
+],
+"output_types": [
+"TRACKS",
+"INT"
+],
+"output_names": [
+"TRACKS",
+"track_length"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanMoveVisualizeTracks",
+"display_name": "WanMoveVisualizeTracks",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"images",
+"line_resolution",
+"circle_size",
+"opacity",
+"line_width",
+"tracks"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"INT",
+"TRACKS"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [
+"IMAGE"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanPhantomSubjectToVideo",
+"display_name": "WanPhantomSubjectToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"images"
+],
+"input_types": [
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative_text",
+"negative_img_text",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanSCAILToVideo",
+"display_name": "WanSCAILToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"pose_strength",
+"pose_start",
+"pose_end",
+"clip_vision_output",
+"reference_image",
+"pose_video"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanSoundImageToVideo",
+"display_name": "WanSoundImageToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"audio_encoder_output",
+"ref_image",
+"control_video",
+"ref_motion"
+],
+"input_types": [
+"AUDIO_ENCODER_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanSoundImageToVideoExtend",
+"display_name": "WanSoundImageToVideoExtend",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"length",
+"video_latent",
+"audio_encoder_output",
+"ref_image",
+"control_video"
+],
+"input_types": [
+"AUDIO_ENCODER_OUTPUT",
+"CONDITIONING",
+"IMAGE",
+"INT",
+"LATENT",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanTrackToVideo",
+"display_name": "WanTrackToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"tracks",
+"width",
+"height",
+"length",
+"batch_size",
+"temperature",
+"topk",
+"start_image",
+"clip_vision_output"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"STRING",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WanVaceToVideo",
+"display_name": "WanVaceToVideo",
+"category": "conditioning/video_models",
+"description": "",
+"input_names": [
+"positive",
+"negative",
+"vae",
+"width",
+"height",
+"length",
+"batch_size",
+"strength",
+"control_video",
+"control_masks",
+"reference_image"
+],
+"input_types": [
+"CONDITIONING",
+"FLOAT",
+"IMAGE",
+"INT",
+"MASK",
+"VAE"
+],
+"output_types": [
+"CONDITIONING",
+"CONDITIONING",
+"LATENT",
+"INT"
+],
+"output_names": [
+"positive",
+"negative",
+"latent",
+"trim_latent"
+],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "WebcamCapture",
+"display_name": "Webcam Capture",
+"category": "image",
+"description": "",
+"input_names": [
+"image",
+"width",
+"height",
+"capture_on_queue"
+],
+"input_types": [
+"BOOLEAN",
+"INT",
+"WEBCAM"
+],
+"output_types": [
+"IMAGE"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "ZImageFunControlnet",
+"display_name": "ZImageFunControlnet",
+"category": "advanced/loaders/zimage",
+"description": "",
+"input_names": [
+"model",
+"model_patch",
+"vae",
+"strength",
+"image",
+"inpaint_image",
+"mask"
+],
+"input_types": [
+"FLOAT",
+"IMAGE",
+"MASK",
+"MODEL",
+"MODEL_PATCH",
+"VAE"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "unCLIPCheckpointLoader",
+"display_name": "unCLIPCheckpointLoader",
+"category": "loaders",
+"description": "",
+"input_names": [
+"ckpt_name"
+],
+"input_types": [],
+"output_types": [
+"MODEL",
+"CLIP",
+"VAE",
+"CLIP_VISION"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "unCLIPConditioning",
+"display_name": "unCLIPConditioning",
+"category": "conditioning",
+"description": "",
+"input_names": [
+"conditioning",
+"clip_vision_output",
+"strength",
+"noise_augmentation"
+],
+"input_types": [
+"CLIP_VISION_OUTPUT",
+"CONDITIONING",
+"FLOAT"
+],
+"output_types": [
+"CONDITIONING"
+],
+"output_names": [],
+"output_node": false,
+"source": "core"
+},
+{
+"name": "wanBlockSwap",
+"display_name": "wanBlockSwap",
+"category": "",
+"description": "NOP",
+"input_names": [
+"model"
+],
+"input_types": [
+"MODEL"
+],
+"output_types": [
+"MODEL"
+],
+"output_names": [
+"MODEL"
+],
+"output_node": false,
+"source": "core"
+}
+]
+}
