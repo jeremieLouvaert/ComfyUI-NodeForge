@@ -20,6 +20,7 @@ cheap and crash-proof. Routes register even with no API key (the engine only run
 on demand, and reports a clear error if the key is missing).
 """
 import os
+import re
 import json
 import time
 import queue
@@ -56,6 +57,17 @@ GATE_TIMEOUT = 600.0          # seconds a human gate (confirm/approve) may wait
 AMBIGUITY_TIMEOUT = 300.0     # ambiguity is rarely surfaced; shorter wait
 JOB_TTL = 1800.0             # GC a finished/idle job + its temp after this long
 CANCEL = object()            # sentinel pushed into a job queue to cancel a wait
+
+# Pure-plumbing invariants (dtype/shape/range) are guaranteed automatically and are
+# noise to a non-technical human at the confirm step -- hide them from the display.
+# The full invariant set stays in the spec for verification.
+_PLUMBING_INV = re.compile(
+    r"dtype|float32|\bshape\b|\[\s*b\s*,?\s*h|values?.{0,24}\bin\s*\[0|\bin\s*\[0\s*,\s*1\]",
+    re.I)
+
+
+def _user_invariants(invs):
+    return [i for i in (invs or []) if not _PLUMBING_INV.search(str(i))]
 
 
 # ---------------------------------------------------------------------------
@@ -197,7 +209,7 @@ def _run_job_inner(job):
             examples.append(ex)
         payload = {"spec": spec.to_dict(), "examples": examples,
                    "title": spec.title, "ask": spec.ask,
-                   "invariants": list(spec.invariants),
+                   "invariants": _user_invariants(spec.invariants),
                    "unpinned_axes": list(spec.unpinned_axes)}
         edits = _await(job, "confirm", "nodeforge:await_confirm", payload,
                        job.confirm_q, GATE_TIMEOUT, cancel_value=CANCEL)
@@ -256,6 +268,7 @@ def _run_job_inner(job):
             confirm_cb=confirm_cb, approve_cb=approve_cb, ambiguity_cb=ambiguity_cb,
             precheck=False,            # the panel already ran /nodeforge/precheck
             staging_root=staging_root, log=ws_log,
+            force_bank=True,           # interactive iterate-tool: approving = replace any same-named node
         )
     except _Cancelled:
         job.status = "cancelled"
@@ -298,6 +311,8 @@ def _result_summary(res):
         out["limited_verification"] = True
     if res.get("caveats"):
         out["caveats"] = list(res["caveats"])
+    if res.get("replaced"):
+        out["replaced"] = True
     if res.get("unkilled_mutants"):
         out["unkilled_mutants"] = list(res["unkilled_mutants"])
     spec = res.get("spec")

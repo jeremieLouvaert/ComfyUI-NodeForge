@@ -304,12 +304,15 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
                     "detail": f"banked load-test failed pre-copy: {err}"}
         pack_dir, class_name, display = nodegen.write_pack(spec, winner, staging_root,
                                                           class_name=class_name)
+        replaced = os.path.exists(os.path.join(
+            bank.CUSTOM_NODES, os.path.basename(pack_dir.rstrip("/\\"))))
         dest, msg = bank.bank(pack_dir, force=force_bank)
         log(msg)
         return {"status": "banked", "spec": spec, "winner": winner, "dest": dest,
                 "class_name": class_name, "display": display, "report": report,
                 "kept_checks": kept, "unkilled_mutants": vet["unkilled_mutants"],
-                "limited_verification": limited, "caveats": caveats}
+                "limited_verification": limited, "caveats": caveats,
+                "replaced": replaced}
 
 
 def main(argv=None):

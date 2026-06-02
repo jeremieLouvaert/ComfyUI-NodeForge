@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { app } from '/scripts/app.js'
 
 export function TerminalView({ data, onStartOver, onRestart }) {
-  const { type, title, detail, class_name, live_registered, status } = data
+  const { type, title, detail, class_name, live_registered, status, replaced } = data
   const [restarting, setRestarting] = useState(false)
 
   // Live registration: the backend already injected the node into the running
@@ -30,6 +30,11 @@ export function TerminalView({ data, onStartOver, onRestart }) {
       <div className="nf-fade-in nf-success-card">
         <div className="nf-success-icon">✓</div>
         <div className="nf-success-title">{displayTitle} installed</div>
+        {replaced && (
+          <p className="nf-caption" style={{ opacity: 0.75, marginTop: '-2px' }}>
+            Replaced your previous version of this node.
+          </p>
+        )}
         {live_registered ? (
           <>
             <p className="nf-success-sub">

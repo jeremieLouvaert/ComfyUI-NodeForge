@@ -80,6 +80,10 @@ cell corners), formulas, and code reasoning. Say "the dark parts of the image" n
 The machine-side "expectation.statement" MAY stay technical; the "nl_statement" must NOT.
 Bad:  "A pure black image produces output entirely the background color (luminance=0 -> dot radius=0)."
 Good: "A solid black image comes out as solid dark dots covering it (the darkest areas get the biggest dots)."
+Write any BEHAVIOUR "invariants" in the same plain language (no widget/internal names: say
+"repeats in a regular grid" not "periodic with period dot_size"). Still include the standard
+technical invariants (output stays in [0,1], output shape equals input shape) -- they are
+hidden from the human but used as checks.
 
 DEFAULT TO THE STANDARD CONVENTION. When an effect has a well-known convention, USE IT as
 the default and write the examples to match it. E.g. a halftone is like newsprint: the
