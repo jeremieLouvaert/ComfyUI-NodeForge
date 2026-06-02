@@ -57,8 +57,9 @@ Output ONLY a JSON object, no markdown fences, with this exact schema:
   "return_types": ["IMAGE"],
   "return_names": null,
   "contract": "one or two sentences: shapes, ranges, dtype, any fixed formula (e.g. Rec.709 luma).",
+  "clarify": null,
   "examples": [
-    {"id":"e1","nl_statement":"plain-language example a human can confirm",
+    {"id":"e1","nl_statement":"plain language, what a PERSON SEES -- no jargon",
      "input_spec":{"generator":"solid","params":{"color":[0,0,0],"h":2,"w":2}},
      "args":{"color_highlights":"#0000ff","gamma":1.0},
      "expectation":{"kind":"literal","statement":"...", "literal":[r,g,b]}}
@@ -68,7 +69,33 @@ Output ONLY a JSON object, no markdown fences, with this exact schema:
 }
 Give 3 to 6 examples. Make at least one a clear anchor 'literal' when the op has natural
 endpoints. Keep fixtures tiny (2x2 to 8x8). For a 'literal' whose output is uniform, you
-may give a single pixel value [r,g,b] -- it will be broadcast."""
+may give a single pixel value [r,g,b] -- it will be broadcast.
+
+PHRASING (critical) -- each example's "nl_statement" is shown to a NON-TECHNICAL human
+who must confirm it is what they meant. Write it in PLAIN language about WHAT A PERSON
+SEES in the picture. FORBIDDEN in nl_statement: widget/parameter names (dot_size, angle,
+cell, gamma, etc.), internal terms (luminance, radius, foreground_color/background_color,
+cell corners), formulas, and code reasoning. Say "the dark parts of the image" not
+"luminance=0"; "small dots" not "dot radius=0"; "the dot colour" not "foreground_color".
+The machine-side "expectation.statement" MAY stay technical; the "nl_statement" must NOT.
+Bad:  "A pure black image produces output entirely the background color (luminance=0 -> dot radius=0)."
+Good: "A solid black image comes out as solid dark dots covering it (the darkest areas get the biggest dots)."
+
+DEFAULT TO THE STANDARD CONVENTION. When an effect has a well-known convention, USE IT as
+the default and write the examples to match it. E.g. a halftone is like newsprint: the
+DARK areas of the image get the BIG dots and bright areas get small/no dots (do NOT invert
+this). Pick the reading a knowledgeable user expects.
+
+CLARIFY -- set "clarify" to null UNLESS the ask leaves exactly ONE genuinely consequential,
+USER-VISIBLE convention unpinned: a choice where a reasonable person could expect either of
+two clearly different LOOKS and guessing wrong would surprise them. Then set:
+  "clarify": {"question":"a plain question the person can answer",
+              "options":["plain option A","plain option B"],
+              "default":"the option your examples use (the STANDARD/expected one)"}
+Your examples MUST match clarify.default. Real clarify cases: halftone tone direction (dark
+areas get the dots [standard] vs bright areas get the dots); which direction a rotate turns.
+NOT clarify: internal micro-choices, or anything a widget/example/contract already pins. At
+most ONE clarify, else null."""
 # NOTE: unpinned-axis discovery is NOT done here. Embedding a forced-enumeration in
 # elaborate blew the token budget (truncated JSON) and over-listed. Axes come from
 # the dedicated, conservative audit_unpinned_axes() pass below, and they drive ONLY
@@ -313,6 +340,10 @@ def elaborate(ask, model="claude-sonnet-4-6", client=None):
             expectation=records.Expectation.from_dict(e["expectation"]),
             args=e.get("args", {}) or {},
         ))
+    clarify = d.get("clarify")
+    if not (isinstance(clarify, dict) and clarify.get("question")
+            and isinstance(clarify.get("options"), list) and len(clarify["options"]) >= 2):
+        clarify = None
     spec = records.Spec(
         ask=ask, title=d.get("title", ask[:40]),
         input_types=d.get("input_types", {"required": {"image": ["IMAGE"]}}),
@@ -322,6 +353,7 @@ def elaborate(ask, model="claude-sonnet-4-6", client=None):
         examples=examples,
         invariants=d.get("invariants", []),
         edge_cases=d.get("edge_cases", []),
+        clarify=clarify,
         confirmed=False,
     )
     # v0.2 ambiguity oracle: axes come ONLY from the dedicated conservative audit

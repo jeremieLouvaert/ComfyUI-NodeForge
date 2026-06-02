@@ -99,6 +99,9 @@ class Spec:
     #  "interpretations": [str, ...]}. Empty for a fully-specified ask (then the
     #  author loop behaves exactly as v0.1). See docs + decisions.md ambiguity oracle.
     unpinned_axes: list = field(default_factory=list)
+    # A single user-visible convention choice the ask left open, surfaced as a plain
+    # question BEFORE confirm: {"question","options":[...],"default"}. None = nothing to ask.
+    clarify: Optional[dict] = None
     confirmed: bool = False
 
     def to_dict(self):
@@ -109,6 +112,7 @@ class Spec:
                 "examples": [e.to_dict() for e in self.examples],
                 "invariants": list(self.invariants), "edge_cases": list(self.edge_cases),
                 "unpinned_axes": list(self.unpinned_axes),
+                "clarify": self.clarify,
                 "confirmed": self.confirmed}
 
     @classmethod
@@ -119,6 +123,7 @@ class Spec:
                    examples=[Example.from_dict(e) for e in d.get("examples", [])],
                    invariants=d.get("invariants", []), edge_cases=d.get("edge_cases", []),
                    unpinned_axes=d.get("unpinned_axes", []),
+                   clarify=d.get("clarify"),
                    confirmed=d.get("confirmed", False))
 
     def to_spec_string(self) -> str:

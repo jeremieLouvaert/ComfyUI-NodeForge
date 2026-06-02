@@ -156,6 +156,25 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
     log("[0] elaborating spec ...")
     spec, _u = spec_mod.elaborate(ask, model=model, client=client)
 
+    # ---- Stage 0b: clarify ONE genuinely user-visible convention BEFORE confirm ----
+    # If the ask left a consequential look-changing convention open (e.g. a halftone's
+    # dark-dots vs bright-dots), ask the human now so the confirm examples + the build
+    # reflect THEIR choice, not a silent guess. Skipped in non-interactive auto runs
+    # (which take the standard-convention default), preserving the acceptance contract.
+    if getattr(spec, "clarify", None) and (ambiguity_cb is not None or interactive):
+        q = spec.clarify
+        opts = list(q.get("options", []))
+        spec.clarify = None
+        if ambiguity_cb is not None:
+            choice = ambiguity_cb({"question": q["question"], "options": opts, "axis": "convention"})
+        else:
+            choice = confirm_mod.ask_choice(q["question"], opts)
+        if choice and choice in opts and choice != q.get("default"):
+            log(f"[0b] re-elaborating for your choice: {choice}")
+            spec, _u = spec_mod.elaborate(ask + f"\n\nIMPORTANT user choice (honor exactly): {choice}",
+                                          model=model, client=client)
+            spec.clarify = None   # resolved; do not re-ask
+
     # Each unpinned axis can cost one resolution round (the oracle probes one axis
     # per round); give the loop enough budget to resolve them all + a final bank
     # round, so a multi-axis spec is not starved into ambiguity_exhausted.
