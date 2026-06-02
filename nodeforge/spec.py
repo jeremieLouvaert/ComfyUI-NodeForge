@@ -252,7 +252,7 @@ def audit_unpinned_axes(ask, spec, model="claude-sonnet-4-6", client=None, max_t
             "List every axis where two competent engineers could differ. "
             "Output the JSON array now.")
     try:
-        resp = client.messages.create(
+        resp = keys.create_message(client,
             model=model, max_tokens=max_tokens, temperature=0.2,
             system=[{"type": "text", "text": _AUDIT_SYSTEM,
                      "cache_control": {"type": "ephemeral"}}],
@@ -286,7 +286,7 @@ def elaborate(ask, model="claude-sonnet-4-6", client=None):
     last_err = None
     resp = None
     for attempt in range(2):
-        resp = client.messages.create(
+        resp = keys.create_message(client,
             model=model, max_tokens=8000, temperature=0.3,
             system=[{"type": "text", "text": _SPEC_SYSTEM,
                      "cache_control": {"type": "ephemeral"}}],

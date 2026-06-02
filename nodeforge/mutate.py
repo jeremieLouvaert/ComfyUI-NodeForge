@@ -37,7 +37,7 @@ module only emits sources.
 import os
 import re
 
-from . import records
+from . import records, keys
 
 
 # ---------------------------------------------------------------------------
@@ -173,7 +173,7 @@ def build_llm_mutants(spec, n=1, model="claude-sonnet-4-6", client=None):
     for k in range(n):
         user = (f"SPECIFICATION (mutation seed {k}):\n\n{spec_text}\n\n"
                 "Write the subtly-buggy implementation now. Output only the Python module.")
-        resp = client.messages.create(
+        resp = keys.create_message(client,
             model=model, max_tokens=4000, temperature=1.0,
             system=[{"type": "text", "text": _MUTANT_SYSTEM,
                      "cache_control": {"type": "ephemeral"}}],

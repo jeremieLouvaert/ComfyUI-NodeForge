@@ -43,3 +43,24 @@ def anthropic_client():
     import anthropic
     return anthropic.Anthropic(api_key=anthropic_key(),
                                max_retries=MAX_RETRIES, timeout=TIMEOUT_S)
+
+
+# Newer models (e.g. claude-opus-4-8) DEPRECATE the `temperature` param and 400 on
+# it. The engine sets temperature on most calls (diversity for impls/mutants), so
+# wrap creation: drop temperature + retry on that specific 400, and remember the
+# model so the rest of the run skips it (one wasted request per model, not per call).
+_NO_TEMPERATURE = set()
+
+
+def create_message(client, **kwargs):
+    model = kwargs.get("model")
+    if model in _NO_TEMPERATURE:
+        kwargs.pop("temperature", None)
+    try:
+        return client.messages.create(**kwargs)
+    except Exception as e:
+        if "temperature" in str(e).lower() and "temperature" in kwargs:
+            _NO_TEMPERATURE.add(model)
+            kwargs.pop("temperature", None)
+            return client.messages.create(**kwargs)
+        raise

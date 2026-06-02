@@ -88,7 +88,7 @@ def _complete(client, model, system_text, user, temperature, max_tokens=6000):
     last_cap = max_tokens
     for cap in (max_tokens, min(8000, int(max_tokens * 1.5))):
         last_cap = cap
-        resp = client.messages.create(
+        resp = keys.create_message(client,
             model=model, max_tokens=cap, temperature=temperature,
             system=[{"type": "text", "text": system_text,
                      "cache_control": {"type": "ephemeral"}}],
