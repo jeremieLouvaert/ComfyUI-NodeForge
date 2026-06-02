@@ -49,7 +49,8 @@ export function ConfirmView({ data, api, onConfirm }) {
         <div>
           <div className="nf-label">Examples</div>
           <p className="nf-caption" style={{ marginBottom: '8px' }}>
-            Toggle ✕ to drop an example from the test oracle.
+            Worked examples NodeForge checks the finished node against. Drop one (✕) only if it
+            does not match what you want — that removes the check, not a feature.
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {examples.map(ex => (
@@ -67,7 +68,7 @@ export function ConfirmView({ data, api, onConfirm }) {
 
       {(invariants.length > 0 || unpinned_axes.length > 0) && (
         <div>
-          <div className="nf-label">Invariants</div>
+          <div className="nf-label">Rules it must always follow</div>
           {invariants.length > 0 && (
             <div className="nf-invariants-list">
               {invariants.map((inv, i) => (
@@ -82,13 +83,13 @@ export function ConfirmView({ data, api, onConfirm }) {
       )}
 
       <div>
-        <div className="nf-label">Add invariant</div>
+        <div className="nf-label">Add a rule</div>
         <div style={{ display: 'flex', gap: '6px' }}>
           <input
             className="nf-input"
             value={addInvariantText}
             onChange={e => setAddInvariantText(e.target.value)}
-            placeholder="e.g. output tensor must have same dtype as input"
+            placeholder="e.g. the output must never be brighter than the original"
             onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addInvariant() } }}
           />
           <button
