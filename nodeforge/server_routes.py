@@ -309,10 +309,37 @@ def _result_summary(res):
 
 
 def _try_live_register(res):
-    """Pin #4 SPIKE seam. Default OFF (returns False -> frontend shows the restart
-    CTA). The proven path is a one-click restart; live in-process registration is
-    filled in + proven by the spike before being enabled by default."""
-    return False
+    """Pin #4: register the just-banked pack into the LIVE server so the node appears
+    with no restart. Reliable for NodeForge's constrained class (simple, single-file,
+    pure-Python, no JS): ComfyUI's nodes.load_custom_node execs the pack and injects
+    its classes into the global NODE_CLASS_MAPPINGS, which /object_info serves live.
+
+    Self-protecting: ANY failure returns False, so the frontend falls back to the
+    restart CTA -- enabling the attempt costs nothing. The worker is a background
+    thread, so the async load_custom_node is scheduled onto the aiohttp event loop.
+    On success the frontend re-pulls /object_info (refreshComboInNodes) off the
+    nodeforge:banked event."""
+    dest = res.get("dest")
+    if not (_HAVE_SERVER and dest and os.path.isdir(dest)):
+        return False
+    try:
+        import asyncio
+        import nodes
+        loop = getattr(_SERVER, "loop", None)
+        if loop is None:
+            return False
+        fut = asyncio.run_coroutine_threadsafe(nodes.load_custom_node(dest), loop)
+        ok = bool(fut.result(timeout=15))
+        # confirm the class is actually servable now (not just that load returned)
+        cls = res.get("class_name")
+        if ok and cls:
+            ok = cls in getattr(nodes, "NODE_CLASS_MAPPINGS", {})
+        if ok:
+            print(f"[NodeForge] live-registered {res.get('class_name')} (no restart)")
+        return ok
+    except Exception as e:
+        print(f"[NodeForge] live-register failed ({type(e).__name__}: {e}); restart fallback")
+        return False
 
 
 # ---------------------------------------------------------------------------

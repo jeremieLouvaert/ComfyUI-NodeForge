@@ -1,8 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { app } from '/scripts/app.js'
 
 export function TerminalView({ data, onStartOver, onRestart }) {
   const { type, title, detail, class_name, live_registered, status } = data
   const [restarting, setRestarting] = useState(false)
+
+  // Live registration: the backend already injected the node into the running
+  // server (NODE_CLASS_MAPPINGS), but the frontend only learns of it by re-pulling
+  // /object_info and re-registering the LiteGraph types -- which is exactly what
+  // refreshComboInNodes() does. Fire it once when a banked node registered live.
+  useEffect(() => {
+    if (type === 'banked' && live_registered) {
+      try {
+        Promise.resolve(app?.refreshComboInNodes?.()).catch(() => {})
+      } catch (e) {
+        console.warn('[NodeForge] refreshComboInNodes failed; a page reload will show the node', e)
+      }
+    }
+  }, [type, live_registered])
 
   async function handleRestart() {
     setRestarting(true)
@@ -18,7 +33,8 @@ export function TerminalView({ data, onStartOver, onRestart }) {
         {live_registered ? (
           <>
             <p className="nf-success-sub">
-              The node is live and registered — no restart needed.
+              Live and added to your node search — no restart needed. Double-click the
+              canvas and search for it. (If it doesn't show, reload the page.)
             </p>
             <button className="nf-btn nf-btn-secondary" onClick={onStartOver}>
               Build another
