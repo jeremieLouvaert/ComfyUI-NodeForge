@@ -277,6 +277,7 @@ def _run_job_inner(job):
     job.status = status
     if status == "banked":
         live = _try_live_register(res)
+        job.result["live_registered"] = live   # so resume-on-reopen reflects it too
         job.emit("nodeforge:banked", {**job.result, "live_registered": live})
     elif status == "rejected":
         job.emit("nodeforge:rejected", {"detail": res.get("detail", "")})
