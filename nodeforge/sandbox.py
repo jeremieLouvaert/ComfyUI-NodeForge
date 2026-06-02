@@ -184,6 +184,36 @@ def run_job(job: dict, wall_s: float = DEFAULT_WALL_S, mem_mb: int = DEFAULT_MEM
     return report
 
 
+def render(fixtures, out_dir, candidate=None, wall_s=60.0):
+    """Render fixture INPUTs (and, if `candidate` given, that candidate's OUTPUTs)
+    to PNGs in out_dir, via a sandbox child. Returns {key: abspath} for PNGs
+    actually written on disk -- 'in_<example_id>' always, 'out_<example_id>' when a
+    candidate is supplied. Best-effort: a fixture or candidate that fails to render
+    is simply absent from the returned map (it never raises).
+
+    `fixtures` is the same [{"example_id","input_spec"}] list the run mode takes;
+    `candidate` is {"id","source","class_name"}. The parent stays torch-free and
+    never execs candidate code -- all of that happens in the child."""
+    os.makedirs(out_dir, exist_ok=True)
+    out_dir = os.path.abspath(out_dir)
+    job = {"job_id": "render", "mode": "render", "allow_gpu": False,
+           "candidates": [candidate] if candidate else [],
+           "batteries": [], "example_fixtures": list(fixtures),
+           "render_dir": out_dir}
+    run_job(job, wall_s=wall_s)
+    rendered = {}
+    for f in fixtures:
+        eid = f["example_id"]
+        p_in = os.path.join(out_dir, f"in_{eid}.png")
+        if os.path.exists(p_in):
+            rendered[f"in_{eid}"] = p_in
+        if candidate:
+            p_out = os.path.join(out_dir, f"out_{eid}.png")
+            if os.path.exists(p_out):
+                rendered[f"out_{eid}"] = p_out
+    return rendered
+
+
 def _parse_report(stdout_text, job_id):
     """Pull the last JSON object out of stdout (the child prints exactly one, but
     be defensive about stray prints)."""

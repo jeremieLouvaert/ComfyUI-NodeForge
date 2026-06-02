@@ -159,6 +159,118 @@ def _literal_check_fn(fname, example):
 
 
 # ---------------------------------------------------------------------------
+# A3 graceful-degradation fallback battery (no LLM, no teeth): the confirmed
+# examples + the output contract. Used only when the teeth-gate yields no checks,
+# so the run reaches the human gate (flagged "limited verification") instead of a
+# dead-end. The human + the before/after images are the oracle here.
+# ---------------------------------------------------------------------------
+def _contract_battery(spec):
+    """Generic IMAGE-output contract checks (range [0,1], dtype float32, and shape
+    preservation when the spec asserts it) as a battery module. Returns source or
+    None when the node does not output an IMAGE."""
+    rtypes = [str(t).upper() for t in (spec.return_types or [])]
+    if "IMAGE" not in rtypes:
+        return None
+    pres = any(("shape" in str(x).lower() and ("equal" in str(x).lower() or "same" in str(x).lower()))
+               for x in (list(spec.invariants) + [spec.contract or ""]))
+    src = (
+        "import torch\n"
+        "from nodeforge import fixtures as _fx\n\n"
+        "def _run(NodeClass):\n"
+        "    node = NodeClass(); fn = getattr(node, NodeClass.FUNCTION)\n"
+        "    img = _fx.build({'generator':'seeded_texture','params':{'h':16,'w':16}})\n"
+        "    req = NodeClass.INPUT_TYPES().get('required', {})\n"
+        "    kwargs = {}\n"
+        "    for pname, pdef in req.items():\n"
+        "        if pname=='image' or (isinstance(pdef,(list,tuple)) and pdef and pdef[0]=='IMAGE'):\n"
+        "            kwargs[pname]=img\n"
+        "        elif isinstance(pdef,(list,tuple)) and len(pdef)>1 and isinstance(pdef[1],dict) and 'default' in pdef[1]:\n"
+        "            kwargs[pname]=pdef[1]['default']\n"
+        "    out = fn(**kwargs)\n"
+        "    o = out[0] if isinstance(out,(tuple,list)) else out\n"
+        "    return img, o\n\n"
+        "def check_contract_range(NodeClass):\n"
+        "    _, o = _run(NodeClass)\n"
+        "    return ('contract_range', bool(o.min()>=-1e-3 and o.max()<=1+1e-3), 'output in [0,1]')\n\n"
+        "def check_contract_dtype(NodeClass):\n"
+        "    _, o = _run(NodeClass)\n"
+        "    return ('contract_dtype', bool(o.dtype==torch.float32), str(o.dtype))\n\n"
+    )
+    checks = ["check_contract_range", "check_contract_dtype"]
+    if pres:
+        src += (
+            "def check_contract_shape(NodeClass):\n"
+            "    img, o = _run(NodeClass)\n"
+            "    return ('contract_shape', bool(tuple(o.shape)==tuple(img.shape)), f'{tuple(o.shape)} vs {tuple(img.shape)}')\n\n"
+        )
+        checks.append("check_contract_shape")
+    src += "CHECKS = [" + ", ".join(checks) + "]\nOPEN_QUESTIONS = []\n"
+    return src
+
+
+def fallback_checks(spec):
+    """A3: the no-teeth fallback battery as a list[Check] -- the confirmed literal
+    examples (via _examples_as_battery) plus the IMAGE contract. teeth=[] (these
+    kill no mutants by construction); they are the human-confirmed oracle + the
+    contract, surfaced honestly as limited verification. Returns [] only when there
+    is genuinely nothing to check (no literal examples and a non-IMAGE output)."""
+    out = []
+    ex_src = _examples_as_battery(spec)
+    if ex_src:
+        out.append(records.Check(name="confirmed_examples", source=ex_src,
+                                 teeth=[], passes_ref0=True, vacuous=False))
+    contract_src = _contract_battery(spec)
+    if contract_src:
+        out.append(records.Check(name="output_contract", source=contract_src,
+                                 teeth=[], passes_ref0=True, vacuous=False))
+    return out
+
+
+# ---------------------------------------------------------------------------
+# op-aware discriminating fixtures (A2): a spatially-structured op (halftone,
+# dither, tiling, kernels) produces UNIFORM output on a solid/tiny input, so a
+# mutant that breaks its grid/rotation/cell logic looks identical to ref0 there
+# and valid_mutants drops it -- leaving zero teeth targets and a Stage-2 dead-end.
+# Probing on structured, op-sized fixtures makes those mutants differ and survive.
+# ---------------------------------------------------------------------------
+_SIZE_WIDGET_RE = re.compile(r"dot|cell|tile|kernel|grid|radius|block|patch|step|size", re.I)
+
+
+def _op_probe_size(spec):
+    """Probe edge length large enough that a structured op shows structure: ~4x the
+    largest cell/size-like INT widget default, clamped to [16, 48] (kept modest so
+    the sandbox stays fast)."""
+    sizes = []
+    for section in ("required", "optional"):
+        for name, pdef in (spec.input_types.get(section, {}) or {}).items():
+            if not _SIZE_WIDGET_RE.search(str(name)):
+                continue
+            if isinstance(pdef, (list, tuple)) and pdef and pdef[0] == "INT":
+                opts = pdef[1] if len(pdef) > 1 and isinstance(pdef[1], dict) else {}
+                d = opts.get("default")
+                if isinstance(d, (int, float)) and d > 0:
+                    sizes.append(int(d))
+    base = max(sizes) * 4 if sizes else 32
+    return max(16, min(48, base))
+
+
+def _discriminating_probes(spec):
+    """Structured, op-sized fixtures (checkerboard + gradient + texture) so a
+    spatial mutant differs from ref0 even when the confirmed examples are solid or
+    tiny. Deterministic, no API. Returns [{example_id, input_spec, args}]."""
+    n = _op_probe_size(spec)
+    cell = max(2, n // 8)
+    return [
+        {"example_id": "_probe_checker",
+         "input_spec": {"generator": "checkerboard", "params": {"cell": cell, "h": n, "w": n}}, "args": {}},
+        {"example_id": "_probe_grad",
+         "input_spec": {"generator": "gradient", "params": {"axis": "x", "h": n, "w": n}}, "args": {}},
+        {"example_id": "_probe_tex",
+         "input_spec": {"generator": "seeded_texture", "params": {"seed": 7, "h": n, "w": n}}, "args": {}},
+    ]
+
+
+# ---------------------------------------------------------------------------
 # the gate
 # ---------------------------------------------------------------------------
 def valid_mutants(spec, ref0, mutants, wall_s=60):
@@ -171,10 +283,11 @@ def valid_mutants(spec, ref0, mutants, wall_s=60):
     cands = [{"id": "ref0", "source": ref0.source, "class_name": ref0.class_name, "origin": "ref0"}]
     for m in mutants:
         cands.append({"id": m.id, "source": m.source, "class_name": m.class_name, "origin": m.origin})
-    # use example fixtures if any, else a default texture probe so differences show
-    fixtures = _example_fixtures(spec) or [
-        {"example_id": "_probe", "input_spec": {"generator": "seeded_texture",
-                                                "params": {"h": 8, "w": 8}}, "args": {}}]
+    # A2: probe on the confirmed example fixtures AND op-sized structured probes, so
+    # a spatial mutant that is invisible on a solid/tiny example still differs on a
+    # structured probe and survives as a teeth target (keep a mutant if it differs
+    # on ANY fixture).
+    fixtures = _example_fixtures(spec) + _discriminating_probes(spec)
     job = {"job_id": "mutant_validate", "mode": "run", "allow_gpu": False,
            "candidates": cands, "batteries": [], "example_fixtures": fixtures}
     # batteries empty -> child still computes output_digests; but it early-returns

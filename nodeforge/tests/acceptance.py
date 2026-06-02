@@ -15,7 +15,7 @@ import sys
 
 _REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, _REPO)
-from nodeforge import cli, bank as bank_mod   # noqa: E402
+from nodeforge import cli, bank as bank_mod, gate as gate_mod   # noqa: E402
 
 ASK_A = ("I want a node that gives an image a duotone look -- map the whole image to a "
          "gradient between two colors based on how bright each pixel is.")
@@ -36,15 +36,27 @@ def _auto_approve(*a, **k):
     return True
 
 
+def _capture_reject():
+    """An approve_cb that records what the gate was handed (did it reach the gate?
+    was it limited? what caveats?) then rejects, so nothing banks. Models the human
+    seeing the gate. Returns (cap_dict, cb)."""
+    cap = {"reached": False, "limited": None, "caveats": []}
+    def cb(spec, winner, kept, unkilled, limited_verification=False, caveats=None):
+        cap.update(reached=True, limited=bool(limited_verification),
+                   caveats=list(caveats or []))
+        raise gate_mod.RejectError("acceptance: capture, do not bank")
+    return cap, cb
+
+
 def run_A(force=False):
+    # A clean, well-specified op must bank AND be FULLY verified (not limited).
     res = cli.run_author(ASK_A, n=3, interactive=False,
                          confirm_cb=_auto_confirm, approve_cb=_auto_approve,
                          force_bank=force, log=log)
-    ok = res["status"] == "banked"
-    detail = [f"status={res['status']}", f"detail={res.get('detail','')}",
-              f"dest={res.get('dest','')}"]
-    if ok:
-        # banked pack must pass a sandbox load-test of its node module
+    ok = res["status"] == "banked" and not res.get("limited_verification")
+    detail = [f"status={res['status']}", f"limited={res.get('limited_verification')}",
+              f"detail={res.get('detail','')}", f"dest={res.get('dest','')}"]
+    if res["status"] == "banked":
         import glob
         node_files = glob.glob(os.path.join(res["dest"], "nodes", "*.py"))
         node_files = [f for f in node_files if not f.endswith("__init__.py")]
@@ -56,20 +68,36 @@ def run_A(force=False):
 
 
 def run_B(force=False):
+    # 2026-06-02 contract: an ambiguous ask is NO LONGER a dead-end. It must REACH
+    # the gate (deliver a runnable candidate for human review), not hard-error.
+    cap, cb = _capture_reject()
     res = cli.run_author(ASK_B, n=3, interactive=False,
-                         confirm_cb=_auto_confirm, approve_cb=_auto_approve,
+                         confirm_cb=_auto_confirm, approve_cb=cb,
                          force_bank=force, log=log)
-    ok = res["status"] != "banked"   # must NOT bank
-    return "B", ok, [f"status={res['status']}", f"detail={res.get('detail','')}",
-                     f"question={res.get('question','')[:200]}"]
+    # reached the gate (then we rejected -> 'rejected'); OR it banked under a clean
+    # parameterization (also fine -- it delivered something reviewable).
+    ok = cap["reached"] or res["status"] == "banked"
+    return "B", ok, [f"status={res['status']}", f"reached_gate={cap['reached']}",
+                     f"limited={cap['limited']}", f"caveats={cap['caveats']}"]
 
 
 def run_C(force=False):
+    # 2026-06-02 contract: a contradictory ask must NOT silently bank. It reaches the
+    # human gate (so a human can reject what they see), nothing banks without approval,
+    # and IF it is flagged limited it always carries caveats (no silent downgrade).
+    # Either elaborate resolves the ask into a coherent node (confident, the human
+    # judges the before/after) OR the conflict surfaces as limited+caveats; both are
+    # honest, neither silently banks. (The "surface conflicting examples as caveats"
+    # path is exercised live by over-idealized structured asks, e.g. halftone.)
+    cap, cb = _capture_reject()
     res = cli.run_author(ASK_C, n=3, interactive=False,
-                         confirm_cb=_auto_confirm, approve_cb=_auto_approve,
+                         confirm_cb=_auto_confirm, approve_cb=cb,
                          force_bank=force, log=log)
-    ok = res["status"] != "banked"   # must NOT bank
-    return "C", ok, [f"status={res['status']}", f"detail={res.get('detail','')}"]
+    no_silent_bank = cap["reached"] and res["status"] == "rejected"
+    limited_implies_caveats = (not cap["limited"]) or len(cap["caveats"]) > 0
+    ok = no_silent_bank and limited_implies_caveats
+    return "C", ok, [f"status={res['status']}", f"reached_gate={cap['reached']}",
+                     f"limited={cap['limited']}", f"caveats={cap['caveats']}"]
 
 
 def main():

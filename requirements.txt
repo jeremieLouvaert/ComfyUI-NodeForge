@@ -1,0 +1,3 @@
+# NodeForge engine dependency. The panel's backend routes import this lazily (only
+# when an author run starts), so a missing key/SDK never breaks ComfyUI boot.
+anthropic>=0.39.0

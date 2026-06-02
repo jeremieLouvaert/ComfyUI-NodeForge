@@ -21,6 +21,15 @@ from . import (records, spec as spec_mod, confirm as confirm_mod, codegen,
                precheck as precheck_mod)
 
 
+# A trivial always-pass battery used only to make the sandbox load + run the impls
+# (so we learn which ones are runnable + get output digests) when there are no real
+# checks at all -- the advisory posture never lets "no checks" become a dead-end.
+_NOOP_CHECK = records.Check(
+    name="_noop",
+    source="def check_noop(NodeClass):\n    return ('noop', True, '')\nCHECKS=[check_noop]\nOPEN_QUESTIONS=[]\n",
+    teeth=[], passes_ref0=True, vacuous=True)
+
+
 # ---------------------------------------------------------------------------
 # Stage 4 helper: run the vetted battery (list[Check]) vs impl candidates
 # ---------------------------------------------------------------------------
@@ -52,19 +61,25 @@ def _best_ref0(spec, model, client, tries=4, log=print):
     return best, best_fail
 
 
-def _resolve_ambiguity(spec, outcome, confirm_cb, log):
+def _resolve_ambiguity(spec, outcome, confirm_cb, log, ambiguity_cb=None):
     """Fold a Stage-4 ambiguity resolution into the spec, then let the loop re-run.
 
     Structured (the v0.2 oracle, outcome carries `options`): the human picks one
     interpretation via a multiple-choice menu; it becomes a hard invariant AND the
     resolved axis is removed from spec.unpinned_axes so the next round stops probing
-    it (impls converge on the pinned reading -> CONFIDENT -> bank). In auto mode
-    (confirm_cb set, no human) the first option is chosen deterministically so the
-    loop still progresses. Falls back to today's free-text path when no options."""
+    it (impls converge on the pinned reading -> CONFIDENT -> bank). Resolution order:
+    an explicit `ambiguity_cb` (the panel surfaces the question to the human) wins;
+    else in auto mode (confirm_cb set, no human) the first option is chosen
+    deterministically so the loop still progresses; else the interactive CLI menu.
+    Falls back to a free-text path when no options."""
     axis = outcome.get("axis")
     options = outcome.get("options", [])
     if options:
-        if confirm_cb is not None:
+        if ambiguity_cb is not None:
+            choice = ambiguity_cb(outcome)         # panel: surface the real question
+            if choice not in options:              # honor the human-question contract,
+                choice = options[0]                # but never let a bad return derail it
+        elif confirm_cb is not None:
             choice = options[0]            # auto mode: deterministic, keeps the loop moving
         else:
             choice = confirm_mod.ask_choice(outcome["question"], options)
@@ -75,7 +90,11 @@ def _resolve_ambiguity(spec, outcome, confirm_cb, log):
         log(f"    [AMBIGUITY resolved] {axis} -> {choice}")
         return
     # free-text fallback (no structured options)
-    if confirm_cb is not None:
+    if ambiguity_cb is not None:
+        ans = (ambiguity_cb(outcome) or "").strip()
+        if ans:
+            spec.invariants.append(ans)
+    elif confirm_cb is not None:
         spec.invariants.append("Resolve ambiguity: " + outcome["question"])
     else:
         ans = input("Clarify the intended behavior (becomes a new invariant): ").strip()
@@ -86,7 +105,7 @@ def _resolve_ambiguity(spec, outcome, confirm_cb, log):
 def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
                confirm_cb=None, approve_cb=None, max_spec_rounds=2,
                staging_root=None, force_bank=False, log=print, client=None,
-               precheck=True, precheck_cb=None):
+               precheck=True, precheck_cb=None, ambiguity_cb=None):
     """Drive the full author loop. Returns a result dict:
        {status: banked|rejected|contradiction|ambiguity_exhausted|exists|error,
         dest, spec, winner, report, ...}.
@@ -96,6 +115,12 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
     precheck_cb(routed)->bool: pre-check hook; receives the routed band result
                                ({band, hit, candidates}); True = author anyway,
                                False = stop (use what retrieval found).
+    ambiguity_cb(outcome)->str: Stage-4 hook; given the ambiguity outcome (carries
+                               `question`/`axis`/`options`), returns the chosen
+                               interpretation string. When set, the loop surfaces
+                               the question instead of auto-picking options[0] (the
+                               panel's human-question contract). Default None keeps
+                               today's behavior.
     """
     staging_root = staging_root or os.path.join(
         os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_staging")
@@ -153,12 +178,21 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         # examples. A single draw is occasionally imperfect on one example; that is
         # not a contradiction. Only if NO draw across the budget can satisfy the
         # examples do we treat the spec as bad/contradictory.
+        # ADVISORY posture (2026-06-02): the only hard gates are "code runs" + "human
+        # approves". Every automated signal below either raises confidence or degrades
+        # to a surfaced caveat; none of them dead-ends the run.
         ref0, failing = _best_ref0(spec, model, client, tries=4, log=log)
-        if failing:
-            log(f"    no ref0 satisfied all examples; best still fails: {failing}")
-            return {"status": "contradiction", "spec": spec,
-                    "detail": f"no reference impl can satisfy the confirmed examples "
-                              f"after multiple tries: {failing}"}
+        caveats = []
+        limited = False
+        ref0_load_failed = any("load error" in str(f).lower() for f in failing)
+        if failing and not ref0_load_failed:
+            # The reference could not reproduce every confirmed example. Usually the
+            # examples are over-idealized (a solid-input edge case), not the ask being
+            # impossible -- carry it as a caveat and run LIMITED; the human gate decides.
+            log(f"    reference could not satisfy all examples ({failing}); continuing LIMITED")
+            caveats.append("the reference could not reproduce these confirmed examples "
+                           f"exactly: {', '.join(str(f) for f in failing)}")
+            limited = True
         mutants = mutate.build_operator_mutants(spec, ref0.source, ref0.class_name)
         try:
             mutants += mutate.build_llm_mutants(spec, n=1, model=model, client=client)
@@ -167,56 +201,79 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         vet = synth.vet_battery(spec, ref0, mutants, model=model, client=client, log=log)
         kept = vet["kept_checks"]
         if not kept:
-            return {"status": "error", "spec": spec,
-                    "detail": "Stage 2 produced no teeth-passing checks."}
+            fb = synth.fallback_checks(spec)
+            if fb:
+                kept = fb
+                caveats.append("a full mutation test could not be built; the checks shown "
+                               "are your confirmed examples + the output contract only")
+            else:
+                kept = []
+                caveats.append("no automated checks could be built for this op; it is "
+                               "verified by your review of the code + before/after only")
+            limited = True
+            log("    no teeth-passing checks -> LIMITED verification; the human gate is the oracle")
         if vet["unkilled_mutants"]:
-            log(f"    residual: {len(vet['unkilled_mutants'])} mutation class(es) uncaught "
-                f"-> surfaced at the gate")
+            caveats.append(f"{len(vet['unkilled_mutants'])} mutation class(es) were not caught by any test")
+            log(f"    residual: {len(vet['unkilled_mutants'])} mutation class(es) uncaught -> surfaced at the gate")
 
         # ---- Stage 3: N implementations ----
         log(f"[3] generating {n} implementations ...")
         impls, _us = codegen.generate_impls(spec, n=n, model=model, client=client)
 
-        # ---- Stage 4: run vetted battery + differential ----
+        # ---- Stage 4: run battery + differential -- ADVISORY signals, never a gate ----
         log("[4] running battery vs implementations + differential ...")
-        report = _run_vetted(spec, kept, impls)
+        run_battery = kept if kept else [_NOOP_CHECK]   # noop -> still get load/run info
+        report = _run_vetted(spec, run_battery, impls)
         impl_ids = [c.id for c in impls]
         by_id = {c.id: c for c in impls}
-        # analyze_stance is byte-identical to analyze for non-stance runs (no
-        # Candidate carries a .stance); for stance runs it escalates only on
-        # axis-attributable, on-dimension divergence (the v0.2 ambiguity oracle).
         outcome = differential.analyze_stance(report, impl_ids, spec, candidates_by_id=by_id)
         log(f"    outcome: {outcome['outcome']} -- {outcome['detail']}")
 
-        if outcome["outcome"] == differential.CONTRADICTION:
-            return {"status": "contradiction", "spec": spec, "report": report,
-                    "detail": outcome["detail"]}
-        if outcome["outcome"] == differential.RETRY:
-            if rounds >= max_spec_rounds:
-                return {"status": "error", "spec": spec, "report": report,
-                        "detail": "no implementation passed after retries: " + outcome["detail"]}
-            log("    retrying with fresh implementations ...")
-            continue
-        if outcome["outcome"] == differential.AMBIGUITY:
-            if rounds >= max_spec_rounds:
-                return {"status": "ambiguity_exhausted", "spec": spec, "report": report,
-                        "question": outcome["question"], "axis": outcome.get("axis"),
-                        "options": outcome.get("options", [])}
-            log("    [AMBIGUITY] " + outcome["question"])
-            _resolve_ambiguity(spec, outcome, confirm_cb, log)
-            spec.confirmed = False
-            continue
+        # Interactive ambiguity resolution is still worth doing when we can -- it is
+        # human-in-the-loop, not a dead-end. With a real teeth battery and rounds left,
+        # ask + retry on a genuine ambiguity, or retry on a fixable RETRY. Past that
+        # (or in LIMITED mode) we NEVER hard-error: we degrade to the best runnable
+        # candidate + the human gate.
+        if not limited and rounds < max_spec_rounds:
+            if outcome["outcome"] == differential.AMBIGUITY:
+                log("    [AMBIGUITY] " + outcome["question"])
+                _resolve_ambiguity(spec, outcome, confirm_cb, log, ambiguity_cb=ambiguity_cb)
+                spec.confirmed = False
+                continue
+            if outcome["outcome"] == differential.RETRY:
+                log("    retrying with fresh implementations ...")
+                continue
 
-        # CONFIDENT
-        winner = by_id[outcome["winner_id"]]
-        log(f"[5] approval gate (winner: {winner.id})")
+        # Winner: the confident differential winner, else the best RUNNABLE candidate
+        # (ref0 if it runs, else any impl that loaded). Never a dead-end here.
+        if outcome["outcome"] == differential.CONFIDENT:
+            winner = by_id[outcome["winner_id"]]
+        else:
+            limited = True
+            caveats.append(f"implementations did not reach automated consensus "
+                           f"({outcome['outcome']})")
+            loaded_impls = [by_id[c] for c in impl_ids if c not in report.load_errors]
+            if not ref0_load_failed:
+                winner = ref0
+            elif loaded_impls:
+                winner = loaded_impls[0]
+            else:
+                winner = ref0   # nothing loaded; the bank load-test fails honestly below
+            log(f"    no automated consensus ({outcome['outcome']}); presenting "
+                f"'{winner.id}' for human review (LIMITED)")
+
+        _seen = set()
+        caveats = [c for c in caveats if not (c in _seen or _seen.add(c))]
+        log(f"[5] approval gate (winner: {winner.id}{', LIMITED' if limited else ''})")
         try:
             if approve_cb is not None:
-                approve_cb(spec, winner, kept, vet["unkilled_mutants"])
+                approve_cb(spec, winner, kept, vet["unkilled_mutants"],
+                           limited_verification=limited, caveats=caveats)
             else:
                 gate.approve(spec, winner, kept, vet["unkilled_mutants"],
                              render_dir=os.path.join(staging_root, "diff"),
-                             interactive=interactive)
+                             interactive=interactive, limited_verification=limited,
+                             caveats=caveats)
         except gate.RejectError as e:
             return {"status": "rejected", "spec": spec, "winner": winner, "detail": str(e)}
 
@@ -232,7 +289,8 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         log(msg)
         return {"status": "banked", "spec": spec, "winner": winner, "dest": dest,
                 "class_name": class_name, "display": display, "report": report,
-                "kept_checks": kept, "unkilled_mutants": vet["unkilled_mutants"]}
+                "kept_checks": kept, "unkilled_mutants": vet["unkilled_mutants"],
+                "limited_verification": limited, "caveats": caveats}
 
 
 def main(argv=None):

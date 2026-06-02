@@ -29,8 +29,15 @@ def render_before_after(spec, candidate, out_dir):
         return {}
 
 
-def format_report(spec, candidate, kept_checks, unkilled_mutants, thumbs):
+def format_report(spec, candidate, kept_checks, unkilled_mutants, thumbs,
+                  limited_verification=False, caveats=None):
     L = ["=" * 70, f"APPROVAL GATE: {spec.title}", "=" * 70]
+    if limited_verification:
+        L.append("\n!! LIMITED VERIFICATION: automated checks could not fully confirm "
+                 "this node.\n   Review the code and the before/after carefully before "
+                 "approving. Caveats:")
+        for c in (caveats or ["a full automated verification could not be built"]):
+            L.append(f"     - {c}")
     L.append(f"\nWinning implementation (class {candidate.class_name}):\n")
     L.append(candidate.source)
     L.append("\n" + "-" * 70)
@@ -52,11 +59,13 @@ def format_report(spec, candidate, kept_checks, unkilled_mutants, thumbs):
 
 
 def approve(spec, candidate, kept_checks, unkilled_mutants, render_dir=None,
-            interactive=True, decision=None, inp=input, out=print):
+            interactive=True, decision=None, inp=input, out=print,
+            limited_verification=False, caveats=None):
     """Return True to bank, raise RejectError(reason) to reject. `decision` (auto
     mode): True/False/("reject","reason")."""
     thumbs = render_before_after(spec, candidate, render_dir) if render_dir else {}
-    out(format_report(spec, candidate, kept_checks, unkilled_mutants, thumbs))
+    out(format_report(spec, candidate, kept_checks, unkilled_mutants, thumbs,
+                      limited_verification=limited_verification, caveats=caveats))
 
     if not interactive:
         if decision is True:

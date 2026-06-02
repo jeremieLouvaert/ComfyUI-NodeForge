@@ -79,6 +79,28 @@ def _first_node_class_name(source):
     return names[0] if names else "Node"
 
 
+def _complete(client, model, system_text, user, temperature, max_tokens=6000):
+    """One completion with a self-healing truncation guard. A node body rarely
+    exceeds 6000 tokens, but if a draw is truncated we retry once with more room
+    (up to 8000) rather than emit broken code that fails downstream as a mystery
+    syntax error (the failure mode benchmark/generate.py:101 warns about). Returns
+    (stripped_source, usage)."""
+    last_cap = max_tokens
+    for cap in (max_tokens, min(8000, int(max_tokens * 1.5))):
+        last_cap = cap
+        resp = client.messages.create(
+            model=model, max_tokens=cap, temperature=temperature,
+            system=[{"type": "text", "text": system_text,
+                     "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": user}],
+        )
+        if resp.stop_reason != "max_tokens":
+            src = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
+            return src, resp.usage
+    raise ValueError(f"codegen output truncated even at max_tokens={last_cap}; "
+                     f"the spec may be too large")
+
+
 def generate_impl(spec, candidate_id, temperature=0.7, seed=0,
                   model="claude-sonnet-4-6", client=None):
     """Generate one node implementation from the spec. Returns (Candidate, usage)."""
@@ -86,17 +108,11 @@ def generate_impl(spec, candidate_id, temperature=0.7, seed=0,
     spec_text = spec.to_spec_string()
     user = (f"SPECIFICATION (variant {seed}):\n\n{spec_text}\n\n"
             "Write the implementation now. Output only the Python module.")
-    resp = client.messages.create(
-        model=model, max_tokens=2000, temperature=temperature,
-        system=[{"type": "text", "text": _IMPL_SYSTEM,
-                 "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": user}],
-    )
-    src = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
+    src, usage = _complete(client, model, _IMPL_SYSTEM, user, temperature)
     cname = _first_node_class_name(src)
     return records.Candidate(id=candidate_id, source=src, class_name=cname,
                              origin="ref0" if candidate_id == "ref0" else "impl",
-                             temperature=temperature), resp.usage
+                             temperature=temperature), usage
 
 
 def generate_ref0(spec, model="claude-sonnet-4-6", client=None):
@@ -130,13 +146,7 @@ def generate_stance_impls(spec, axis, n_cap=3, model="claude-sonnet-4-6", client
             f"----------------------------\n\n"
             "Write the implementation now. Output only the Python module."
         )
-        resp = client.messages.create(
-            model=model, max_tokens=2000, temperature=0.4,
-            system=[{"type": "text", "text": _STANCE_SYSTEM,
-                     "cache_control": {"type": "ephemeral"}}],
-            messages=[{"role": "user", "content": user}],
-        )
-        src = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
+        src, usage = _complete(client, model, _STANCE_SYSTEM, user, 0.4)
         cname = _first_node_class_name(src)
         cands.append(records.Candidate(
             id=f"stance_{i}",
@@ -150,7 +160,7 @@ def generate_stance_impls(spec, axis, n_cap=3, model="claude-sonnet-4-6", client
                 "dimension": axis_dim,
             },
         ))
-        usages.append(resp.usage)
+        usages.append(usage)
     return cands, usages
 
 

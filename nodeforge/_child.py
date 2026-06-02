@@ -15,7 +15,7 @@ boundary is "no live ComfyUI server until the human approves the bank".
 Job (stdin) schema:
   {
     "job_id": str,
-    "mode": "run" | "loadtest",
+    "mode": "run" | "loadtest" | "render",   # render: PNGs -> job["render_dir"]
     "allow_gpu": bool,
     "candidates": [{"id","source","class_name","origin"}],
     "batteries":  [{"id","source"}],            # mode=="run"; each is a full
@@ -253,6 +253,37 @@ def main():
             built[f["example_id"]] = (fx.build(f["input_spec"]), f.get("args", {}))
         except Exception as e:
             report["stderr_tail"] += f"fixture {f.get('example_id')} build failed: {e}\n"
+
+    # mode render: write each fixture's INPUT (and, if a candidate is given, the
+    # candidate's OUTPUT) to PNGs in render_dir. The panel's confirm/approval
+    # views reuse this via sandbox.render(); the parent has no torch and never
+    # execs candidate code, so all rendering happens here in the child.
+    if mode == "render":
+        render_dir = job.get("render_dir") or "."
+        os.makedirs(render_dir, exist_ok=True)
+        cand = candidates[0] if candidates else None
+        cls = None
+        if cand:
+            try:
+                cls = _load_class(cand["source"], cand["class_name"])
+            except Exception as e:
+                report["load_errors"][cand.get("id", "cand")] = f"{type(e).__name__}: {e}"
+        for ex_id, (img, ex_args) in built.items():
+            try:
+                fx.render_png(img, os.path.join(render_dir, f"in_{ex_id}.png"))
+            except Exception as e:
+                report["stderr_tail"] += f"render in_{ex_id} failed: {e}\n"
+            if cls is not None:
+                try:
+                    out = _call_node(cls, img, ex_args)
+                    items = out if isinstance(out, (tuple, list)) else (out,)
+                    img_out = next((t for t in items if torch.is_tensor(t)), None)
+                    if img_out is not None:
+                        fx.render_png(img_out, os.path.join(render_dir, f"out_{ex_id}.png"))
+                except Exception as e:
+                    report["stderr_tail"] += f"render out_{ex_id} failed: {e}\n"
+        report["wall_ms"] = int((time.time() - t0) * 1000)
+        emit(report); return
 
     for cand in candidates:
         cid = cand["id"]

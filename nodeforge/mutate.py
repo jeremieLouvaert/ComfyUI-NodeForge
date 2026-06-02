@@ -166,18 +166,21 @@ def build_llm_mutants(spec, n=1, model="claude-sonnet-4-6", client=None):
     """Generate n subtly-wrong implementations from the spec in an isolated
     context. Returns [Candidate]. Requires ANTHROPIC_API_KEY (or a passed client)."""
     import anthropic
-    client = client or anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = client or anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"],
+                                            max_retries=8, timeout=120)
     spec_text = spec.to_spec_string()
     out = []
     for k in range(n):
         user = (f"SPECIFICATION (mutation seed {k}):\n\n{spec_text}\n\n"
                 "Write the subtly-buggy implementation now. Output only the Python module.")
         resp = client.messages.create(
-            model=model, max_tokens=2000, temperature=1.0,
+            model=model, max_tokens=4000, temperature=1.0,
             system=[{"type": "text", "text": _MUTANT_SYSTEM,
                      "cache_control": {"type": "ephemeral"}}],
             messages=[{"role": "user", "content": user}],
         )
+        if resp.stop_reason == "max_tokens":
+            continue  # truncated mutant = broken source; mutants are optional, skip it
         src = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
         cname = _first_node_class_name(src)
         out.append(records.Candidate(id=f"mutant_llm:{k}", source=src,

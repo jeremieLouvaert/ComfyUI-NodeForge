@@ -277,14 +277,33 @@ def audit_unpinned_axes(ask, spec, model="claude-sonnet-4-6", client=None, max_t
 def elaborate(ask, model="claude-sonnet-4-6", client=None):
     """Vague ask -> (records.Spec (unconfirmed), usage). Raises on unparseable output."""
     client = client or keys.anthropic_client()
-    resp = client.messages.create(
-        model=model, max_tokens=2000, temperature=0.3,
-        system=[{"type": "text", "text": _SPEC_SYSTEM,
-                 "cache_control": {"type": "ephemeral"}}],
-        messages=[{"role": "user", "content": f"ASK: {ask}\n\nProduce the JSON spec now."}],
-    )
-    raw = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
-    d = json.loads(raw)
+    # A richly-specified ask (many examples + edge cases) can overrun the cap and
+    # come back as truncated/unterminated JSON. Give it room (8000) AND retry on a
+    # truncated or unparseable draw instead of crashing -- a spec this expensive to
+    # discard is worth one more draw (mirrors benchmark/generate.py's truncation
+    # guard, here softened to a retry because elaborate is the entry point).
+    d = None
+    last_err = None
+    resp = None
+    for attempt in range(2):
+        resp = client.messages.create(
+            model=model, max_tokens=8000, temperature=0.3,
+            system=[{"type": "text", "text": _SPEC_SYSTEM,
+                     "cache_control": {"type": "ephemeral"}}],
+            messages=[{"role": "user", "content": f"ASK: {ask}\n\nProduce the JSON spec now."}],
+        )
+        raw = _strip_fences("".join(b.text for b in resp.content if b.type == "text"))
+        if resp.stop_reason == "max_tokens":
+            last_err = "spec JSON truncated at max_tokens=8000"
+            continue
+        try:
+            d = json.loads(raw)
+            break
+        except json.JSONDecodeError as e:
+            last_err = f"spec JSON unparseable ({e})"
+            continue
+    if d is None:
+        raise ValueError(f"elaborate: no valid spec JSON after 2 tries ({last_err})")
     examples = []
     for i, e in enumerate(d.get("examples", [])):
         examples.append(records.Example(

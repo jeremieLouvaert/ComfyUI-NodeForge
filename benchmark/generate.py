@@ -82,7 +82,8 @@ def generate_battery(spec_text, model="claude-sonnet-4-6", max_tokens=8000, seed
     """Call Claude to synthesize a verification battery from the spec alone.
     seed_hint varies the prompt across trials so repeated calls explore variation.
     Returns the generated module source (str)."""
-    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+    client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"],
+                                 max_retries=8, timeout=120)
     user = (
         f"CONFIRMED SPEC (trial {seed_hint}):\n\n{spec_text}\n\n"
         "Write the verification module now. Output only the Python module."
