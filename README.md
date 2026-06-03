@@ -74,7 +74,7 @@ This is the heart of the tool and the part worth being precise about.
 - **Live appear is best-effort.** Banked single-file nodes register live in most cases; if one does not show up, a one-click restart (offered in the panel) or a page reload always works. Nodes that ship their own front-end JavaScript still need a reload.
 - **Retrieval is pack-level and provisional.** Thresholds were calibrated on a small adjudication set; a generic ask can still rank a polished community pack above an equivalent built-in.
 - **The clarifying question is a backstop, not a guarantee.** It asks when it detects a genuinely user-visible convention choice, but it does not catch every ambiguity; often it picks a sensible standard default instead.
-- **Cost.** Each author run makes several Anthropic API calls. Cheaper-model tiering for the mechanical stages is planned but not yet shipped.
+- **Cost and latency.** Each author run makes several Anthropic API calls and takes a few minutes; an ambiguous operation can take longer. Cheaper and faster model tiering for the mechanical stages is the next priority.
 
 ## The CLI (power-user backdoor)
 
