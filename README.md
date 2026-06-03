@@ -91,8 +91,8 @@ Flags: `--n` (candidate implementations, default 3), `--model`, `--yes` (non-int
 
 NodeForge was de-risked before it was built, and the artifacts ship with the repo:
 
-- [`probe/`](probe/) — capability and negative-control probes. A strong LLM drafted 5 non-trivial nodes (channel shuffle, luma-key mask, tile mosaic, unsharp mask, luma split), each verified against real torch by an independent numeric oracle covering the known traps (MASK `[B,H,W]` vs `[B,H,W,C]`, separable-Gaussian conv, multi-output typing, Rec.709 luma). 5/5 correct, and 5/5 deliberately-broken variants caught (the oracles have teeth).
-- [`benchmark/`](benchmark/) — a meta-validation harness that runs the verification model without the human to prove it builds teeth-having, non-over-strict test batteries from a spec alone (teeth 21/21, specificity 21/21).
+- [`probe/`](probe/): capability and negative-control probes. A strong LLM drafted 5 non-trivial nodes (channel shuffle, luma-key mask, tile mosaic, unsharp mask, luma split), each verified against real torch by an independent numeric oracle covering the known traps (MASK `[B,H,W]` vs `[B,H,W,C]`, separable-Gaussian conv, multi-output typing, Rec.709 luma). 5/5 correct, and 5/5 deliberately-broken variants caught (the oracles have teeth).
+- [`benchmark/`](benchmark/): a meta-validation harness that runs the verification model without the human to prove it builds teeth-having, non-over-strict test batteries from a spec alone (teeth 21/21, specificity 21/21).
 - Design docs: [`docs/self-verification-model.md`](docs/self-verification-model.md), [`docs/retrieval-model.md`](docs/retrieval-model.md).
 
 ### What has been verified end to end
