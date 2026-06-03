@@ -78,6 +78,8 @@ cell, gamma, etc.), internal terms (luminance, radius, foreground_color/backgrou
 cell corners), formulas, and code reasoning. Say "the dark parts of the image" not
 "luminance=0"; "small dots" not "dot radius=0"; "the dot colour" not "foreground_color".
 The machine-side "expectation.statement" MAY stay technical; the "nl_statement" must NOT.
+Use plain punctuation in EVERY human-facing string (title, nl_statement, invariants): do
+NOT use em dashes or en dashes; use commas, periods, or parentheses instead.
 Bad:  "A pure black image produces output entirely the background color (luminance=0 -> dot radius=0)."
 Good: "A solid black image comes out as solid dark dots covering it (the darkest areas get the biggest dots)."
 Write any BEHAVIOUR "invariants" in the same plain language (no widget/internal names: say
