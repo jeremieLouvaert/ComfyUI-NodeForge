@@ -6,6 +6,20 @@
 
 ---
 
+## See it in action
+
+A crosshatch filter, described in plain language and running on a real image a minute later, all inside ComfyUI:
+
+![The authored Crosshatch Filter node, installed live and running on a real image](docs/images/04-installed.png)
+
+How it got there: describe it, confirm what it will build in plain language, then review the generated code, the test results, and a real before/after at the approval gate before anything installs.
+
+![Describe the node you want](docs/images/01-describe.png)
+
+![Confirm the plain-language examples and rules](docs/images/02-confirm.png)
+
+![Review the code, the teeth-tested checks, and the honest verification caveats, then approve](docs/images/03-approve.png)
+
 ## What it is
 
 ComfyUI has thousands of custom nodes, but two things still hurt: finding the one that does what you want, and the times when the operation you need simply does not exist as a node. "Go write a custom node" is a wall for most people.
