@@ -73,7 +73,9 @@ export function TerminalView({ data, onStartOver, onRestart }) {
     return (
       <div className="nf-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div className="nf-callout nf-callout-amber">
-          <div className="nf-callout-title">Rejected — nothing was installed</div>
+          <div className="nf-callout-title">
+            {/imed out/.test(detail || '') ? 'Approval timed out' : 'Rejected — nothing was installed'}
+          </div>
           {detail && <p style={{ margin: '4px 0 0', fontSize: '12px', opacity: 0.85 }}>{detail}</p>}
         </div>
         <button className="nf-btn nf-btn-secondary nf-btn-full" onClick={onStartOver}>

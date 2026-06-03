@@ -53,8 +53,8 @@ except Exception as _e:  # imported outside ComfyUI (tests) -> stub the decorato
           f"(expected outside ComfyUI).")
 
 VERSION = "0.2.0"
-GATE_TIMEOUT = 600.0          # seconds a human gate (confirm/approve) may wait
-AMBIGUITY_TIMEOUT = 300.0     # ambiguity is rarely surfaced; shorter wait
+GATE_TIMEOUT = 3600.0         # a human reviewing generated code may take a while; give an hour
+AMBIGUITY_TIMEOUT = 900.0     # a quick pick, but don't punish a short distraction
 JOB_TTL = 1800.0             # GC a finished/idle job + its temp after this long
 CANCEL = object()            # sentinel pushed into a job queue to cancel a wait
 
@@ -214,7 +214,7 @@ def _run_job_inner(job):
         edits = _await(job, "confirm", "nodeforge:await_confirm", payload,
                        job.confirm_q, GATE_TIMEOUT, cancel_value=CANCEL)
         if edits is CANCEL:
-            raise confirm_mod.AbortError("confirm gate timed out")
+            raise confirm_mod.AbortError("Timed out waiting for you to confirm -- nothing was built.")
         # edits = {"drop":[ids], "add_invariants":[str]} -> proven non-interactive path
         return confirm_mod.confirm_spec(spec, interactive=False, edits=edits or {})
 
@@ -252,7 +252,8 @@ def _run_job_inner(job):
         decision = _await(job, "approval", "nodeforge:await_approval", payload,
                           job.approve_q, GATE_TIMEOUT, cancel_value=CANCEL)
         if decision is CANCEL:
-            raise gate_mod.RejectError("approval gate timed out")
+            raise gate_mod.RejectError("Timed out waiting for your approval -- nothing was "
+                                       "installed. Start over to build it again.")
         if isinstance(decision, dict) and decision.get("decision") == "approve":
             return True
         reason = ""
