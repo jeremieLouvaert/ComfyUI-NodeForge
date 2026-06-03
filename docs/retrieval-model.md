@@ -144,16 +144,16 @@ node (0/6 in the eval). Closed in v0.2:
   named node (ImageScale = "Upscale Image") is judged on capability. The rerank
   prompt carries a built-in-preference instruction (judge a core node on
   capability, ignore a terse/odd name, don't rank it below a pack that does the
-  same) — precision-guarded (a non-matching core node still scores low; eval
+  same), precision-guarded (a non-matching core node still scores low; eval
   confirmed no inflation / no new false positives / no pack regression).
 - **Route (precedence):** a core node clearing `tau_core` (0.85, precision-biased)
-  BEATS a custom-pack rec — a built-in needs no install. Wired into the live
+  BEATS a custom-pack rec, a built-in needs no install. Wired into the live
   `precheck.py`. Proven: eval (4/5 firm backend hits, 0 true false positives, no
   pack regression) + `verify_core_live.py`.
 - **Limits (honest):** frontend-only UI features (e.g. a mask-editor button) have
   no backend node and are out of scope; for ultra-common ops (generic resize) a
   polished custom pack may still out-rank core ImageScale at rerank on some
-  phrasings (improved by the built-in-preference fix but not guaranteed live — a
+  phrasings (improved by the built-in-preference fix but not guaranteed live, a
   soft cost). tau_core is provisional on n=29.
 
 ## 6. Full three-band router (v0.2, BUILT 2026-06-01)
@@ -161,7 +161,7 @@ node (0/6 in the eval). Closed in v0.2:
 The thin HIGH-band pre-check was promoted to the full HIGH/MIDDLE/LOW router
 (`precheck._route` / `find_existing`), composing with the core-node precedence above:
 - **HIGH** (≥ tau_high=0.95) → recommend the one strong match.
-- **MIDDLE** (tau_low=0.50 ≤ score < tau_high) → show 1–3 related **custom** packs
+- **MIDDLE** (tau_low=0.50 ≤ score < tau_high) → show 1 to 3 related **custom** packs
   AND offer to author; the human picks via a numbered menu (`prompt_middle`). Health
   (stars/downloads/deprecated) is surfaced best-effort via `build_index.registry_health`
   and a positively-deprecated/archived candidate is hard-excluded; a sub-tau_core core
@@ -170,7 +170,7 @@ The thin HIGH-band pre-check was promoted to the full HIGH/MIDDLE/LOW router
 - The **24h freshness cache** was already in `build_index.load_manager_index` (TTL +
   stale-fallback-with-age-warning).
 - **Gate:** validated by a three-band re-read of the n=29 adjudication
-  (`eval/adjudication_sheet.md`) — all 13 "partial" verdicts land in MIDDLE and 0 "yes"
+  (`eval/adjudication_sheet.md`), all 13 "partial" verdicts land in MIDDLE and 0 "yes"
   falls below tau_low, so MIDDLE (which defers to the human, making no binary claim) is
   the structural answer to the known eval confound and needs no HIGH-grade firming.
   tau_low=0.50 kept wide-by-design. Offline `test_precheck.py` + live
