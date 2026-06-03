@@ -6,10 +6,18 @@ Never logs or returns the key anywhere except to the anthropic client.
 """
 import os
 
-_COMFY_ROOT = os.environ.get(
-    "NODEFORGE_COMFY_ROOT",
-    r"F:\ComfyUI_windows_portable_nvidia\ComfyUI_windows_portable\ComfyUI",
-)
+def _default_comfy_root():
+    """ComfyUI base dir, derived at runtime (portable). Prefer ComfyUI's folder_paths
+    in-process, else this pack's location. Override: NODEFORGE_COMFY_ROOT."""
+    try:
+        import folder_paths
+        return folder_paths.base_path
+    except Exception:
+        here = os.path.dirname(os.path.abspath(__file__))
+        return os.path.dirname(os.path.dirname(os.path.dirname(here)))
+
+
+_COMFY_ROOT = os.environ.get("NODEFORGE_COMFY_ROOT") or _default_comfy_root()
 
 
 def anthropic_key():

@@ -11,10 +11,19 @@ import shutil
 
 from . import sandbox
 
-CUSTOM_NODES = os.environ.get(
-    "NODEFORGE_CUSTOM_NODES",
-    r"F:\ComfyUI_windows_portable_nvidia\ComfyUI_windows_portable\ComfyUI\custom_nodes",
-)
+def _default_custom_nodes():
+    """ComfyUI's custom_nodes dir, derived at runtime so the pack is portable: prefer
+    ComfyUI's own folder_paths (when running in-process), else this pack's own parent
+    (it lives at custom_nodes/<pack>/nodeforge/). Override: NODEFORGE_CUSTOM_NODES."""
+    try:
+        import folder_paths
+        return folder_paths.get_folder_paths("custom_nodes")[0]
+    except Exception:
+        here = os.path.dirname(os.path.abspath(__file__))
+        return os.path.dirname(os.path.dirname(here))
+
+
+CUSTOM_NODES = os.environ.get("NODEFORGE_CUSTOM_NODES") or _default_custom_nodes()
 
 
 def _clear_pycache(root):

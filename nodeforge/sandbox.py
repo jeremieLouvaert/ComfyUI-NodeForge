@@ -28,10 +28,10 @@ from . import records
 
 # the ComfyUI embedded python -- same torch/CUDA the live server uses, and keeps
 # torch out of THIS process.
-EMBEDDED_PYTHON = os.environ.get(
-    "NODEFORGE_PYTHON",
-    r"F:\ComfyUI_windows_portable_nvidia\ComfyUI_windows_portable\python_embeded\python.exe",
-)
+# Inside ComfyUI, sys.executable IS the embedded python (the one with torch); for the
+# standalone CLI, run with that python or set NODEFORGE_PYTHON. No hardcoded machine
+# path, so the pack is portable to any ComfyUI install.
+EMBEDDED_PYTHON = os.environ.get("NODEFORGE_PYTHON") or sys.executable
 _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))   # ...\ComfyUI-NodeForge
 _CHILD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "_child.py")
 
