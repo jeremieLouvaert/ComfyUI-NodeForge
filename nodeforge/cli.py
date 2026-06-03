@@ -175,10 +175,10 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
                                           model=model, client=client)
             spec.clarify = None   # resolved; do not re-ask
 
-    # Each unpinned axis can cost one resolution round (the oracle probes one axis
-    # per round); give the loop enough budget to resolve them all + a final bank
-    # round, so a multi-axis spec is not starved into ambiguity_exhausted.
-    max_spec_rounds = max(max_spec_rounds, len(spec.unpinned_axes) + 1)
+    # max_spec_rounds bounds only the RETRY path now (the battery genuinely failed,
+    # a fresh draw may pass). Ambiguity no longer drives multi-round resolution loops
+    # (it degrades straight to the gate), so we do NOT inflate rounds by axis count --
+    # that inflation was the cause of multi-minute author runs on ambiguous ops.
 
     rounds = 0
     while True:
@@ -248,20 +248,16 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
         outcome = differential.analyze_stance(report, impl_ids, spec, candidates_by_id=by_id)
         log(f"    outcome: {outcome['outcome']} -- {outcome['detail']}")
 
-        # Interactive ambiguity resolution is still worth doing when we can -- it is
-        # human-in-the-loop, not a dead-end. With a real teeth battery and rounds left,
-        # ask + retry on a genuine ambiguity, or retry on a fixable RETRY. Past that
-        # (or in LIMITED mode) we NEVER hard-error: we degrade to the best runnable
-        # candidate + the human gate.
-        if not limited and rounds < max_spec_rounds:
-            if outcome["outcome"] == differential.AMBIGUITY:
-                log("    [AMBIGUITY] " + outcome["question"])
-                _resolve_ambiguity(spec, outcome, confirm_cb, log, ambiguity_cb=ambiguity_cb)
-                spec.confirmed = False
-                continue
-            if outcome["outcome"] == differential.RETRY:
-                log("    retrying with fresh implementations ...")
-                continue
+        # A non-confident differential outcome no longer triggers a slow resolve/retry
+        # loop (that ran many minutes on a genuinely ambiguous op). Only a RETRY (the
+        # battery genuinely failed; a fresh draw may pass) retries, bounded by
+        # max_spec_rounds. AMBIGUITY and everything else degrade STRAIGHT to the gate
+        # with an honest caveat -- the human gate is the oracle, and a real ambiguity
+        # was already surfaced up front at confirm (Stage 0b).
+        if (not limited and rounds < max_spec_rounds
+                and outcome["outcome"] == differential.RETRY):
+            log("    retrying with fresh implementations ...")
+            continue
 
         # Winner: the confident differential winner, else the best RUNNABLE candidate
         # (ref0 if it runs, else any impl that loaded). Never a dead-end here.
@@ -269,8 +265,10 @@ def run_author(ask, n=3, model="claude-sonnet-4-6", interactive=True,
             winner = by_id[outcome["winner_id"]]
         else:
             limited = True
-            caveats.append(f"implementations did not reach automated consensus "
-                           f"({outcome['outcome']})")
+            caveats.append("the implementations disagreed on a detail the request left open"
+                           if outcome["outcome"] == differential.AMBIGUITY
+                           else f"implementations did not reach automated consensus "
+                                f"({outcome['outcome']})")
             loaded_impls = [by_id[c] for c in impl_ids if c not in report.load_errors]
             if not ref0_load_failed:
                 winner = ref0
