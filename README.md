@@ -1,87 +1,112 @@
 # ComfyUI-NodeForge
 
-**Describe the ComfyUI node you need. NodeForge finds it if it exists, and forges a new one (verified and banked) if it doesn't.**
+**Describe the ComfyUI node you need. NodeForge finds it if it already exists, and forges a brand-new one (tested, reviewed by you, and installed) if it doesn't.**
 
-> **Status: v0.2** (pre-alpha). A command-line agent that, from a plain-language description, first checks whether a node already exists (ComfyUI core or a community pack), and otherwise authors a brand-new custom node: it drafts the code, tests it in a sandbox against real inputs, shows you the diff and the test result, and on your approval installs it and banks it in your node library. Both halves are live-verified. Thresholds are provisional and ambiguity handling has a known gap (see [Known limits](#known-limits-honest)).
+> **Status: v0.2, pre-alpha.** NodeForge is a ComfyUI sidebar panel. You type what you want in plain language; it checks whether a node already exists, and otherwise authors a new custom node, tests it in a sandbox, shows you the generated code plus a real before/after preview at an approval gate, and installs it as a reusable node only after you approve. The full loop has been run end to end, in the browser, producing a working installed node. It is early and there are rough edges; the honest limits are spelled out below.
 
-## The idea
+---
 
-ComfyUI has thousands of custom nodes, but two things still hurt: finding the one that does what you want, and the times when the genuinely novel operation you need (a bespoke math op, a format bridge, a one-off API wrapper) simply doesn't exist. "Go write a custom node" is a wall for most users.
+## What it is
 
-NodeForge closes both gaps from a single description:
+ComfyUI has thousands of custom nodes, but two things still hurt: finding the one that does what you want, and the times when the operation you need simply does not exist as a node. "Go write a custom node" is a wall for most people.
+
+NodeForge closes both gaps from a single plain-language description, inside ComfyUI:
 
 1. **Find it first.** It searches ComfyUI's built-in nodes and the community pack index, ranks the candidates, and if something already does the job it points you there instead of reinventing it.
-2. **Forge it if it's missing.** When nothing fits, it drafts a new custom node, tests it in a sandbox against real inputs, shows you the code and the test result, and on your approval installs it and banks it in your personal library. Over time your ComfyUI grows the capabilities you actually use.
+2. **Forge it if it is missing.** When nothing fits, it drafts a new custom node, runs it in a sandbox against real test images, shows you the code and a real before/after, and on your approval installs it as a normal, reusable node you can wire into any graph. It can appear in your node search without a restart.
 
-The lineage is the self-authoring / skill-library agent pattern (Voyager, ADAS) applied to ComfyUI's executable node graph as the substrate, rather than to chat. The graph is data; a node is code; the agent closes the loop between them. **Authoring is the hard, novel part (the moat); retrieval is table stakes done responsibly.**
+The lineage is the self-authoring, skill-library agent pattern (Voyager, ADAS) applied to ComfyUI's executable node graph rather than to chat. A node is code; the graph is data; the agent closes the loop between them.
 
-## Design principles (non-negotiable)
+## Why it is different
 
-- **Human-approval gate.** The agent never silently writes and runs code in your install. You see the diff and the sandboxed test output, and you approve before anything is installed or banked. This is a security boundary, not a UX nicety.
-- **Sandboxed write, test, verify, bank loop.** Generated nodes run in isolation first; ComfyUI's own execution is the runtime-correctness oracle (did it import, did it run, is the output the declared type, shape, and range).
-- **Verification is the hard part, not generation.** Code generation is largely solved (see the evidence trail below); knowing whether a node did the *right* thing is the real problem. The verify/bank loop is the core of the tool.
-- **Banked nodes are curated, not auto-trusted.** Your library is a record of nodes you approved, not whatever the agent emitted.
-- **Find before you forge.** Authoring a redundant node is waste; NodeForge checks what already exists first and defers to it.
+There are tools that let an LLM write node logic inline at runtime inside a single node. NodeForge is not that. The difference is the point:
 
-## Install and usage
+- It **tests** what it writes (a sandboxed write, run, and self-check loop) instead of running unchecked code.
+- It puts a **human approval gate** in front of installation. You see the code and a real before/after and decide.
+- It produces a **real, reusable, standalone node** banked into your install, not throwaway code trapped inside one node that you re-prompt every time.
+- It is **retrieval-first**, so it does not author a redundant node when ComfyUI or a community pack already does the job.
 
-NodeForge is a command-line tool that runs *outside* ComfyUI. It only touches your live ComfyUI install at the final, approved bank step.
+In short: NodeForge authors a verified, reusable node that you own and approved, not disposable inline code you have to trust blindly.
+
+## Install
+
+NodeForge installs like any other ComfyUI custom node pack.
 
 ```bash
+cd ComfyUI/custom_nodes
 git clone https://github.com/jeremieLouvaert/ComfyUI-NodeForge
-cd ComfyUI-NodeForge
-# Provide an Anthropic API key, via env var or anthropic_api_key.txt in your ComfyUI root:
+# restart ComfyUI
+```
+
+It needs an Anthropic API key for the authoring engine. Provide it either way:
+
+- set the `ANTHROPIC_API_KEY` environment variable, or
+- put the key as the only contents of `anthropic_api_key.txt` in your ComfyUI root.
+
+NodeForge registers **zero graph nodes** of its own. It adds a **NodeForge** tab to the right sidebar and a set of backend routes. After restarting, open the sidebar and click the NodeForge (wrench) tab.
+
+## Using the panel
+
+1. **Describe** the node you want, in plain language ("a node that gives an image a halftone print look").
+2. **Find-first.** NodeForge shows whether something already exists. If a built-in node or a community pack fits, it tells you; you can install that instead, or author a new node anyway.
+3. **Confirm.** Before writing any code, it shows you a few plain-language worked examples ("the darkest areas get the biggest dots") and the rules the node must always follow. These are how it will check itself. If one does not match what you want, drop it; otherwise just confirm. If a genuinely ambiguous convention comes up (which way a rotation turns, for instance), it asks you to pick.
+4. **Review and approve.** It generates the node, runs it in a sandbox, and shows you the generated code, the test results (and any honest caveats), and a real before/after on test images. Nothing is installed until you click Approve.
+5. **Installed.** On approval it banks the node into `custom_nodes` and, when possible, registers it live so it shows up in your node search without a restart. Double-click the canvas and search for it.
+
+The CLI engine underneath is also usable directly as a power-user backdoor (see below).
+
+## How verification works, honestly
+
+This is the heart of the tool and the part worth being precise about.
+
+**The two hard guarantees:**
+
+1. The generated code **loads and runs** in an isolated sandbox subprocess. The parent process never imports torch and never executes candidate code; everything risky runs in the sandbox child with a memory cap and a wall-clock kill. ComfyUI's own execution is the runtime oracle: did it import, did it run, is the output the right type, shape, and range.
+2. **Nothing is installed until you approve it** at the gate, after seeing the code and a real before/after. This is the security boundary, not a UX nicety.
+
+**Everything else is advisory.** NodeForge tries to build a test battery with teeth (checks that catch deliberately broken variants) and tests several candidate implementations against your confirmed examples. When it can establish confidence, it shows you that it did. When it cannot, it does not dead-end; it presents the best runnable node with an honest "limited verification" note and the specific caveats, and lets you decide. The only outright failures are "could not understand the ask into a spec" and "could not generate code that even runs."
+
+**What "verified" does and does not mean.** Verified means the node runs and matches the examples you confirmed, and you approved it after seeing it work. It does **not** mean the node is provably semantically correct. A plausible-looking node can still do the wrong thing, and the automated checks will not always catch it. The before/after at the gate is the real check, and it asks you to actually look. Treat the approval gate as a code review with a preview, not a rubber stamp.
+
+## Known limits
+
+- **Semantic correctness rests on your review.** As above: the tool proves "it runs and matches your examples," not "it is correct." Look at the before/after.
+- **Live appear is best-effort.** Banked single-file nodes register live in most cases; if one does not show up, a one-click restart (offered in the panel) or a page reload always works. Nodes that ship their own front-end JavaScript still need a reload.
+- **Retrieval is pack-level and provisional.** Thresholds were calibrated on a small adjudication set; a generic ask can still rank a polished community pack above an equivalent built-in.
+- **The clarifying question is a backstop, not a guarantee.** It asks when it detects a genuinely user-visible convention choice, but it does not catch every ambiguity; often it picks a sensible standard default instead.
+- **Cost.** Each author run makes several Anthropic API calls. Cheaper-model tiering for the mechanical stages is planned but not yet shipped.
+
+## The CLI (power-user backdoor)
+
+The same engine runs from the command line, outside ComfyUI:
+
+```bash
 export ANTHROPIC_API_KEY=sk-ant-...
 python -m nodeforge.cli "a node that splits an image into its luma and chroma channels"
 ```
 
-Flags: `--n` (number of candidate implementations, default 3), `--model`, `--yes` (non-interactive auto-confirm), `--force` (overwrite an existing banked pack), `--no-precheck` (skip the "does this already exist?" retrieval step).
-
-> Note for ComfyUI's embedded Python: its isolated `python._pth` does not put the repo on the import path, so invoke from the repo root (so the `nodeforge` package is importable), or use a standard Python install for the CLI.
-
-## How it works
-
-### Find it first (the retrieval router)
-
-Before authoring anything, NodeForge runs a three-band router over a freshness-cached index of ComfyUI's built-in nodes plus the community pack registry:
-
-- **HIGH** (confident match): recommends you install the existing node and skips authoring.
-- **MIDDLE** (partial or related): shows one to three candidate packs and offers to author anyway; you pick.
-- **LOW / none**: nothing fits, so it proceeds to author.
-
-A confident **built-in** node takes precedence over a community pack (no install needed for something ComfyUI already ships). Install is always human-confirmed; authoring is never silently suppressed.
-
-### Forge it (the authoring loop)
-
-When nothing fits, a staged pipeline runs: spec elaboration, then you confirm a few input/output examples (the trusted oracle), then teeth-gated test-battery synthesis, then N candidate implementations, then subprocess-sandboxed differential consensus, then the human-approval gate, then bank. The parent process never imports torch and never executes candidate code; all candidate execution happens in a sandbox child (Windows Job-Object memory cap plus wall-clock kill). The design is written up in [`docs/self-verification-model.md`](docs/self-verification-model.md) and [`docs/retrieval-model.md`](docs/retrieval-model.md).
+Flags: `--n` (candidate implementations, default 3), `--model`, `--yes` (non-interactive), `--force` (overwrite an existing banked pack), `--no-precheck` (skip retrieval). Note: ComfyUI's embedded Python disables the repo import path, so run from the repo root or use a standard Python install.
 
 ## Evidence trail
 
-This was de-risked before it was built, and the de-risking artifacts ship with the repo:
+NodeForge was de-risked before it was built, and the artifacts ship with the repo:
 
-- [`probe/node_authoring_capability_probe.py`](probe/) — capability probe. A strong LLM, given ComfyUI's node conventions, drafted 5 non-trivial nodes (channel shuffle, luma-key mask, tile mosaic, unsharp mask, luma split). Each is verified against real torch by an **independent** numeric oracle covering the known traps (the `MASK` `[B,H,W]` vs `[B,H,W,C]` convention, separable-Gaussian conv, multi-output typing, `INT`/`FLOAT` widget configs, Rec.709 luma). Result: **5/5 correct.**
-- [`probe/negative_control.py`](probe/) — proves the oracles have teeth: 5 deliberately-broken variants are all correctly caught, so the pass is not a self-confirming tautology.
-- [`probe/ComfyUI-Node-Probe/`](probe/) — the 5 probe nodes packaged as a real custom-node pack with `verify_loadtest.py`, used for the real-server load test.
-- [`benchmark/`](benchmark/) — the meta-validation benchmark: runs the verification model *without the human* on confirmed specs to prove it generates teeth-having, non-over-strict test batteries from a spec alone.
+- [`probe/`](probe/) — capability and negative-control probes. A strong LLM drafted 5 non-trivial nodes (channel shuffle, luma-key mask, tile mosaic, unsharp mask, luma split), each verified against real torch by an independent numeric oracle covering the known traps (MASK `[B,H,W]` vs `[B,H,W,C]`, separable-Gaussian conv, multi-output typing, Rec.709 luma). 5/5 correct, and 5/5 deliberately-broken variants caught (the oracles have teeth).
+- [`benchmark/`](benchmark/) — a meta-validation harness that runs the verification model without the human to prove it builds teeth-having, non-over-strict test batteries from a spec alone (teeth 21/21, specificity 21/21).
+- Design docs: [`docs/self-verification-model.md`](docs/self-verification-model.md), [`docs/retrieval-model.md`](docs/retrieval-model.md).
 
-### What's verified
+### What has been verified end to end
 
-- **Real-server load test** (2026-05-30): probe nodes register with correct schemas in live ComfyUI and a `Probe Test Image -> Probe Unsharp Mask -> SaveImage` graph executes via `/prompt`.
-- **Self-verification benchmark** (2026-05-30): teeth 21/21, specificity 21/21, triage 3/3.
-- **Author acceptance**: a genuinely-novel *duotone* node authored, sandbox-verified, and banked, then live-verified in a running ComfyUI (`/object_info` registration plus an `EmptyImage -> DuotoneNode -> SaveImage` `/prompt` run). A contradictory ask is correctly refused.
-- **Retrieval router**: live-verified routing (SD3 and ControlNet to built-ins, a crop-and-paste-back ask to MIDDLE candidates, a rotation ask to LOW then author).
-
-## Known limits (honest)
-
-- **Ambiguity (the "B" gap).** An under-specified ask (for example "make it smaller") banks one reasonable interpretation rather than asking you to choose. Differential consensus only flags ambiguity when implementations diverge, and a consistent model converges on one reading. An ambiguity oracle ships as a backstop, not a headline; the human-approval gate still sits between any guess and your install.
-- **Retrieval is pack-level** and its thresholds are provisional (calibrated on a 29-ask adjudication). A generic ask like "resize to WxH" can still rank a polished community pack above the equivalent built-in.
-- **No registry / Manager listing yet.** NodeForge is a developer CLI today, not an installable node pack. A ComfyUI-native frontend (and a Comfy-registry listing) is the next milestone.
+- **Live in ComfyUI:** authored nodes register in `/object_info` and run via `/prompt`; a freshly approved node appears live in node search without a restart.
+- **The full panel loop in the browser:** describe, find-first, confirm, generate, sandbox-test, review code plus before/after, approve, installed and usable. This has been run successfully end to end.
+- **Retrieval routing:** built-ins win over wrapper packs (SD3, ControlNet), related-but-not-exact asks surface candidate packs, novel asks proceed to author.
 
 ## Roadmap
 
-- Ambiguity oracle promoted from backstop to an active "which did you mean?" prompt.
-- ComfyUI-native frontend and Comfy-registry distribution.
-- Node-level (not just pack-level) retrieval; an external-reference verification oracle.
+- Cheaper-model tiering for the mechanical stages to cut cost per run.
+- Stronger semantic checks and clearer, plainer verification reporting.
+- Node-level (not just pack-level) retrieval.
+- Comfy registry distribution.
 
 ## License
 

@@ -3,6 +3,18 @@
 > Status: design, signed off 2026-05-30. No harness until the meta-validation
 > benchmark (section 7) passes. This is the core of the product: the probe
 > proved codegen is not the bottleneck, self-verification is.
+>
+> **UPDATE 2026-06-02 (verification is ADVISORY, not a gate):** the escalating
+> oracle below is still how confidence is *built*, but it is no longer a hard
+> *gate*. After live use showed a chain of strict gates dead-ending on reasonable
+> asks, the posture was inverted: the only hard requirements are "the code runs in
+> the sandbox" and "the human approves". Every automated stage here (examples,
+> teeth/mutants, differential, contradiction, ambiguity) degrades to an honest
+> caveat surfaced at the approval gate instead of refusing. Verification therefore
+> means "runs and matches the confirmed examples, and the human approved after
+> seeing a real before/after" -- NOT "provably semantically correct". A
+> plausible-but-wrong node can pass the automated layer; the human review at the
+> gate is the real oracle. See the README "How verification works, honestly".
 
 ## 1. The problem
 
