@@ -1,7 +1,7 @@
 """
 Bank an approved + staged node pack into the live ComfyUI install.
 
-Follows the AKURATE deployment rules (decisions.md 2026-03-22 + patterns.md):
+Follows the standard deployment rules:
 COPY, never symlink; clear __pycache__; do NOT auto-restart the server (killing a
 running server is out of scope -- print the restart instruction instead). The
 banked copy is load-tested in the sandbox before we declare success.

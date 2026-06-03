@@ -1,6 +1,6 @@
 """
-Build / refresh the CORE-node index for the NodeForge retrieval stage (v0.2
-core-node path, decisions.md "[2026-06-01] NodeForge core-node path").
+Build / refresh the CORE-node index for the NodeForge retrieval stage (the v0.2
+core-node path).
 
 The custom-pack index (build_index.py) has NO core nodes, so asks answered by a
 ComfyUI built-in either misdirect to a custom wrapper pack (the row-15 SD3

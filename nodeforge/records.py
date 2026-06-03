@@ -97,7 +97,7 @@ class Spec:
     # v0.2 ambiguity oracle: interpretive forks the spec left UNPINNED. Each item:
     # {"axis": str, "dimension": "shape"|"value"|"channel"|"dtype",
     #  "interpretations": [str, ...]}. Empty for a fully-specified ask (then the
-    #  author loop behaves exactly as v0.1). See docs + decisions.md ambiguity oracle.
+    #  author loop behaves exactly as v0.1). See the design docs.
     unpinned_axes: list = field(default_factory=list)
     # A single user-visible convention choice the ask left open, surfaced as a plain
     # question BEFORE confirm: {"question","options":[...],"default"}. None = nothing to ask.

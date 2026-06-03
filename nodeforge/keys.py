@@ -1,6 +1,5 @@
 """
-API-key resolution, following the AKURATE convention (CLAUDE.md):
-env var first, then a {service}_api_key.txt in the ComfyUI root.
+API-key resolution: env var first, then a {service}_api_key.txt in the ComfyUI root.
 
 Never logs or returns the key anywhere except to the anthropic client.
 """

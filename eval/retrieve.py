@@ -121,7 +121,7 @@ def rerank(ask, candidates, model="claude-sonnet-4-6", max_tokens=1500):
     return out, resp.usage
 
 
-# --- v0.2 core-node path (decisions.md "[2026-06-01] NodeForge core-node path") ---
+# --- v0.2 core-node path ---
 # Core nodes ship with ComfyUI, so a confident core match should answer "you
 # already have this" and take PRECEDENCE over recommending a third-party pack
 # (the row-15 SD3 wrapper-misdirect). Core entries come from build_core_index.py

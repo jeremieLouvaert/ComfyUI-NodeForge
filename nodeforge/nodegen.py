@@ -12,7 +12,7 @@ Approach: the approved candidate's source is ALREADY a complete, verified, worki
 node module (it passed the whole battery in the sandbox, including any module-level
 helpers it defines). So we ship it VERBATIM rather than surgically extracting the
 method (which would silently drop module-level helper functions). We only:
-  - force CATEGORY = "AKURATE/NodeForge" on the node class,
+  - force CATEGORY = "NodeForge" on the node class,
   - strip any NODE_*_MAPPINGS the candidate emitted, and
   - append our own mappings keyed by the candidate's real class name, with the
     human-facing display name = spec.title.
@@ -23,7 +23,7 @@ import os
 import re
 import shutil
 
-_CATEGORY = "AKURATE/NodeForge"
+_CATEGORY = "NodeForge"
 
 
 def _pascal(title):
@@ -63,7 +63,7 @@ def _strip_mappings(source):
 
 
 def _force_category(source):
-    """Set CATEGORY = "AKURATE/NodeForge" on the class (replace if present).
+    """Set CATEGORY = "NodeForge" on the class (replace if present).
     Returns (source, had_category). Uses a function replacement so the literal
     quotes around the category never collide with regex backref/escape rules."""
     repl = lambda m: m.group(1) + 'CATEGORY = "' + _CATEGORY + '"'

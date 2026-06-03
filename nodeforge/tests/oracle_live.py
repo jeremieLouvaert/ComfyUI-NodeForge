@@ -2,8 +2,8 @@
 v0.2 ambiguity-oracle LIVE gate -- the DEMOTED contract (spends API; embedded python;
 NO bank side effect).
 
-Decision 2026-06-01 (decisions.md "NodeForge v0.2 ambiguity oracle DEMOTED"): live
-testing showed elaborate already resolves most under-specified asks by PARAMETERIZING
+The ambiguity oracle is a demoted backstop: live testing showed elaborate already
+resolves most under-specified asks by PARAMETERIZING
 them into widgets (resize -> width/height node), so the oracle rarely fires and is
 shipped as a SAFETY-NET BACKSTOP, not the headline. This gate therefore proves the
 SAFE HALF only: across representative asks the oracle must NOT over-escalate -- every
