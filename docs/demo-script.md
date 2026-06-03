@@ -11,7 +11,7 @@ Prep before recording:
 
 ---
 
-## Beat 1 — "Find it first" (about 15s)
+## Beat 1: "Find it first" (about 15s)
 
 Show that NodeForge checks before it builds.
 
@@ -20,18 +20,18 @@ Show that NodeForge checks before it builds.
 
 (Alternative if you want the MIDDLE band: `crop a region, inpaint it, and paste it back` surfaces related packs plus an author offer. Beat 1 only needs about 15s; pick one.)
 
-## Beat 2 — "Forge it" (about 75s, the star)
+## Beat 2: "Forge it" (about 75s, the star)
 
 Now ask for something genuinely missing and visual:
 
 - Type: `a node that gives an image a halftone print look`
 - Walk through the panel, narrating each step in a few words:
-  1. **Confirm** — plain-language examples appear ("the darkest areas get the biggest dots"). Narration: "It shows me, in plain English, what it is about to build and how it will check itself. I confirm."
-  2. **Working** — a calm progress log. Narration: "It writes the node and tests it in a sandbox."
-  3. **Approval gate** — the generated code, the test results, and a real before/after appear. Narration: "Here is the code and a before/after on real images. Nothing touches my install until I approve." **Approve.**
-  4. **Installed** — the success card. Narration: "Installed, and added to my node search, no restart."
+  1. **Confirm.** Plain-language examples appear ("the darkest areas get the biggest dots"). Narration: "It shows me, in plain English, what it is about to build and how it will check itself. I confirm."
+  2. **Working.** A calm progress log. Narration: "It writes the node and tests it in a sandbox."
+  3. **Approval gate.** The generated code, the test results, and a real before/after appear. Narration: "Here is the code and a before/after on real images. Nothing touches my install until I approve." **Approve.**
+  4. **Installed.** The success card. Narration: "Installed, and added to my node search, no restart."
 
-## Beat 3 — payoff in ComfyUI (about 30s)
+## Beat 3: payoff in ComfyUI (about 30s)
 
 Stay in ComfyUI.
 - Double-click the canvas, search for the new node, drop it in.
@@ -43,7 +43,7 @@ Stay in ComfyUI.
 
 ## Closing card (optional, 3s)
 
-"NodeForge — describe the node you need. github.com/jeremieLouvaert/ComfyUI-NodeForge"
+"NodeForge: describe the node you need. github.com/jeremieLouvaert/ComfyUI-NodeForge"
 
 ## Rehearsal note
 
