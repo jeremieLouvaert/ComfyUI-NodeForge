@@ -8,17 +8,9 @@
 
 ## See it in action
 
-A crosshatch filter, described in plain language and running on a real image a minute later, all inside ComfyUI:
+Describing a crosshatch filter in plain language, confirming what it will build, reviewing the generated code and a real before/after at the approval gate, and the installed node running on a photo, all inside ComfyUI and about a minute end to end:
 
-![The authored Crosshatch Filter node, installed live and running on a real image](docs/images/04-installed.png)
-
-How it got there: describe it, confirm what it will build in plain language, then review the generated code, the test results, and a real before/after at the approval gate before anything installs.
-
-![Describe the node you want](docs/images/01-describe.png)
-
-![Confirm the plain-language examples and rules](docs/images/02-confirm.png)
-
-![Review the code, the teeth-tested checks, and the honest verification caveats, then approve](docs/images/03-approve.png)
+![NodeForge authoring a crosshatch filter node end to end: from a plain-language description, through the confirm and approval steps, to a verified node installed and running on a real image](docs/images/demo.gif)
 
 ## What it is
 
