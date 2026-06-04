@@ -1,7 +1,7 @@
 [project]
 name = "comfyui-nodeforge"
 description = "A node-authoring copilot for ComfyUI: describe a node in plain language, NodeForge retrieves an existing one or authors a new one through a sandboxed write→test→verify loop, and installs it only after you approve the code, the test report, and a before/after preview. Surfaced as a sidebar panel."
-version = "0.2.0"
+version = "0.3.0"
 license = { file = "LICENSE" }
 dependencies = ["anthropic>=0.39.0"]
 
