@@ -32,8 +32,6 @@ There are tools that let an LLM write node logic inline at runtime inside a sing
 - It produces a **real, reusable, standalone node** banked into your install, not throwaway code trapped inside one node that you re-prompt every time.
 - It is **retrieval-first**, so it does not author a redundant node when ComfyUI or a community pack already does the job.
 
-In short: NodeForge authors a verified, reusable node that you own and approved, not disposable inline code you have to trust blindly.
-
 ## Install
 
 NodeForge installs like any other ComfyUI custom node pack.
@@ -111,7 +109,7 @@ NodeForge was de-risked before it was built, and the artifacts ship with the rep
 
 - Cheaper-model tiering for the mechanical stages to cut cost per run.
 - Stronger semantic checks and clearer, plainer verification reporting.
-- Node-level (not just pack-level) retrieval.
+- Node-level retrieval (currently pack-level only).
 - Comfy registry distribution.
 
 ## License
