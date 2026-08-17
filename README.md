@@ -1,5 +1,7 @@
 # ComfyUI-NodeForge
 
+![ComfyUI-NodeForge](assets/hero.jpg)
+
 **Describe the ComfyUI node you need. NodeForge finds it if it already exists, and forges a brand-new one (tested, reviewed by you, and installed) if it doesn't.**
 
 > **Status: v0.2, pre-alpha.** NodeForge is a ComfyUI sidebar panel. You type what you want in plain language; it checks whether a node already exists, and otherwise authors a new custom node, tests it in a sandbox, shows you the generated code plus a real before/after preview at an approval gate, and installs it as a reusable node only after you approve. The full loop has been run end to end, in the browser, producing a working installed node. It is early and there are rough edges; the honest limits are spelled out below.
