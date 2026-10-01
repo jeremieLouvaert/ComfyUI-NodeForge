@@ -123,7 +123,8 @@ def _best_core(scored):
 def evaluate(asks, packs, core_nodes, model, use_llm):
     cache = json.load(open(CACHE, encoding="utf-8")) if os.path.exists(CACHE) else {}
     if not use_llm and not cache:
-        print("!! --no-llm but no cache present; nothing to score."); sys.exit(2)
+        print("!! --no-llm but no cache present; nothing to score.")
+        sys.exit(2)
     rows = []
     for a in asks:
         if a["label"] == "other":
@@ -228,7 +229,8 @@ def main():
     packs = load_manager_index()
     core_nodes = load_core_index()
     if not core_nodes:
-        print("!! core index empty -- run build_core_index.py first (embedded python)."); sys.exit(2)
+        print("!! core index empty -- run build_core_index.py first (embedded python).")
+        sys.exit(2)
 
     rows, cache = evaluate(asks, packs, core_nodes, args.model, use_llm=not args.no_llm)
 

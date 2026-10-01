@@ -187,7 +187,8 @@ def record(name, passed, detail):
 def t_channel():
     cls = ChannelShuffleNode
     se = check_structure(cls)
-    if se: return record("ChannelShuffle", False, "structure: " + "; ".join(se))
+    if se:
+        return record("ChannelShuffle", False, "structure: " + "; ".join(se))
     x = img()
     (out,) = cls().execute(x)
     ok = (out.shape == x.shape
@@ -201,7 +202,8 @@ def t_channel():
 def t_lumamask():
     cls = LumaKeyMaskNode
     se = check_structure(cls)
-    if se: return record("LumaKeyMask", False, "structure: " + "; ".join(se))
+    if se:
+        return record("LumaKeyMask", False, "structure: " + "; ".join(se))
     if cls.RETURN_TYPES != ("MASK",):
         return record("LumaKeyMask", False, f"RETURN_TYPES should be ('MASK',), got {cls.RETURN_TYPES}")
     x = img()
@@ -215,16 +217,20 @@ def t_lumamask():
     match_ok = torch.allclose(m, exp)
     ok = shape_ok and binary_ok and match_ok
     detail = []
-    if not shape_ok: detail.append(f"mask shape {tuple(m.shape)} not [B,H,W]")
-    if not binary_ok: detail.append("mask not binary")
-    if not match_ok: detail.append("mask != independent luma-threshold")
+    if not shape_ok:
+        detail.append(f"mask shape {tuple(m.shape)} not [B,H,W]")
+    if not binary_ok:
+        detail.append("mask not binary")
+    if not match_ok:
+        detail.append("mask != independent luma-threshold")
     record("LumaKeyMask", ok, "MASK [B,H,W], binary, matches Rec.709 oracle" if ok else "; ".join(detail))
 
 # --- 3. TileMosaic ---
 def t_mosaic():
     cls = TileMosaicNode
     se = check_structure(cls)
-    if se: return record("TileMosaic", False, "structure: " + "; ".join(se))
+    if se:
+        return record("TileMosaic", False, "structure: " + "; ".join(se))
     x = img(b=1, h=64, w=64)
     grid = 8
     (out,) = cls().execute(x, grid)
@@ -237,15 +243,18 @@ def t_mosaic():
                 reg = x[:, i*tile:(i+1)*tile, j*tile:(j+1)*tile, :]
                 exp = reg.mean(dim=(1, 2), keepdim=True).expand_as(reg)
                 if not torch.allclose(out[:, i*tile:(i+1)*tile, j*tile:(j+1)*tile, :], exp, atol=1e-5):
-                    ok = False; break
-            if not ok: break
+                    ok = False
+                    break
+            if not ok:
+                break
     record("TileMosaic", ok, "every tile == its mean color" if ok else "tile means incorrect")
 
 # --- 4. UnsharpMask ---
 def t_unsharp():
     cls = UnsharpMaskNode
     se = check_structure(cls)
-    if se: return record("UnsharpMask", False, "structure: " + "; ".join(se))
+    if se:
+        return record("UnsharpMask", False, "structure: " + "; ".join(se))
     inst = cls()
     # oracle A: amount=0 => identity
     x = img()
@@ -261,17 +270,22 @@ def t_unsharp():
     range_ok = in_range(os)
     ok = id_ok and flat_ok and var_ok and range_ok
     detail = []
-    if not id_ok: detail.append("amount=0 not identity")
-    if not flat_ok: detail.append("flat image not preserved")
-    if not var_ok: detail.append("does not increase detail (not sharpening)")
-    if not range_ok: detail.append("output out of [0,1]")
+    if not id_ok:
+        detail.append("amount=0 not identity")
+    if not flat_ok:
+        detail.append("flat image not preserved")
+    if not var_ok:
+        detail.append("does not increase detail (not sharpening)")
+    if not range_ok:
+        detail.append("output out of [0,1]")
     record("UnsharpMask", ok, "identity@0, flat-invariant, sharpens, clamped" if ok else "; ".join(detail))
 
 # --- 5. LumaSplit ---
 def t_split():
     cls = LumaSplitNode
     se = check_structure(cls)
-    if se: return record("LumaSplit", False, "structure: " + "; ".join(se))
+    if se:
+        return record("LumaSplit", False, "structure: " + "; ".join(se))
     if len(cls.RETURN_TYPES) != 2:
         return record("LumaSplit", False, f"expected 2 outputs, got {cls.RETURN_TYPES}")
     x = img()

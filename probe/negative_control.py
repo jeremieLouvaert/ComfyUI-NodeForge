@@ -38,10 +38,12 @@ class BadUnsharp_returnsblur:  # returns the blur (de-sharpens) -- sign/logic er
     def _blur(self, image, sigma):
         radius = max(1, int(math.ceil(3.0*sigma)))
         xs = torch.arange(-radius, radius+1, dtype=image.dtype)
-        k = torch.exp(-(xs**2)/(2*sigma*sigma)); k = k/k.sum()
+        k = torch.exp(-(xs**2)/(2*sigma*sigma))
+        k = k/k.sum()
         b,h,w,c = image.shape
         x = image.permute(0,3,1,2)
-        kh = k.view(1,1,-1,1).repeat(c,1,1,1); kv = k.view(1,1,1,-1).repeat(c,1,1,1)
+        kh = k.view(1,1,-1,1).repeat(c,1,1,1)
+        kv = k.view(1,1,1,-1).repeat(c,1,1,1)
         x = F.conv2d(F.pad(x,(0,0,radius,radius),mode="reflect"), kh, groups=c)
         x = F.conv2d(F.pad(x,(radius,radius,0,0),mode="reflect"), kv, groups=c)
         return x.permute(0,2,3,1)
@@ -58,26 +60,36 @@ class BadLumaSplit_notlossless:  # highlights correct, shadows = full image (ove
 # ---- ORACLES (copied verbatim from the probe) ----
 
 def oracle_channel(node):
-    x = img(); (out,) = node.execute(x)
+    x = img()
+    (out,) = node.execute(x)
     return (out.shape==x.shape and torch.allclose(out[...,0],x[...,2])
             and torch.allclose(out[...,2],x[...,0]) and torch.allclose(out[...,1],x[...,1]) and in_range(out))
 
 def oracle_lumamask(node):
-    x = img(); thr=0.5; (m,) = node.execute(x, thr)
+    x = img()
+    thr=0.5
+    (m,) = node.execute(x, thr)
     luma = x[...,0]*0.2126 + x[...,1]*0.7152 + x[...,2]*0.0722
     exp = (luma > thr).float()
     return (m.ndim==3 and m.shape==x.shape[:3] and bool(torch.all((m==0)|(m==1))) and torch.allclose(m,exp))
 
 def oracle_unsharp(node):
     x = img()
-    (o0,) = node.execute(x, 2.0, 0.0); id_ok = torch.allclose(o0,x,atol=1e-5)
-    flat = torch.full((1,32,32,3),0.4); (of,) = node.execute(flat,2.0,1.5); flat_ok = torch.allclose(of,flat,atol=1e-4)
-    (os_,) = node.execute(x,1.5,1.0); var_ok = bool(os_.std() > x.std()+1e-4); range_ok = in_range(os_)
+    (o0,) = node.execute(x, 2.0, 0.0)
+    id_ok = torch.allclose(o0,x,atol=1e-5)
+    flat = torch.full((1,32,32,3),0.4)
+    (of,) = node.execute(flat,2.0,1.5)
+    flat_ok = torch.allclose(of,flat,atol=1e-4)
+    (os_,) = node.execute(x,1.5,1.0)
+    var_ok = bool(os_.std() > x.std()+1e-4)
+    range_ok = in_range(os_)
     return id_ok and flat_ok and var_ok and range_ok
 
 def oracle_split(node):
-    x = img(); out = node.execute(x,0.5)
-    if not (isinstance(out,tuple) and len(out)==2): return False
+    x = img()
+    out = node.execute(x,0.5)
+    if not (isinstance(out,tuple) and len(out)==2):
+        return False
     sh,hi = out
     return torch.allclose(sh+hi,x,atol=1e-6) and sh.shape==x.shape and hi.shape==x.shape and in_range(sh) and in_range(hi)
 
@@ -91,7 +103,9 @@ CASES = [
 ]
 
 if __name__ == "__main__":
-    print("="*60); print("NEGATIVE CONTROL: every broken node MUST be caught (FAIL)"); print("="*60)
+    print("="*60)
+    print("NEGATIVE CONTROL: every broken node MUST be caught (FAIL)")
+    print("="*60)
     all_caught = True
     for name, oracle, node in CASES:
         try:

@@ -101,7 +101,8 @@ class ProbeUnsharpMask:
     def _gaussian_blur(self, image, sigma):
         radius = max(1, int(math.ceil(3.0 * sigma)))
         xs = torch.arange(-radius, radius + 1, dtype=image.dtype, device=image.device)
-        k = torch.exp(-(xs ** 2) / (2.0 * sigma * sigma)); k = k / k.sum()
+        k = torch.exp(-(xs ** 2) / (2.0 * sigma * sigma))
+        k = k / k.sum()
         b, h, w, c = image.shape
         x = image.permute(0, 3, 1, 2)
         kh = k.view(1, 1, -1, 1).repeat(c, 1, 1, 1)

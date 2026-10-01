@@ -243,7 +243,8 @@ def main():
                 report["load_errors"][f"battery:{bid}"] = f"{type(e).__name__}: {e}"
         if not loaded_checks:
             report["stderr_tail"] = "no battery produced a usable CHECKS list"
-            emit(report); return
+            emit(report)
+            return
 
     # build example fixtures once
     from nodeforge import fixtures as fx
@@ -283,7 +284,8 @@ def main():
                 except Exception as e:
                     report["stderr_tail"] += f"render out_{ex_id} failed: {e}\n"
         report["wall_ms"] = int((time.time() - t0) * 1000)
-        emit(report); return
+        emit(report)
+        return
 
     for cand in candidates:
         cid = cand["id"]
